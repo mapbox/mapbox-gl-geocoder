@@ -12,8 +12,7 @@
   position:relative;
   background-color:white;
   width:33.3333%;
-  max-width:300px;
-  min-width:200px;
+  min-width:240px;
   max-width:360px;
   z-index:1;
   }
