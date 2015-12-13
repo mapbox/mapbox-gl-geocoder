@@ -5,9 +5,7 @@
   "main": "index.js",
   "browserify": {
     "transform": [
-      "envify",
-      "babelify",
-      "brfs"
+      "babelify"
     ]
   },
   "scripts": {
@@ -36,11 +34,9 @@
     "babel-eslint": "^4.0.10",
     "babel-plugin-object-assign": "^1.2.1",
     "babelify": "^6.4.0",
-    "brfs": "^1.4.1",
     "browserify": "^11.2.0",
     "budo": "^7.0.2",
     "documentation": "^3.0.0",
-    "envify": "^3.4.0",
     "eslint": "^1.1.0",
     "lodash.once": "^3.0.1",
     "smokestack": "^3.3.1",
@@ -52,7 +48,6 @@
     "mapbox-gl": "^0.12.1"
   },
   "dependencies": {
-    "lodash.assign": "^3.2.0",
     "lodash.debounce": "^3.1.1",
     "mapbox": "^0.11.0",
     "suggestions": "^1.1.0"

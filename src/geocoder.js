@@ -1,6 +1,5 @@
 import MapboxClient from 'mapbox/lib/services/geocoder';
 import Typeahead from 'suggestions';
-import assign from 'lodash.assign';
 import debounce from 'lodash.debounce';
 
 export default class Geocoder extends mapboxgl.Control {
@@ -13,7 +12,7 @@ export default class Geocoder extends mapboxgl.Control {
   constructor(options) {
     super();
     this._ev = [];
-    this.options = assign(this.options, options);
+    this.options = Object.assign(this.options, options);
   }
 
   onAdd(map) {
@@ -39,8 +38,8 @@ export default class Geocoder extends mapboxgl.Control {
     }), 100);
 
     input.addEventListener('change', () => {
-      if (this._typeahead.selected) {
-        const { selected } = this._typeahead;
+      const { selected } = this._typeahead;
+      if (selected) {
         map.flyTo({
           center: selected.center
         });
@@ -98,20 +97,6 @@ export default class Geocoder extends mapboxgl.Control {
       if (!res.features.length) this._typeahead.selected = null;
       this._typeahead.update(res.features);
       this._clearEl.classList.toggle('active', res.features.length);
-
-      const onChange = document.createEvent('HTMLEvents');
-      onChange.initEvent('change', true, false);
-
-      // Adjust values if input is not :focus
-      // or query remains unchanged.
-      /*
-      if (this._inputEl !== document.activeElement &&
-          this._inputEl.value !== this.query) {
-        this._inputEl.value = this.query;
-        this._inputEl.dispatchEvent(onChange);
-      }
-      */
-
       return callback(res.features);
     });
   }
@@ -123,7 +108,6 @@ export default class Geocoder extends mapboxgl.Control {
   _queryInput(q) {
     this._geocode(q, (results) => {
       this._results = results;
-      this._query = q;
     });
   }
 
@@ -135,9 +119,15 @@ export default class Geocoder extends mapboxgl.Control {
     const q = (typeof input === 'string') ? input : input.join();
     this._geocode(q, (results) => {
       if (!results.length) return;
-      // const result = results[0];
-      // dispatch(queryInput(result.geometry.coordinates));
-      // return dispatch(inputResults(result.place_name, results));
+      const result = results[0];
+      this._results = results;
+      this._typeahead.selected = result;
+
+      // Trigger inputs onChange event
+      const onChange = document.createEvent('HTMLEvents');
+      onChange.initEvent('change', true, false);
+      this._inputEl.value = result.place_name;
+      this._inputEl.dispatchEvent(onChange);
     });
   }
 
@@ -151,7 +141,7 @@ export default class Geocoder extends mapboxgl.Control {
    * Return the input
    * @returns {Object} input
    */
-  getInput() {
+  get() {
     return this._input;
   }
 
@@ -160,7 +150,7 @@ export default class Geocoder extends mapboxgl.Control {
    * @param {Array|String} query An array of coordinates [lng, lat] or location name as a string.
    * @returns {Geocoder} this
    */
-  setInput(query) {
+  set(query) {
     this._query(query);
     return this;
   }
