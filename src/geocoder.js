@@ -12,6 +12,7 @@ export default class Geocoder extends mapboxgl.Control {
 
   constructor(options) {
     super();
+    this._ev = [];
     this.options = assign(this.options, options);
   }
 
@@ -73,25 +74,6 @@ export default class Geocoder extends mapboxgl.Control {
     this._typeahead = new Typeahead(input, []);
     this._typeahead.getItemValue = function(item) { return item.place_name; };
 
-    /*
-      if (!inputResults.length) this.inputTypeahead.selected = null;
-
-      this.inputTypeahead.update(inputResults);
-      this._clearEl.classList.toggle('active', inputResults.length);
-      this._loadingEl.classList.toggle('active', loading);
-
-      var onChange = document.createEvent('HTMLEvents');
-      onChange.initEvent('change', true, false);
-
-      // Adjust values if input is not :focus
-      // or query remains unchanged.
-      if (this._inputEl !== document.activeElement &&
-          this._inputEl.value !== inputQuery) {
-        this._inputEl.value = inputQuery;
-        this._inputEl.dispatchEvent(onChange);
-      }
-    */ 
-
     return el;
   }
 
@@ -107,12 +89,29 @@ export default class Geocoder extends mapboxgl.Control {
 
     return this.client.geocodeForward(q.trim(), options, (err, res) => {
       if (err) throw err;
+      if (!res.features.length) this._typeahead.selected = null;
+      this._typeahead.update(res.features);
+      this._clearEl.classList.toggle('active', res.features.length);
+
+      const onChange = document.createEvent('HTMLEvents');
+      onChange.initEvent('change', true, false);
+
+      // Adjust values if input is not :focus
+      // or query remains unchanged.
+      /*
+      if (this._inputEl !== document.activeElement &&
+          this._inputEl.value !== this.query) {
+        this._inputEl.value = this.query;
+        this._inputEl.dispatchEvent(onChange);
+      }
+      */
+
       return callback(res.features);
     });
   }
 
   _loading(loading) {
-    // TODO Update the input
+    this._loadingEl.classList.toggle('active', loading);
     if (loading) this.fire('geocoder.loading');
   }
 
