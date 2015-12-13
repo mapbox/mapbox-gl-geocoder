@@ -1,0 +1,63 @@
+{
+  "name": "mapbox-gl-geocoder",
+  "version": "1.0.0",
+  "description": "A geocoding control for the Mapbox GL JS",
+  "main": "index.js",
+  "browserify": {
+    "transform": [
+      "envify",
+      "babelify",
+      "brfs"
+    ]
+  },
+  "scripts": {
+    "start": "budo example/index.js --serve=example/bundle.js --live -d",
+    "build": "NODE_ENV=production && browserify index.js | uglifyjs -c -m > dist/mapbox-gl-geocoder.js",
+    "test": "npm run lint && browserify test/index.js | smokestack -b firefox | tap-status",
+    "docs": "documentation --format=md > API.md",
+    "lint": "eslint --no-eslintrc -c .eslintrc index.js src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/mapbox/mapbox-gl-geocoder.js.git"
+  },
+  "keywords": [
+    "geocoder",
+    "osm",
+    "gl"
+  ],
+  "author": "Mapbox",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mapbox/mapbox-gl-geocoder.js/issues"
+  },
+  "homepage": "https://github.com/mapbox/mapbox-gl-geocoder.js#readme",
+  "devDependencies": {
+    "babel-eslint": "^4.0.10",
+    "babel-plugin-object-assign": "^1.2.1",
+    "babelify": "^6.4.0",
+    "brfs": "^1.4.1",
+    "browserify": "^11.2.0",
+    "budo": "^7.0.2",
+    "documentation": "^3.0.0",
+    "envify": "^3.4.0",
+    "eslint": "^1.1.0",
+    "lodash.once": "^3.0.1",
+    "smokestack": "^3.3.1",
+    "tap-status": "^1.0.1",
+    "tape": "^4.2.0",
+    "uglify-js": "^2.4.24"
+  },
+  "peerDependencies": {
+    "mapbox-gl": "^0.12.1"
+  },
+  "dependencies": {
+    "lodash.assign": "^3.2.0",
+    "lodash.debounce": "^3.1.1",
+    "lodash.template": "^3.6.2",
+    "mapbox": "^0.11.0",
+    "redux": "^1.0.1",
+    "redux-thunk": "^1.0.0",
+    "suggestions": "^1.1.0"
+  }
+}
