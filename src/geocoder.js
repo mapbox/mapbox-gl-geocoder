@@ -1,16 +1,7 @@
-import { createStore, applyMiddleware, bindActionCreators } from 'redux';
-import thunk from 'redux-thunk';
-import rootReducer from './reducers';
+import MapboxClient from 'mapbox';
+import Typeahead from 'suggestions';
 import assign from 'lodash.assign';
-
-const storeWithMiddleware = applyMiddleware(thunk)(createStore);
-const store = storeWithMiddleware(rootReducer);
-
-// State object management via redux
-import * as actions from './actions';
-
-// Controls
-import Input from './controls/input';
+import debounce from 'lodash.debounce';
 
 export default class Geocoder extends mapboxgl.Control {
 
@@ -21,25 +12,141 @@ export default class Geocoder extends mapboxgl.Control {
 
   constructor(options) {
     super();
-    this.actions = bindActionCreators(actions, store.dispatch);
     this.options = assign(this.options, options);
   }
 
   onAdd(map) {
-    const { container } = store.getState();
+    this.container = this.options.container ?
+      typeof this.options.container === 'string' ?
+      document.getElementById(this.options.container) :
+      this.options.container :
+      map.getContainer();
 
-    this.container = container ? typeof container === 'string' ?
-      document.getElementById(container) : container : map.getContainer();
-
+    // Template
     const el = document.createElement('div');
-    el.className = 'geocoder-control geocoder-control-inputs';
+    el.className = 'mapboxgl-ctrl-geocoder';
+
+    const icon = document.createElement('span');
+    icon.classList.add('geocoder-icon', 'geocoder-icon-search');
+
+    const input = this._inputEl = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Search';
+
+    input.addEventListener('keypress', debounce((e) => {
+      this._queryInput(e.target.value);
+    }), 100);
+
+    input.addEventListener('change', () => {
+      if (this._typeahead.selected) {
+        const coords = this._typeahead.selected.center;
+        // TODO set Input
+        // Pan the map?
+      }
+    });
+
+    const actions = document.createElement('div');
+    actions.classList.add('geocoder-pin-right');
+
+    const clear = this._clearEl = document.createElement('button');
+    clear.classList.add('geocoder-icon', 'geocoder-icon-close');
+    clear.addEventListener('click', this._clear);
+
+    const loading = this._loadingEl = document.createElement('span');
+    clear.classList.add('geocoder-icon', 'geocoder-icon-loading');
+
+    actions.appendChild(clear);
+    actions.appendChild(loading);
+
+    el.appendChild(icon);
+    el.appendChild(input);
+    el.appendChild(actions);
 
     this.container.appendChild(el);
+    this.client = new MapboxClient(this.options.accessToken ?
+                                   this.options.accessToken :
+                                   mapboxgl.accessToken);
 
-    // Add controllers to the page
-    new Input(el, store, this.actions);
+    // Override the control being added to control containers
+    if (this.options.container) this.options.position = false;
+
+    this._typeahead = new Typeahead(input, []);
+    this._typeahead.getItemValue = function(item) { return item.place_name; };
+
+    /*
+      if (!inputResults.length) this.inputTypeahead.selected = null;
+
+      this.inputTypeahead.update(inputResults);
+      this._clearEl.classList.toggle('active', inputResults.length);
+      this._loadingEl.classList.toggle('active', loading);
+
+      var onChange = document.createEvent('HTMLEvents');
+      onChange.initEvent('change', true, false);
+
+      // Adjust values if input is not :focus
+      // or query remains unchanged.
+      if (this._inputEl !== document.activeElement &&
+          this._inputEl.value !== inputQuery) {
+        this._inputEl.value = inputQuery;
+        this._inputEl.dispatchEvent(onChange);
+      }
+    */ 
 
     return el;
+  }
+
+  // Private Methods
+  // ============================
+  _geocode(q, callback) {
+    const options = this.options.proximity ? {
+      proximity: {
+        longitude: this.options.proximity[0],
+        latitude: this.options.proximity[1]
+      }
+    } : {};
+
+    return this.client.geocodeForward(q.trim(), options, (err, res) => {
+      if (err) throw err;
+      return callback(res.features);
+    });
+  }
+
+  _loading(loading) {
+    // TODO Update the input
+    if (loading) this.fire('geocoder.loading');
+  }
+
+  /*
+   * Query input
+   * @returns {Object} input
+   */
+  _queryInput(q) {
+    this._loading(true);
+    this._geocode(q, (results) => {
+      this._loading(false);
+      // return dispatch(inputResults(q, results));
+    });
+  }
+
+  /*
+   * Programmatic input query
+   * @returns {Object} input
+   */
+  _query(input) {
+    const q = (typeof input === 'string') ? input : input.join();
+    this._loading(true);
+    this._geocode(q, (results) => {
+      this.loading(false);
+      if (!results.length) return;
+      // const result = results[0];
+      // dispatch(queryInput(result.geometry.coordinates));
+      // return dispatch(inputResults(result.place_name, results));
+    });
+  }
+
+  _clear() {
+    // TODO clear the input
+    this.fire('geocoder.clear');
   }
 
   // API Methods
@@ -50,7 +157,7 @@ export default class Geocoder extends mapboxgl.Control {
    * @returns {Object} input
    */
   getInput() {
-    return store.getState().input;
+    return this._input;
   }
 
   /**
@@ -59,7 +166,7 @@ export default class Geocoder extends mapboxgl.Control {
    * @returns {Geocoder} this
    */
   setInput(query) {
-    this.actions.queryInput(query);
+    this._query(query);
     return this;
   }
 
@@ -74,7 +181,15 @@ export default class Geocoder extends mapboxgl.Control {
    * @returns {Geocoder} this;
    */
   on(type, fn) {
-    this.actions.eventSubscribe(type, fn);
+    this._ev[type] = this._ev[type] || [];
+    this._ev[type].push(fn);
+    return this;
+  }
+
+  fire(type, data) {
+    if (!this._ev[type]) return;
+    const listeners = this._ev[type].slice();
+    for (var i = 0; i < listeners.length; i++) listeners[i].call(this, data);
     return this;
   }
 }

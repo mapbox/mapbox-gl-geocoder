@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/mapbox/mapbox-gl-geocoder.js.git"
+    "url": "git+ssh://git@github.com/mapbox/mapbox-gl-geocoder.git"
   },
   "keywords": [
     "geocoder",
@@ -29,9 +29,9 @@
   "author": "Mapbox",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mapbox/mapbox-gl-geocoder.js/issues"
+    "url": "https://github.com/mapbox/mapbox-gl-geocoder/issues"
   },
-  "homepage": "https://github.com/mapbox/mapbox-gl-geocoder.js#readme",
+  "homepage": "https://github.com/mapbox/mapbox-gl-geocoder#readme",
   "devDependencies": {
     "babel-eslint": "^4.0.10",
     "babel-plugin-object-assign": "^1.2.1",
@@ -54,10 +54,7 @@
   "dependencies": {
     "lodash.assign": "^3.2.0",
     "lodash.debounce": "^3.1.1",
-    "lodash.template": "^3.6.2",
     "mapbox": "^0.11.0",
-    "redux": "^1.0.1",
-    "redux-thunk": "^1.0.0",
     "suggestions": "^1.1.0"
   }
 }
