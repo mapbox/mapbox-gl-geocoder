@@ -29,5 +29,16 @@ test('geocoder', (tt) => {
     }));
   });
 
+  tt.test('fire', t => {
+    t.plan(1);
+    setup();
+
+    geocoder.on('custom', (e) => {
+      t.equals(e.custom, 'data');
+    });
+
+    geocoder.fire('custom', { custom: 'data'});
+  });
+
   tt.end();
 });
