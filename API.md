@@ -23,7 +23,7 @@ Subscribe to events that happen within the plugin.
 
 -   `type` **String** name of event. Available events and the data passed into their respective event objects are:-   **geocoder.clear** `Emitted when the input is cleared`
     -   **geocoder.loading** `Emitted when the geocoder is looking up a query`
-    -   **geocoder.input** `{ feature } Fired when input is set`
+    -   **geocoder.input** `{ result } Fired when input is set`
     -   **geocoder.error** `{ error } Error as string
 -   `fn` **Function** function that's called when the event is emitted.
 
