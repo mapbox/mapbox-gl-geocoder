@@ -39,6 +39,7 @@ export default class Geocoder extends mapboxgl.Control {
 
     input.addEventListener('change', () => {
       const { selected } = this._typeahead;
+
       if (selected) {
         map.flyTo({
           center: selected.center
