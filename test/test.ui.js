@@ -41,6 +41,13 @@ test('Geocoder#inputControl', tt => {
     geocoder.set([-79, 43]);
   });
 
+  tt.test('position', t => {
+    setup({ position:'bottom-left' });
+    var contains = map.getContainer().querySelector('.mapboxgl-ctrl-bottom-left .mapboxgl-ctrl-geocoder');
+    t.ok(map.getContainer().querySelector('.mapboxgl-ctrl-bottom-left .mapboxgl-ctrl-geocoder'));
+    t.end();
+  });
+
   tt.end();
 });
 

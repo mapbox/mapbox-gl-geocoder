@@ -9,7 +9,9 @@ var map = new mapboxgl.Map({
   zoom: 13
 });
 
-var geocoder = new mapboxgl.Geocoder();
+var geocoder = new mapboxgl.Geocoder({
+  position: 'bottom-left'
+});
 var button = document.createElement('button');
 button.textContent = 'click me';
 
