@@ -34,7 +34,7 @@ export default class Geocoder extends mapboxgl.Control {
     input.placeholder = 'Search';
 
     input.addEventListener('keypress', debounce((e) => {
-      this._queryInput(e.target.value);
+      this._queryFromInput(e.target.value);
     }), 100);
 
     input.addEventListener('change', () => {
@@ -101,21 +101,14 @@ export default class Geocoder extends mapboxgl.Control {
     });
   }
 
-  /*
-   * Query input
-   * @returns {Object} input
-   */
-  _queryInput(q) {
+  _queryFromInput(q) {
     this._geocode(q, (results) => {
       this._results = results;
     });
   }
 
-  /*
-   * Programmatic input query
-   * @returns {Object} input
-   */
   _query(input) {
+    if (!input) return;
     const q = (typeof input === 'string') ? input : input.join();
     this._geocode(q, (results) => {
       if (!results.length) return;
@@ -134,6 +127,10 @@ export default class Geocoder extends mapboxgl.Control {
   _clear() {
     this._input = null;
     this._inputEl.value = '';
+    this._inputEl.focus();
+
+    this._typeahead.selected = null;
+    this._typeahead.update([]);
     this.fire('geocoder.clear');
   }
 
@@ -171,6 +168,12 @@ export default class Geocoder extends mapboxgl.Control {
     return this;
   }
 
+  /**
+   * Fire an event
+   * @param {String} type event name.
+   * @param {Object} data event data to pass to the function subscribed.
+   * @returns {Geocoder} this
+   */
   fire(type, data) {
     if (!this._ev[type]) return;
     const listeners = this._ev[type].slice();
