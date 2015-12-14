@@ -54,11 +54,8 @@ A geocoder component using Mapbox Geocoding APi
 **Examples**
 
 ```javascript
-var geocoder = Geocoder({
-  container: 'map'
-});
-
-map.addControl(directions);
+var geocoder = new mapboxgl.Geocoder();
+map.addControl(geocoder);
 ```
 
 Returns **Geocoder** `this`
