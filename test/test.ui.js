@@ -38,7 +38,7 @@ test('Geocoder#inputControl', tt => {
       t.ok('input was cleared');
     }));
 
-    geocoder.set([-79, 43]);
+    geocoder.query([-79, 43]);
   });
 
   tt.test('position', t => {

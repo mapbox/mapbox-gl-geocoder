@@ -9,7 +9,7 @@ Fire an event
 
 Returns **Geocoder** this
 
-# get
+# getResult
 
 Return the input
 
@@ -29,7 +29,7 @@ Subscribe to events that happen within the plugin.
 
 Returns **Geocoder** this;
 
-# set
+# query
 
 Set input
 

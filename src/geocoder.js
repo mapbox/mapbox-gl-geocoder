@@ -143,7 +143,7 @@ export default class Geocoder extends mapboxgl.Control {
    * Return the input
    * @returns {Object} input
    */
-  get() {
+  getResult() {
     return this._input;
   }
 
@@ -152,7 +152,7 @@ export default class Geocoder extends mapboxgl.Control {
    * @param {Array|String} query An array of coordinates [lng, lat] or location name as a string.
    * @returns {Geocoder} this
    */
-  set(query) {
+  query(query) {
     this._query(query);
     return this;
   }

@@ -22,9 +22,9 @@ test('geocoder', (tt) => {
   tt.test('set/get input', t => {
     t.plan(2);
     setup({ proximity: [-79.45, 43.65] });
-    geocoder.set('Queen Street');
+    geocoder.query('Queen Street');
     geocoder.on('geocoder.input', once((e) => {
-      t.ok(geocoder.get(), 'feature is present from get');
+      t.ok(geocoder.getResult(), 'feature is present from get');
       t.ok(e.result, 'feature is in the event object');
     }));
   });
