@@ -41,9 +41,13 @@ export default class Geocoder extends mapboxgl.Control {
       const { selected } = this._typeahead;
 
       if (selected) {
-        map.flyTo({
-          center: selected.center
-        });
+
+        if (selected.bbox) {
+          const { bbox } = selected;
+          map.fitBounds([[bbox[0], bbox[1]],[bbox[2], bbox[3]]]);
+        } else {
+          map.flyTo({ center: selected.center });
+        }
 
         this._input = selected;
         this.fire('geocoder.input', { result: selected });
