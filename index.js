@@ -17,12 +17,8 @@
  */
 import Geocoder from './src/geocoder';
 
-function exportFn(options) {
-  return new Geocoder(options);
-}
-
 if (window.mapboxgl) {
-  mapboxgl.Geocoder = exportFn;
+  mapboxgl.Geocoder = Geocoder;
 } else if (typeof module !== 'undefined') {
-  module.exports = exportFn;
+  module.exports = Geocoder;
 }
