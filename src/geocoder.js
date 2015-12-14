@@ -45,8 +45,8 @@ export default class Geocoder extends mapboxgl.Control {
           center: selected.center
         });
 
-        this.fire('geocoder.input', { feature: selected });
         this._input = selected;
+        this.fire('geocoder.input', { result: selected });
       }
     });
 
@@ -158,7 +158,7 @@ export default class Geocoder extends mapboxgl.Control {
    * @param {String} type name of event. Available events and the data passed into their respective event objects are:
    * - __geocoder.clear__ `Emitted when the input is cleared`
    * - __geocoder.loading__ `Emitted when the geocoder is looking up a query`
-   * - __geocoder.input__ `{ feature } Fired when input is set`
+   * - __geocoder.input__ `{ result } Fired when input is set`
    * - __geocoder.error__ `{ error } Error as string
    * @param {Function} fn function that's called when the event is emitted.
    * @returns {Geocoder} this;

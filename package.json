@@ -5,6 +5,7 @@
   "main": "index.js",
   "browserify": {
     "transform": [
+      "envify",
       "babelify"
     ]
   },
@@ -37,6 +38,7 @@
     "browserify": "^11.2.0",
     "budo": "^7.0.2",
     "documentation": "^3.0.0",
+    "envify": "^3.4.0",
     "eslint": "^1.1.0",
     "lodash.once": "^3.0.1",
     "smokestack": "^3.3.1",

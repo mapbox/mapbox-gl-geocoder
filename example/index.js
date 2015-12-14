@@ -21,3 +21,8 @@ map.on('load', () => {
     geocoder.set('Montreal Quebec');
   });
 });
+
+geocoder.on('geocoder.input', function() {
+  var result = geocoder.get();
+  console.log('Fetched', result);
+});
