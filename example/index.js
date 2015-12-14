@@ -9,9 +9,7 @@ var map = new mapboxgl.Map({
   zoom: 13
 });
 
-var geocoder = new mapboxgl.Geocoder({
-  position: 'bottom-left'
-});
+var geocoder = new mapboxgl.Geocoder();
 var button = document.createElement('button');
 button.textContent = 'click me';
 
@@ -25,6 +23,5 @@ map.on('load', () => {
 });
 
 geocoder.on('geocoder.input', function() {
-  var result = geocoder.get();
-  console.log('Fetched', result);
+  console.log('Fetched', geocoder.get());
 });
