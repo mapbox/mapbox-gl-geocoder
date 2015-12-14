@@ -42,12 +42,27 @@ test('Geocoder#inputControl', tt => {
   });
 
   tt.test('position', t => {
-    setup({ position:'bottom-left' });
-    var contains = map.getContainer().querySelector('.mapboxgl-ctrl-bottom-left .mapboxgl-ctrl-geocoder');
+    setup({ position: 'bottom-left' });
     t.ok(map.getContainer().querySelector('.mapboxgl-ctrl-bottom-left .mapboxgl-ctrl-geocoder'));
+    t.end();
+  });
+
+  tt.test('container', t => {
+    container = document.createElement('div');
+    map = new mapboxgl.Map({ container: container });
+
+    const customEl = document.createElement('div');
+    customEl.id = 'custom';
+    map.getContainer().appendChild(customEl);
+
+    geocoder = new mapboxgl.Geocoder({
+      container: customEl
+    });
+
+    map.addControl(geocoder);
+    t.ok(map.getContainer().querySelector('#custom .mapboxgl-ctrl-geocoder'), 'appended to custom container');
     t.end();
   });
 
   tt.end();
 });
-
