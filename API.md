@@ -15,6 +15,17 @@ Return the input
 
 Returns **Object** input
 
+# off
+
+Remove an event
+
+**Parameters**
+
+-   `type` **String** Event name.
+-   `fn` **Function** Function that should unsubscribe to the event emitted.
+
+Returns **Geocoder** this
+
 # on
 
 Subscribe to events that happen within the plugin.
