@@ -8,7 +8,7 @@ mapboxgl.accessToken = process.env.MapboxAccessToken;
 
 // Tests
 require('./test.geocoder');
-require('./test.input');
+require('./test.ui');
 
 // close the smokestack window once tests are complete
 test('shutdown', (t) => {

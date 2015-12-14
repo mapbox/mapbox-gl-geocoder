@@ -73,6 +73,11 @@
   overflow:hidden;
   font-size:12px;
   }
+  .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl-geocoder ul,
+  .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-geocoder ul {
+    top:auto;
+    bottom:100%;
+    }
   .mapboxgl-ctrl-geocoder ul > li > a {
     clear:both;
     cursor:default;
