@@ -28,3 +28,7 @@ function getResult() {
   console.log('Fetched', geocoder.getResult());
   geocoder.off('geocoder.input', getResult);
 }
+
+geocoder.on('geocoder.error', function(e) {
+  console.log('Error is', e.error);
+});

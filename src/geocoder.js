@@ -98,8 +98,8 @@ export default class Geocoder extends mapboxgl.Control {
     } : {};
 
     return this.client.geocodeForward(q.trim(), options, (err, res) => {
-      if (err) throw err;
       this._loadingEl.classList.toggle('active', false);
+      if (err) return this.fire('geocoder.error', { error: err.message });
       if (!res.features.length) this._typeahead.selected = null;
       this._typeahead.update(res.features);
       this._clearEl.classList.toggle('active', res.features.length);
