@@ -18,10 +18,13 @@ map.addControl(geocoder);
 
 map.on('load', () => {
   button.addEventListener('click', function() {
-    geocoder.set('Montreal Quebec');
+    geocoder.query('Montreal Quebec');
   });
 });
 
-geocoder.on('geocoder.input', function() {
-  console.log('Fetched', geocoder.get());
-});
+geocoder.on('geocoder.input', getResult);
+
+function getResult() {
+  console.log('Fetched', geocoder.getResult());
+  geocoder.off('geocoder.input', getResult);
+}

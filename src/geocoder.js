@@ -1,6 +1,7 @@
 import MapboxClient from 'mapbox/lib/services/geocoder';
 import Typeahead from 'suggestions';
 import debounce from 'lodash.debounce';
+import { EventEmitter } from 'events';
 
 export default class Geocoder extends mapboxgl.Control {
 
@@ -11,7 +12,7 @@ export default class Geocoder extends mapboxgl.Control {
 
   constructor(options) {
     super();
-    this._ev = [];
+    this._ev = new EventEmitter();
     this.options = Object.assign({}, this.options, options);
   }
 
@@ -168,8 +169,7 @@ export default class Geocoder extends mapboxgl.Control {
    * @returns {Geocoder} this;
    */
   on(type, fn) {
-    this._ev[type] = this._ev[type] || [];
-    this._ev[type].push(fn);
+    this._ev.on(type, fn);
     return this;
   }
 
@@ -180,9 +180,18 @@ export default class Geocoder extends mapboxgl.Control {
    * @returns {Geocoder} this
    */
   fire(type, data) {
-    if (!this._ev[type]) return;
-    const listeners = this._ev[type].slice();
-    for (var i = 0; i < listeners.length; i++) listeners[i].call(this, data);
+    this._ev.emit(type, data);
+    return this;
+  }
+
+  /**
+   * Remove an event
+   * @returns {Geocoder} this
+   * @param {String} type Event name.
+   * @param {Function} fn Function that should unsubscribe to the event emitted.
+   */
+  off(type, fn) {
+    this._ev.removeListener(type, fn);
     return this;
   }
 }

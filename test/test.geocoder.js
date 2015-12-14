@@ -30,14 +30,18 @@ test('geocoder', (tt) => {
   });
 
   tt.test('fire', t => {
-    t.plan(1);
+    t.plan(2);
     setup();
 
-    geocoder.on('custom', (e) => {
+    function custom(e) {
       t.equals(e.custom, 'data');
-    });
+      geocoder.off('custom', custom);
+    }
 
+    geocoder.on('custom', custom);
     geocoder.fire('custom', { custom: 'data'});
+    geocoder.fire('custom', { custom: 'data'});
+    t.ok(true, 'Event fires only once after after off is called.');
   });
 
   tt.end();
