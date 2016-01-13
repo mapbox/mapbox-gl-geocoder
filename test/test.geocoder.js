@@ -1,10 +1,10 @@
 'use strict';
 
-const test = require('tape');
-const once = require('lodash.once');
+var test = require('tape');
+var once = require('lodash.once');
 
-test('geocoder', (tt) => {
-  let container, map, geocoder;
+test('geocoder', function(tt) {
+  var container, map, geocoder;
 
   function setup(opts) {
     container = document.createElement('div');
@@ -13,23 +13,23 @@ test('geocoder', (tt) => {
     map.addControl(geocoder);
   }
 
-  tt.test('initialized', t => {
+  tt.test('initialized', function(t) {
     setup();
     t.ok(geocoder, 'geocoder is initialized');
     t.end();
   });
 
-  tt.test('set/get input', t => {
+  tt.test('set/get input', function(t) {
     t.plan(2);
     setup({ proximity: [-79.45, 43.65] });
     geocoder.query('Queen Street');
-    geocoder.on('geocoder.input', once((e) => {
+    geocoder.on('geocoder.input', once(function(e) {
       t.ok(geocoder.getResult(), 'feature is present from get');
       t.ok(e.result, 'feature is in the event object');
     }));
   });
 
-  tt.test('fire', t => {
+  tt.test('fire', function(t) {
     t.plan(2);
     setup();
 

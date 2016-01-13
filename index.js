@@ -12,7 +12,7 @@
  * map.addControl(geocoder);
  * @return {Geocoder} `this`
  */
-import Geocoder from './src/geocoder';
+var Geocoder = require('./src/geocoder');
 
 if (window.mapboxgl) {
   mapboxgl.Geocoder = Geocoder;

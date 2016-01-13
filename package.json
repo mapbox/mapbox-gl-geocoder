@@ -3,16 +3,10 @@
   "version": "0.0.0",
   "description": "A geocoder control for Mapbox GL JS",
   "main": "index.js",
-  "browserify": {
-    "transform": [
-      "envify",
-      "babelify"
-    ]
-  },
   "scripts": {
     "start": "budo example/index.js --serve=example/bundle.js --live -d",
     "build": "NODE_ENV=production && browserify index.js | uglifyjs -c -m > dist/mapbox-gl-geocoder.js",
-    "test": "npm run lint && browserify test/index.js | smokestack -b firefox | tap-status",
+    "test": "npm run lint && browserify -t envify test/index.js | smokestack -b firefox | tap-status",
     "docs": "documentation --format=md > API.md",
     "lint": "eslint --no-eslintrc -c .eslintrc index.js src"
   },
@@ -32,9 +26,6 @@
   },
   "homepage": "https://github.com/mapbox/mapbox-gl-geocoder#readme",
   "devDependencies": {
-    "babel-eslint": "^4.0.10",
-    "babel-plugin-object-assign": "^1.2.1",
-    "babelify": "^6.4.0",
     "browserify": "^11.2.0",
     "budo": "^7.0.2",
     "documentation": "^3.0.0",
@@ -52,6 +43,7 @@
   "dependencies": {
     "lodash.debounce": "^3.1.1",
     "mapbox": "^0.11.0",
-    "suggestions": "^1.1.1"
+    "suggestions": "^1.1.1",
+    "xtend": "^4.0.1"
   }
 }

@@ -1,22 +1,23 @@
-import MapboxClient from 'mapbox/lib/services/geocoder';
-import Typeahead from 'suggestions';
-import debounce from 'lodash.debounce';
-import { EventEmitter } from 'events';
+var MapboxClient = require('mapbox/lib/services/geocoder');
+var Typeahead = require('suggestions');
+var debounce = require('lodash.debounce');
+var EventEmitter = require('events').EventEmitter;
+var extend = require('xtend');
 
-export default class Geocoder extends mapboxgl.Control {
+module.exports = Geocoder;
 
-  options = {
+function Geocoder(options) {
+  this._ev = new EventEmitter();
+  this.options = extend({}, this.options, options);
+}
+
+Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
+  options: {
     position: 'top-left',
     proximity: null
-  }
+  },
 
-  constructor(options) {
-    super();
-    this._ev = new EventEmitter();
-    this.options = Object.assign({}, this.options, options);
-  }
-
-  onAdd(map) {
+  onAdd: function(map) {
     this.container = this.options.container ?
       typeof this.options.container === 'string' ?
       document.getElementById(this.options.container) :
@@ -24,27 +25,27 @@ export default class Geocoder extends mapboxgl.Control {
       map.getContainer();
 
     // Template
-    const el = document.createElement('div');
+    var el = document.createElement('div');
     el.className = 'mapboxgl-ctrl-geocoder';
 
-    const icon = document.createElement('span');
+    var icon = document.createElement('span');
     icon.classList.add('geocoder-icon', 'geocoder-icon-search');
 
-    const input = this._inputEl = document.createElement('input');
+    var input = this._inputEl = document.createElement('input');
     input.type = 'text';
     input.placeholder = 'Search';
 
-    input.addEventListener('keypress', debounce((e) => {
+    input.addEventListener('keypress', debounce(function(e) {
       this._queryFromInput(e.target.value);
-    }), 100);
+    }.bind(this)), 100);
 
-    input.addEventListener('change', () => {
-      const { selected } = this._typeahead;
+    input.addEventListener('change', function() {
+      var selected = this._typeahead.selected;
 
       if (selected) {
 
         if (selected.bbox) {
-          const { bbox } = selected;
+          var bbox = selected.bbox;
           map.fitBounds([[bbox[0], bbox[1]],[bbox[2], bbox[3]]]);
         } else {
           map.flyTo({ center: selected.center });
@@ -53,16 +54,16 @@ export default class Geocoder extends mapboxgl.Control {
         this._input = selected;
         this.fire('geocoder.input', { result: selected });
       }
-    });
+    }.bind(this));
 
-    const actions = document.createElement('div');
+    var actions = document.createElement('div');
     actions.classList.add('geocoder-pin-right');
 
-    const clear = this._clearEl = document.createElement('button');
+    var clear = this._clearEl = document.createElement('button');
     clear.classList.add('geocoder-icon', 'geocoder-icon-close');
     clear.addEventListener('click', this._clear.bind(this));
 
-    const loading = this._loadingEl = document.createElement('span');
+    var loading = this._loadingEl = document.createElement('span');
     loading.classList.add('geocoder-icon', 'geocoder-icon-loading');
 
     actions.appendChild(clear);
@@ -84,53 +85,53 @@ export default class Geocoder extends mapboxgl.Control {
     this._typeahead.getItemValue = function(item) { return item.place_name; };
 
     return el;
-  }
+  },
 
-  _geocode(q, callback) {
+  _geocode: function(q, callback) {
     this._loadingEl.classList.toggle('active', true);
     this.fire('geocoder.loading');
 
-    const options = this.options.proximity ? {
+    var options = this.options.proximity ? {
       proximity: {
         longitude: this.options.proximity[0],
         latitude: this.options.proximity[1]
       }
     } : {};
 
-    return this.client.geocodeForward(q.trim(), options, (err, res) => {
+    return this.client.geocodeForward(q.trim(), options, function(err, res) {
       this._loadingEl.classList.toggle('active', false);
       if (err) return this.fire('geocoder.error', { error: err.message });
       if (!res.features.length) this._typeahead.selected = null;
       this._typeahead.update(res.features);
       this._clearEl.classList.toggle('active', res.features.length);
       return callback(res.features);
-    });
-  }
+    }.bind(this));
+  },
 
-  _queryFromInput(q) {
-    this._geocode(q, (results) => {
+  _queryFromInput: function(q) {
+    this._geocode(q, function(results) {
       this._results = results;
-    });
-  }
+    }.bind(this));
+  },
 
-  _query(input) {
+  _query: function(input) {
     if (!input) return;
-    const q = (typeof input === 'string') ? input : input.join();
-    this._geocode(q, (results) => {
+    var q = (typeof input === 'string') ? input : input.join();
+    this._geocode(q, function(results) {
       if (!results.length) return;
-      const result = results[0];
+      var result = results[0];
       this._results = results;
       this._typeahead.selected = result;
 
       // Trigger inputs onChange event
-      const onChange = document.createEvent('HTMLEvents');
+      var onChange = document.createEvent('HTMLEvents');
       onChange.initEvent('change', true, false);
       this._inputEl.value = result.place_name;
       this._inputEl.dispatchEvent(onChange);
-    });
-  }
+    }.bind(this));
+  },
 
-  _clear() {
+  _clear: function() {
     this._input = null;
     this._inputEl.value = '';
     this._inputEl.focus();
@@ -138,25 +139,25 @@ export default class Geocoder extends mapboxgl.Control {
     this._typeahead.selected = null;
     this._typeahead.update([]);
     this.fire('geocoder.clear');
-  }
+  },
 
   /**
    * Return the input
    * @returns {Object} input
    */
-  getResult() {
+  getResult: function() {
     return this._input;
-  }
+  },
 
   /**
    * Set input
    * @param {Array|String} query An array of coordinates [lng, lat] or location name as a string.
    * @returns {Geocoder} this
    */
-  query(query) {
+  query: function(query) {
     this._query(query);
     return this;
-  }
+  },
 
   /**
    * Subscribe to events that happen within the plugin.
@@ -168,10 +169,10 @@ export default class Geocoder extends mapboxgl.Control {
    * @param {Function} fn function that's called when the event is emitted.
    * @returns {Geocoder} this;
    */
-  on(type, fn) {
+  on: function(type, fn) {
     this._ev.on(type, fn);
     return this;
-  }
+  },
 
   /**
    * Fire an event
@@ -179,10 +180,10 @@ export default class Geocoder extends mapboxgl.Control {
    * @param {Object} data event data to pass to the function subscribed.
    * @returns {Geocoder} this
    */
-  fire(type, data) {
+  fire: function(type, data) {
     this._ev.emit(type, data);
     return this;
-  }
+  },
 
   /**
    * Remove an event
@@ -190,8 +191,8 @@ export default class Geocoder extends mapboxgl.Control {
    * @param {String} type Event name.
    * @param {Function} fn Function that should unsubscribe to the event emitted.
    */
-  off(type, fn) {
+  off: function(type, fn) {
     this._ev.removeListener(type, fn);
     return this;
   }
-}
+});
