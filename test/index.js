@@ -1,6 +1,6 @@
 'use strict';
 
-const test = require('tape');
+var test = require('tape');
 window.mapboxgl = require('mapbox-gl');
 require('../');
 
