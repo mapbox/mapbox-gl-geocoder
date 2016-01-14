@@ -33,7 +33,11 @@ export default class Geocoder extends mapboxgl.Control {
     input.type = 'text';
     input.placeholder = 'Search';
 
-    input.addEventListener('keyup', debounce((e) => {
+    input.addEventListener('keyup', (e) => {
+      if (!e.target.value) this._clear();
+    });
+
+    input.addEventListener('keypress', debounce((e) => {
       this._queryFromInput(e.target.value);
     }), 200);
 
@@ -113,8 +117,6 @@ export default class Geocoder extends mapboxgl.Control {
 
   _queryFromInput(q) {
     q = q.trim();
-    if (!q) this._clear();
-
     if (q.length > 2) {
       this._geocode(q, (results) => {
         this._results = results;
