@@ -29,6 +29,18 @@ test('geocoder', (tt) => {
     }));
   });
 
+  tt.test('options', t => {
+    t.plan(1);
+    setup({
+      country: 'fr',
+      types: 'region'
+    });
+    geocoder.query('Paris');
+    geocoder.on('geocoder.input', once((e) => {
+      t.equals(e.result.place_name, 'Paris, France', 'one result is returned with expected place name');
+    }));
+  });
+
   tt.test('fire', t => {
     t.plan(2);
     setup();
