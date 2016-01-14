@@ -33,9 +33,9 @@ export default class Geocoder extends mapboxgl.Control {
     input.type = 'text';
     input.placeholder = 'Search';
 
-    input.addEventListener('keypress', debounce((e) => {
+    input.addEventListener('keyup', debounce((e) => {
       this._queryFromInput(e.target.value);
-    }), 100);
+    }), 200);
 
     input.addEventListener('change', () => {
       const { selected } = this._typeahead;
@@ -112,9 +112,20 @@ export default class Geocoder extends mapboxgl.Control {
   }
 
   _queryFromInput(q) {
-    this._geocode(q, (results) => {
-      this._results = results;
-    });
+    q = q.trim();
+    if (!q) this._clear();
+
+    if (q.length > 2) {
+      this._geocode(q, (results) => {
+        this._results = results;
+      });
+    }
+  }
+
+  _change() {
+    const onChange = document.createEvent('HTMLEvents');
+    onChange.initEvent('change', true, false);
+    this._inputEl.dispatchEvent(onChange);
   }
 
   _query(input) {
@@ -125,22 +136,19 @@ export default class Geocoder extends mapboxgl.Control {
       const result = results[0];
       this._results = results;
       this._typeahead.selected = result;
-
-      // Trigger inputs onChange event
-      const onChange = document.createEvent('HTMLEvents');
-      onChange.initEvent('change', true, false);
       this._inputEl.value = result.place_name;
-      this._inputEl.dispatchEvent(onChange);
+      this._change();
     });
   }
 
   _clear() {
     this._input = null;
     this._inputEl.value = '';
-    this._inputEl.focus();
-
     this._typeahead.selected = null;
     this._typeahead.update([]);
+    this._change();
+    this._inputEl.focus();
+    this._clearEl.classList.remove('active');
     this.fire('geocoder.clear');
   }
 
