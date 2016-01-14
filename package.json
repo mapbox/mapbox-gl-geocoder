@@ -2,7 +2,7 @@
   "name": "mapbox-gl-geocoder",
   "version": "0.0.0",
   "description": "A geocoder control for Mapbox GL JS",
-  "main": "index.js",
+  "main": "dist/mapbox-gl-geocoder.js",
   "browserify": {
     "transform": [
       "envify",
