@@ -6,8 +6,7 @@ import { EventEmitter } from 'events';
 export default class Geocoder extends mapboxgl.Control {
 
   options = {
-    position: 'top-left',
-    proximity: null
+    position: 'top-left'
   }
 
   constructor(options) {
@@ -90,12 +89,17 @@ export default class Geocoder extends mapboxgl.Control {
     this._loadingEl.classList.toggle('active', true);
     this.fire('geocoder.loading');
 
-    const options = this.options.proximity ? {
-      proximity: {
+    const options = {};
+
+    if (this.options.proximity) {
+      options.proximity = {
         longitude: this.options.proximity[0],
         latitude: this.options.proximity[1]
-      }
-    } : {};
+      };
+    }
+
+    if (this.options.country) options.country = this.options.country;
+    if (this.options.types) options.types = this.options.types;
 
     return this.client.geocodeForward(q.trim(), options, (err, res) => {
       this._loadingEl.classList.toggle('active', false);
