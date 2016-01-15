@@ -1,6 +1,6 @@
 {
   "name": "mapbox-gl-geocoder",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A geocoder control for Mapbox GL JS",
   "main": "dist/mapbox-gl-geocoder.js",
   "browserify": {
@@ -13,7 +13,7 @@
     "start": "budo example/index.js --serve=example/bundle.js --live -d",
     "build": "NODE_ENV=production && browserify index.js | uglifyjs -c -m > dist/mapbox-gl-geocoder.js",
     "test": "npm run lint && browserify test/index.js | smokestack -b firefox | tap-status",
-    "docs": "documentation --format=md > API.md",
+    "docs": "documentation index.js --format=md > API.md",
     "lint": "eslint --no-eslintrc -c .eslintrc index.js src"
   },
   "repository": {
