@@ -27,7 +27,8 @@ export default class Geocoder extends mapboxgl.Control {
     el.className = 'mapboxgl-ctrl-geocoder';
 
     const icon = document.createElement('span');
-    icon.classList.add('geocoder-icon', 'geocoder-icon-search');
+    icon.classList.add('geocoder-icon');
+    icon.classList.add('geocoder-icon-search');
 
     const input = this._inputEl = document.createElement('input');
     input.type = 'text';
@@ -60,11 +61,13 @@ export default class Geocoder extends mapboxgl.Control {
     actions.classList.add('geocoder-pin-right');
 
     const clear = this._clearEl = document.createElement('button');
-    clear.classList.add('geocoder-icon', 'geocoder-icon-close');
+    clear.classList.add('geocoder-icon')
+    clear.classList.add('geocoder-icon-close');
     clear.addEventListener('click', this._clear.bind(this));
 
     const loading = this._loadingEl = document.createElement('span');
-    loading.classList.add('geocoder-icon', 'geocoder-icon-loading');
+    loading.classList.add('geocoder-icon');
+    loading.classList.add('geocoder-icon-loading');
 
     actions.appendChild(clear);
     actions.appendChild(loading);
