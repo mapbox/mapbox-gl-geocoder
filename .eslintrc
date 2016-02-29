@@ -1,12 +1,10 @@
 {
-  "parser": "babel-eslint",
   "env": {
     "node": true,
     "browser": true
   },
   "globals": {
-    "mapboxgl": true,
-    "fs": true
+    "mapboxgl": true
   },
   "rules": {
     "strict": [0],

@@ -1,9 +1,9 @@
 'use strict';
 
-const test = require('tape');
-const once = require('lodash.once');
+var test = require('tape');
+var once = require('lodash.once');
 
-test('geocoder', (tt) => {
+test('geocoder', function(tt) {
   let container, map, geocoder;
 
   function setup(opts) {
@@ -13,13 +13,13 @@ test('geocoder', (tt) => {
     map.addControl(geocoder);
   }
 
-  tt.test('initialized', t => {
+  tt.test('initialized', function(t) {
     setup();
     t.ok(geocoder, 'geocoder is initialized');
     t.end();
   });
 
-  tt.test('set/get input', t => {
+  tt.test('set/get input', function(t) {
     t.plan(2);
     setup({ proximity: [-79.45, 43.65] });
     geocoder.query('Queen Street');
@@ -29,7 +29,7 @@ test('geocoder', (tt) => {
     }));
   });
 
-  tt.test('options', t => {
+  tt.test('options', function(t) {
     t.plan(1);
     setup({
       country: 'fr',
@@ -41,7 +41,7 @@ test('geocoder', (tt) => {
     }));
   });
 
-  tt.test('fire', t => {
+  tt.test('fire', function(t) {
     t.plan(2);
     setup();
 

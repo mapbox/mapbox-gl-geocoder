@@ -1,5 +1,7 @@
-require('../');
+'use strict';
+/* global mapboxgl */
 
+require('../');
 mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
 
 var map = new mapboxgl.Map({
@@ -16,7 +18,7 @@ button.textContent = 'click me';
 map.getContainer().querySelector('.mapboxgl-ctrl-bottom-left').appendChild(button);
 map.addControl(geocoder);
 
-map.on('load', () => {
+map.on('load', function() {
   button.addEventListener('click', function() {
     geocoder.query('Montreal Quebec');
   });
