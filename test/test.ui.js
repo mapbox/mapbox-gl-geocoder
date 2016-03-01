@@ -30,11 +30,11 @@ test('Geocoder#inputControl', function(tt) {
       clearEl.dispatchEvent(clickEvent);
     }));
 
-    geocoder.on('geocoder.loading', once(function() {
+    geocoder.on('loading', once(function() {
       t.ok('load event was emitted');
     }));
 
-    geocoder.on('geocoder.clear', once(function() {
+    geocoder.on('clear', once(function() {
       t.ok('input was cleared');
     }));
 

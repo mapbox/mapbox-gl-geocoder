@@ -15,41 +15,6 @@ Return the input
 
 Returns **Object** input
 
-# off
-
-Remove an event
-
-**Parameters**
-
--   `type` **String** Event name.
--   `fn` **Function** Function that should unsubscribe to the event emitted.
-
-Returns **Geocoder** this
-
-# on
-
-Subscribe to events that happen within the plugin.
-
-**Parameters**
-
--   `type` **String** name of event. Available events and the data passed into their respective event objects are:-   **geocoder.clear** `Emitted when the input is cleared`
-    -   **geocoder.loading** `Emitted when the geocoder is looking up a query`
-    -   **geocoder.input** `{ result } Fired when input is set`
-    -   **geocoder.error** `{ error } Error as string
--   `fn` **Function** function that's called when the event is emitted.
-
-Returns **Geocoder** this;
-
-# query
-
-Set input
-
-**Parameters**
-
--   `query` **Array or String** An array of coordinates [lng, lat] or location name as a string.
-
-Returns **Geocoder** this
-
 # mapboxgl.Geocoder
 
 A geocoder component using Mapbox Geocoding APi
@@ -72,3 +37,38 @@ map.addControl(geocoder);
 ```
 
 Returns **Geocoder** `this`
+
+# off
+
+Remove an event
+
+**Parameters**
+
+-   `type` **String** Event name.
+-   `fn` **Function** Function that should unsubscribe to the event emitted.
+
+Returns **Geocoder** this
+
+# on
+
+Subscribe to events that happen within the plugin.
+
+**Parameters**
+
+-   `type` **String** name of event. Available events and the data passed into their respective event objects are:-   **clear** `Emitted when the input is cleared`
+    -   **loading** `Emitted when the geocoder is looking up a query`
+    -   **result** `{ result } Fired when input is set`
+    -   **error** `{ error } Error as string
+-   `fn` **Function** function that's called when the event is emitted.
+
+Returns **Geocoder** this;
+
+# query
+
+Set input
+
+**Parameters**
+
+-   `query` **Array or String** An array of coordinates [lng, lat] or location name as a string.
+
+Returns **Geocoder** this

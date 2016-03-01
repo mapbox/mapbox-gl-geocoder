@@ -23,7 +23,7 @@ test('geocoder', function(tt) {
     t.plan(2);
     setup({ proximity: [-79.45, 43.65] });
     geocoder.query('Queen Street');
-    geocoder.on('geocoder.input', once(function(e) {
+    geocoder.on('result', once(function(e) {
       t.ok(geocoder.getResult(), 'feature is present from get');
       t.ok(e.result, 'feature is in the event object');
     }));
@@ -36,7 +36,7 @@ test('geocoder', function(tt) {
       types: 'region'
     });
     geocoder.query('Paris');
-    geocoder.on('geocoder.input', once(function(e) {
+    geocoder.on('result', once(function(e) {
       t.equals(e.result.place_name, 'Paris, France', 'one result is returned with expected place name');
     }));
   });

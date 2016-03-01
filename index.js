@@ -69,7 +69,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
           map.flyTo({ center: selected.center });
         }
         this._input = selected;
-        this.fire('geocoder.input', { result: selected });
+        this.fire('result', { result: selected });
       }
     }.bind(this));
 
@@ -106,7 +106,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
 
   _geocode: function(q, callback) {
     this._loadingEl.classList.toggle('active', true);
-    this.fire('geocoder.loading');
+    this.fire('loading');
 
     var options = {};
 
@@ -122,7 +122,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
 
     return this.client.geocodeForward(q.trim(), options, function(err, res) {
       this._loadingEl.classList.toggle('active', false);
-      if (err) return this.fire('geocoder.error', { error: err.message });
+      if (err) return this.fire('error', { error: err.message });
       if (!res.features.length) this._typeahead.selected = null;
       this._typeahead.update(res.features);
       this._clearEl.classList.toggle('active', res.features.length);
@@ -167,7 +167,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
     this._change();
     this._inputEl.focus();
     this._clearEl.classList.remove('active');
-    this.fire('geocoder.clear');
+    this.fire('clear');
   },
 
   /**
@@ -191,10 +191,10 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
   /**
    * Subscribe to events that happen within the plugin.
    * @param {String} type name of event. Available events and the data passed into their respective event objects are:
-   * - __geocoder.clear__ `Emitted when the input is cleared`
-   * - __geocoder.loading__ `Emitted when the geocoder is looking up a query`
-   * - __geocoder.input__ `{ result } Fired when input is set`
-   * - __geocoder.error__ `{ error } Error as string
+   * - __clear__ `Emitted when the input is cleared`
+   * - __loading__ `Emitted when the geocoder is looking up a query`
+   * - __result__ `{ result } Fired when input is set`
+   * - __error__ `{ error } Error as string
    * @param {Function} fn function that's called when the event is emitted.
    * @returns {Geocoder} this;
    */
