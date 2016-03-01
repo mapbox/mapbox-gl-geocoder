@@ -16,6 +16,8 @@ var EventEmitter = require('events').EventEmitter;
  * @param {String} [options.accessToken=null] Required unless `mapboxgl.accessToken` is set globally
  * @param {string|element} options.container html element to initialize the map in (or element id as string). if no container is passed map.getcontainer() is used instead.
  * @param {Array<Array<number>>} options.proximity If set, search results closer to these coordinates will be given higher priority.
+ * @param {Boolean} [options.flyTo=true] If false, animating the map to a selected result is disabled.
+ * @param {String} [options.placeholder="Search"] Override the default placeholder attribute value.
  * @param {string} options.types a comma seperated list of types that filter results to match those specified. See https://www.mapbox.com/developers/api/geocoding/#filter-type for available types.
  * @param {string} options.country a comma seperated list of country codes to limit results to specified country or countries.
  * @example
@@ -31,7 +33,9 @@ function Geocoder(options) {
 Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
 
   options: {
-    position: 'top-left'
+    position: 'top-left',
+    placeholder: 'Search',
+    flyTo: true
   },
 
   onAdd: function(map) {
@@ -50,7 +54,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
 
     var input = this._inputEl = document.createElement('input');
     input.type = 'text';
-    input.placeholder = 'Search';
+    input.placeholder = this.options.placeholder;
 
     input.addEventListener('keydown', debounce(function(e) {
       // TAB, ESC, LEFT, RIGHT, ENTER, UP, DOWN
@@ -62,11 +66,13 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
       var selected = this._typeahead.selected;
 
       if (selected) {
-        if (selected.bbox) {
-          var bbox = selected.bbox;
-          map.fitBounds([[bbox[0], bbox[1]],[bbox[2], bbox[3]]]);
-        } else {
-          map.flyTo({ center: selected.center });
+        if (this.options.flyTo) {
+          if (selected.bbox) {
+            var bbox = selected.bbox;
+            map.fitBounds([[bbox[0], bbox[1]],[bbox[2], bbox[3]]]);
+          } else {
+            map.flyTo({ center: selected.center });
+          }
         }
         this._input = selected;
         this.fire('result', { result: selected });
