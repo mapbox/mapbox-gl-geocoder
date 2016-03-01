@@ -1,15 +1,15 @@
 'use strict';
 
-const once = require('lodash.once');
-const test = require('tape');
+var once = require('lodash.once');
+var test = require('tape');
 
 test('Geocoder#inputControl', function(tt) {
-  let container, map, geocoder;
+  var container, map, geocoder;
 
-  const changeEvent = document.createEvent('HTMLEvents');
+  var changeEvent = document.createEvent('HTMLEvents');
   changeEvent.initEvent('change', true, false);
 
-  const clickEvent = document.createEvent('HTMLEvents');
+  var clickEvent = document.createEvent('HTMLEvents');
   clickEvent.initEvent('click', true, false);
 
   function setup(opts) {
@@ -51,7 +51,7 @@ test('Geocoder#inputControl', function(tt) {
     container = document.createElement('div');
     map = new mapboxgl.Map({ container: container });
 
-    const customEl = document.createElement('div');
+    var customEl = document.createElement('div');
     customEl.id = 'custom';
     map.getContainer().appendChild(customEl);
 
