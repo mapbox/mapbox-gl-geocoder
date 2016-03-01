@@ -47,6 +47,12 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
+  tt.test('placeholder', function(t) {
+    setup({ placeholder: 'foo to the bar' });
+    t.equal(map.getContainer().querySelector('.mapboxgl-ctrl-geocoder input').placeholder, 'foo to the bar', 'placeholder is custom');
+    t.end();
+  });
+
   tt.test('container', function(t) {
     container = document.createElement('div');
     map = new mapboxgl.Map({ container: container });
