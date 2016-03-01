@@ -46,7 +46,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
     el.className = 'mapboxgl-ctrl-geocoder';
 
     var icon = document.createElement('span');
-    icon.classList.add('geocoder-icon', 'geocoder-icon-search');
+    icon.className = 'geocoder-icon geocoder-icon-search';
 
     var input = this._inputEl = document.createElement('input');
     input.type = 'text';
@@ -77,11 +77,11 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
     actions.classList.add('geocoder-pin-right');
 
     var clear = this._clearEl = document.createElement('button');
-    clear.classList.add('geocoder-icon', 'geocoder-icon-close');
+    clear.className = 'geocoder-icon geocoder-icon-close';
     clear.addEventListener('click', this._clear.bind(this));
 
     var loading = this._loadingEl = document.createElement('span');
-    loading.classList.add('geocoder-icon', 'geocoder-icon-loading');
+    loading.className = 'geocoder-icon geocoder-icon-loading';
 
     actions.appendChild(clear);
     actions.appendChild(loading);
