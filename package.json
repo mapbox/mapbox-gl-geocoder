@@ -38,7 +38,7 @@
     "uglify-js": "^2.4.24"
   },
   "peerDependencies": {
-    "mapbox-gl": "^0.13.1 || ^0.14.0"
+    "mapbox-gl": "^0.13.1 || ^0.14.0 || ^0.15.0"
   },
   "dependencies": {
     "lodash.debounce": "^3.1.1",
