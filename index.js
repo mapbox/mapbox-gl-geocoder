@@ -64,9 +64,11 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
     input.placeholder = this.options.placeholder;
 
     input.addEventListener('keydown', debounce(function(e) {
+      if (!e.target.value) return this._clearEl.classList.remove('active');
+
       // TAB, ESC, LEFT, RIGHT, ENTER, UP, DOWN
       if (e.metaKey || [9, 27, 37, 39, 13, 38, 40].indexOf(e.keyCode) !== -1) return;
-      if (e.target.value.length) this._queryFromInput(e.target.value);
+      this._queryFromInput(e.target.value);
     }.bind(this)), 200);
 
     input.addEventListener('change', function() {
@@ -117,7 +119,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
   },
 
   _geocode: function(q, callback) {
-    this._loadingEl.classList.toggle('active', true);
+    this._loadingEl.classList.add('active');
     this.fire('loading');
 
     var options = {};
@@ -138,10 +140,15 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
       json: true
     }, function(err, res, body) {
       if (err) return this.fire('error', { error: err.message });
-      this._loadingEl.classList.toggle('active', false);
-      if (!body.features.length) this._typeahead.selected = null;
+      this._loadingEl.classList.remove('active');
+      if (body.features.length) {
+        this._clearEl.classList.add('active');
+      } else {
+        this._clearEl.classList.remove('active');
+        this._typeahead.selected = null;
+      }
+
       this._typeahead.update(body.features);
-      this._clearEl.classList.toggle('active', body.features.length);
       return callback(body.features);
     }.bind(this));
   },
