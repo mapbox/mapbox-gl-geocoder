@@ -1,5 +1,7 @@
 'use strict';
+
 /* global mapboxgl */
+if (!mapboxgl) throw new Error('include mapboxgl before mapbox-gl-geocoder.js');
 
 var MapboxClient = require('mapbox/lib/services/geocoder');
 var Typeahead = require('suggestions');
