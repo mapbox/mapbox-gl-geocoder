@@ -53,6 +53,17 @@ test('geocoder', function(tt) {
     }));
   });
 
+  tt.test('options:zoom', function(t) {
+    t.plan(1);
+    setup({ zoom: 12 });
+    geocoder.query('1714 14th St NW');
+    geocoder.on('result', once(function() {
+      map.once(map.on('moveend', function() {
+        t.equals(map.getZoom(), 12, 'Custom zoom is supported');
+      }));
+    }));
+  });
+
   tt.test('fire', function(t) {
     t.plan(2);
     setup();

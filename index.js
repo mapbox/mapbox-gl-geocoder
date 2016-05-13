@@ -1,11 +1,16 @@
 'use strict';
-/* global mapboxgl */
 
-var MapboxClient = require('mapbox/lib/services/geocoder');
+/* global mapboxgl */
+if (!mapboxgl) throw new Error('include mapboxgl before mapbox-gl-geocoder.js');
+
 var Typeahead = require('suggestions');
 var debounce = require('lodash.debounce');
 var extend = require('xtend');
+var request = require('request');
 var EventEmitter = require('events').EventEmitter;
+
+// Mapbox Geocoder version
+var API = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
 
 /**
  * A geocoder component using Mapbox Geocoding APi
@@ -16,6 +21,7 @@ var EventEmitter = require('events').EventEmitter;
  * @param {String} [options.accessToken=null] Required unless `mapboxgl.accessToken` is set globally
  * @param {string|element} options.container html element to initialize the map in (or element id as string). if no container is passed map.getcontainer() is used instead.
  * @param {Array<Array<number>>} options.proximity If set, search results closer to these coordinates will be given higher priority.
+ * @param {Number} [options.zoom=16] On geocoded result what zoom level should the map animate to.
  * @param {Boolean} [options.flyTo=true] If false, animating the map to a selected result is disabled.
  * @param {String} [options.placeholder="Search"] Override the default placeholder attribute value.
  * @param {string} options.types a comma seperated list of types that filter results to match those specified. See https://www.mapbox.com/developers/api/geocoding/#filter-type for available types.
@@ -35,6 +41,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
   options: {
     position: 'top-left',
     placeholder: 'Search',
+    zoom: 16,
     flyTo: true
   },
 
@@ -57,8 +64,10 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
     input.placeholder = this.options.placeholder;
 
     input.addEventListener('keydown', debounce(function(e) {
+      if (!e.target.value) return this._clearEl.classList.remove('active');
+
       // TAB, ESC, LEFT, RIGHT, ENTER, UP, DOWN
-      if ([9, 27, 37, 39, 13, 38, 40].indexOf(e.keyCode) !== -1) return;
+      if (e.metaKey || [9, 27, 37, 39, 13, 38, 40].indexOf(e.keyCode) !== -1) return;
       this._queryFromInput(e.target.value);
     }.bind(this)), 200);
 
@@ -70,7 +79,10 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
             var bbox = selected.bbox;
             map.fitBounds([[bbox[0], bbox[1]],[bbox[2], bbox[3]]]);
           } else {
-            map.flyTo({ center: selected.center });
+            map.flyTo({
+              center: selected.center,
+              zoom: this.options.zoom
+            });
           }
         }
         this._input = selected;
@@ -96,42 +108,48 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
     el.appendChild(actions);
 
     this.container.appendChild(el);
-    this.client = new MapboxClient(this.options.accessToken ?
-                                   this.options.accessToken :
-                                   mapboxgl.accessToken);
 
     // Override the control being added to control containers
     if (this.options.container) this.options.position = false;
 
-    this._typeahead = new Typeahead(input, []);
+    this._typeahead = new Typeahead(input, [], { filter: false });
     this._typeahead.getItemValue = function(item) { return item.place_name; };
 
     return el;
   },
 
   _geocode: function(q, callback) {
-    this._loadingEl.classList.toggle('active', true);
+    this._loadingEl.classList.add('active');
     this.fire('loading');
 
     var options = {};
 
-    if (this.options.proximity) {
-      options.proximity = {
-        longitude: this.options.proximity[0],
-        latitude: this.options.proximity[1]
-      };
-    }
-
+    if (this.options.proximity) options.proximity = this.options.proximity.join();
     if (this.options.country) options.country = this.options.country;
     if (this.options.types) options.types = this.options.types;
 
-    return this.client.geocodeForward(q.trim(), options, function(err, res) {
-      this._loadingEl.classList.toggle('active', false);
+    options.access_token = this.options.accessToken ?
+      this.options.accessToken :
+      mapboxgl.accessToken;
+
+    if (this.request) this.request.abort();
+
+    this.request = request({
+      url: API + encodeURIComponent(q.trim()) + '.json',
+      qs: options,
+      json: true
+    }, function(err, res, body) {
       if (err) return this.fire('error', { error: err.message });
-      if (!res.features.length) this._typeahead.selected = null;
-      this._typeahead.update(res.features);
-      this._clearEl.classList.toggle('active', res.features.length);
-      return callback(res.features);
+      this._loadingEl.classList.remove('active');
+      if (body.features.length) {
+        this._clearEl.classList.add('active');
+      } else {
+        this._clearEl.classList.remove('active');
+        this._typeahead.selected = null;
+      }
+
+      this._typeahead.update(body.features);
+      return callback(body.features);
     }.bind(this));
   },
 
