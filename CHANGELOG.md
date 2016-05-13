@@ -1,3 +1,13 @@
+### v1.1.0
+
+- [PERFORMANCE] Swap mapbox-sdk-js out for request
+- [FEATURE] Pass a custom zoom option [#33](https://github.com/mapbox/mapbox-gl-geocoder/issues/33)
+- [BUG] Dont call query function when input value is empty
+- [BUG] Disable geocoder on metaKey keydown event
+- [BUG] Drop the poorly supported toggle method
+- [BUG] Return error if mapboxgl is not included.
+- [BUG] Bump suggestions pkg to support a no filter option [#36](https://github.com/mapbox/mapbox-gl-geocoder/issues/36)
+
 ### v1.0.0
 
 - [FEATURE] Disable `map.flyTo` option [#20](https://github.com/mapbox/mapbox-gl-geocoder/issues/20)

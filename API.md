@@ -26,6 +26,7 @@ A geocoder component using Mapbox Geocoding APi
     -   `options.accessToken` **[String]** Required unless `mapboxgl.accessToken` is set globally (optional, default `null`)
     -   `options.container` **string or element** html element to initialize the map in (or element id as string). if no container is passed map.getcontainer() is used instead.
     -   `options.proximity` **Array&lt;Array&lt;number&gt;&gt;** If set, search results closer to these coordinates will be given higher priority.
+    -   `options.zoom` **[Number]** On geocoded result what zoom level should the map animate to. (optional, default `16`)
     -   `options.flyTo` **[Boolean]** If false, animating the map to a selected result is disabled. (optional, default `true`)
     -   `options.placeholder` **[String]** Override the default placeholder attribute value. (optional, default `"Search"`)
     -   `options.types` **string** a comma seperated list of types that filter results to match those specified. See <https://www.mapbox.com/developers/api/geocoding/#filter-type> for available types.
