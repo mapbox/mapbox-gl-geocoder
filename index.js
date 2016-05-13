@@ -3,11 +3,14 @@
 /* global mapboxgl */
 if (!mapboxgl) throw new Error('include mapboxgl before mapbox-gl-geocoder.js');
 
-var MapboxClient = require('mapbox/lib/services/geocoder');
 var Typeahead = require('suggestions');
 var debounce = require('lodash.debounce');
 var extend = require('xtend');
+var request = require('request');
 var EventEmitter = require('events').EventEmitter;
+
+// Mapbox Geocoder version
+var API = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
 
 /**
  * A geocoder component using Mapbox Geocoding APi
@@ -103,9 +106,6 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
     el.appendChild(actions);
 
     this.container.appendChild(el);
-    this.client = new MapboxClient(this.options.accessToken ?
-                                   this.options.accessToken :
-                                   mapboxgl.accessToken);
 
     // Override the control being added to control containers
     if (this.options.container) this.options.position = false;
@@ -122,23 +122,27 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
 
     var options = {};
 
-    if (this.options.proximity) {
-      options.proximity = {
-        longitude: this.options.proximity[0],
-        latitude: this.options.proximity[1]
-      };
-    }
-
+    if (this.options.proximity) options.proximity = this.options.proximity.join();
     if (this.options.country) options.country = this.options.country;
     if (this.options.types) options.types = this.options.types;
 
-    return this.client.geocodeForward(q.trim(), options, function(err, res) {
-      this._loadingEl.classList.toggle('active', false);
+    options.access_token = this.options.accessToken ?
+      this.options.accessToken :
+      mapboxgl.accessToken;
+
+    if (this.request) this.request.abort();
+
+    this.request = request({
+      url: API + encodeURIComponent(q.trim()) + '.json',
+      qs: options,
+      json: true
+    }, function(err, res, body) {
       if (err) return this.fire('error', { error: err.message });
-      if (!res.features.length) this._typeahead.selected = null;
-      this._typeahead.update(res.features);
-      this._clearEl.classList.toggle('active', res.features.length);
-      return callback(res.features);
+      this._loadingEl.classList.toggle('active', false);
+      if (!body.features.length) this._typeahead.selected = null;
+      this._typeahead.update(body.features);
+      this._clearEl.classList.toggle('active', body.features.length);
+      return callback(body.features);
     }.bind(this));
   },
 
