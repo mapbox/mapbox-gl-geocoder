@@ -63,7 +63,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
     input.addEventListener('keydown', debounce(function(e) {
       // TAB, ESC, LEFT, RIGHT, ENTER, UP, DOWN
       if ([9, 27, 37, 39, 13, 38, 40].indexOf(e.keyCode) !== -1) return;
-      this._queryFromInput(e.target.value);
+      if (e.target.value.length) this._queryFromInput(e.target.value);
     }.bind(this)), 200);
 
     input.addEventListener('change', function() {
