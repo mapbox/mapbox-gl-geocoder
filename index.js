@@ -11,6 +11,8 @@ var EventEmitter = require('events').EventEmitter;
 
 // Mapbox Geocoder version
 var API = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
+var mapzenAPI = 'https://search.mapzen.com/v1/search';
+var mapzenKey = 'search-mTPqbkM';
 
 /**
  * A geocoder component using Mapbox Geocoding APi
@@ -71,16 +73,19 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
       this._queryFromInput(e.target.value);
     }.bind(this)), 200);
 
+    //
+    //
+    // adjust bbox property
     input.addEventListener('change', function() {
       var selected = this._typeahead.selected;
       if (selected) {
         if (this.options.flyTo) {
-          if (selected.bbox && selected.context.length <= 3) {
+          if (selected.geometry.bbox) {
             var bbox = selected.bbox;
             map.fitBounds([[bbox[0], bbox[1]],[bbox[2], bbox[3]]]);
           } else {
             map.flyTo({
-              center: selected.center,
+              center: selected.geometry.coordinates,
               zoom: this.options.zoom
             });
           }
@@ -113,7 +118,11 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
     if (this.options.container) this.options.position = false;
 
     this._typeahead = new Typeahead(input, [], { filter: false });
-    this._typeahead.getItemValue = function(item) { return item.place_name; };
+    
+    //
+    //
+    // adjust for mapzen results
+    this._typeahead.getItemValue = function(item) { return item.properties.name; };
 
     return el;
   },
@@ -124,18 +133,23 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
 
     var options = {};
 
+    //
+    //
+    // adjust options 
     if (this.options.proximity) options.proximity = this.options.proximity.join();
     if (this.options.country) options.country = this.options.country;
     if (this.options.types) options.types = this.options.types;
 
-    options.access_token = this.options.accessToken ?
-      this.options.accessToken :
-      mapboxgl.accessToken;
+    //
+    //
+    // change to api_key
+    options.api_key = mapzenKey;
+    options.text = q;
 
     if (this.request) this.request.abort();
 
     this.request = request({
-      url: API + encodeURIComponent(q.trim()) + '.json',
+      url: mapzenAPI,
       qs: options,
       json: true
     }, function(err, res, body) {

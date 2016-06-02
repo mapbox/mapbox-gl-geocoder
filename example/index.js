@@ -2,7 +2,7 @@
 /* global mapboxgl */
 
 require('../');
-mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
+mapboxgl.accessToken = "pk.eyJ1IjoiZGFuc3dpY2siLCJhIjoieUZiWmwtVSJ9.0cPQywdbPVmvHiHJ6NwdXA";
 
 var map = new mapboxgl.Map({
   container: 'map',
