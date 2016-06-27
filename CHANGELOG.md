@@ -1,3 +1,10 @@
+### v1.2.0
+
+- [BUG] Broken `flyTo` animation when a country is selected. [#44](https://github.com/mapbox/mapbox-gl-geocoder/issues/44)
+- [BUG] Wrap mapboxgl.utils.wrap when coordinates are passed to query method. [#45](https://github.com/mapbox/mapbox-gl-geocoder/issues/45)
+- [FEATURE] Add a `results` event when geocoder returns results. [#39](https://github.com/mapbox/mapbox-gl-geocoder/issues/39)
+- [FEATURE] `setInput` method to initialize input without making an API request.
+
 ### v1.1.0
 
 - [PERFORMANCE] Swap mapbox-sdk-js out for request

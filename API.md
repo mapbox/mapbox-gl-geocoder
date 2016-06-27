@@ -60,6 +60,7 @@ Subscribe to events that happen within the plugin.
 
 -   `type` **String** name of event. Available events and the data passed into their respective event objects are:-   **clear** `Emitted when the input is cleared`
     -   **loading** `Emitted when the geocoder is looking up a query`
+    -   **results** `{ results } Fired when the geocoder returns a response`
     -   **result** `{ result } Fired when input is set`
     -   **error** `{ error } Error as string
 -   `fn` **Function** function that's called when the event is emitted.
@@ -68,10 +69,20 @@ Returns **Geocoder** this;
 
 # query
 
-Set input
+Set & query the input
 
 **Parameters**
 
 -   `query` **Array or String** An array of coordinates [lng, lat] or location name as a string.
+
+Returns **Geocoder** this
+
+# setInput
+
+Set input
+
+**Parameters**
+
+-   `value` **Array or String** An array of coordinates [lng, lat] or location name as a string. Calling this function just sets the input and does not trigger an API request.
 
 Returns **Geocoder** this

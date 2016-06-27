@@ -71,11 +71,14 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
       this._queryFromInput(e.target.value);
     }.bind(this)), 200);
 
-    input.addEventListener('change', function() {
+    input.addEventListener('change', function(e) {
+      if (e.target.value) this._clearEl.classList.add('active');
+
       var selected = this._typeahead.selected;
       if (selected) {
         if (this.options.flyTo) {
-          if (selected.bbox && selected.context.length <= 3) {
+          if (selected.bbox && selected.context && selected.context.length <= 3 ||
+              selected.bbox && !selected.context) {
             var bbox = selected.bbox;
             map.fitBounds([[bbox[0], bbox[1]],[bbox[2], bbox[3]]]);
           } else {
@@ -148,6 +151,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
         this._typeahead.selected = null;
       }
 
+      this.fire('results', { results: body.features });
       this._typeahead.update(body.features);
       return callback(body.features);
     }.bind(this));
@@ -171,8 +175,14 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
 
   _query: function(input) {
     if (!input) return;
-    var q = (typeof input === 'string') ? input : input.join();
-    this._geocode(q, function(results) {
+    if (typeof input === 'object' && input.length) {
+      input = [
+        mapboxgl.util.wrap(input[0], -180, 180),
+        mapboxgl.util.wrap(input[1], -180, 180)
+      ].join();
+    }
+
+    this._geocode(input, function(results) {
       if (!results.length) return;
       var result = results[0];
       this._results = results;
@@ -180,6 +190,23 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
       this._inputEl.value = result.place_name;
       this._change();
     }.bind(this));
+  },
+
+  _setInput: function(input) {
+    if (!input) return;
+    if (typeof input === 'object' && input.length) {
+      input = [
+        mapboxgl.util.wrap(input[0], -180, 180),
+        mapboxgl.util.wrap(input[1], -180, 180)
+      ].join();
+    }
+
+    // Set input value to passed value and clear everything else.
+    this._inputEl.value = input;
+    this._input = null;
+    this._typeahead.selected = null;
+    this._typeahead.clear();
+    this._change();
   },
 
   _clear: function() {
@@ -202,7 +229,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
   },
 
   /**
-   * Set input
+   * Set & query the input
    * @param {Array|String} query An array of coordinates [lng, lat] or location name as a string.
    * @returns {Geocoder} this
    */
@@ -212,10 +239,22 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
   },
 
   /**
+   * Set input
+   * @param {Array|String} value An array of coordinates [lng, lat] or location name as a string. Calling this function just sets the input and does not trigger an API request.
+   * @returns {Geocoder} this
+   */
+  setInput: function(value) {
+    this._setInput(value);
+    return this;
+  },
+
+  /**
    * Subscribe to events that happen within the plugin.
    * @param {String} type name of event. Available events and the data passed into their respective event objects are:
+   *
    * - __clear__ `Emitted when the input is cleared`
    * - __loading__ `Emitted when the geocoder is looking up a query`
+   * - __results__ `{ results } Fired when the geocoder returns a response`
    * - __result__ `{ result } Fired when input is set`
    * - __error__ `{ error } Error as string
    * @param {Function} fn function that's called when the event is emitted.
