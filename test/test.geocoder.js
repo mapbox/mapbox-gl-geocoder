@@ -35,7 +35,7 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options', function(t) {
-    t.plan(3);
+    t.plan(4);
     setup({
       flyTo: false,
       country: 'fr',
@@ -43,12 +43,15 @@ test('geocoder', function(tt) {
     });
 
     geocoder.query('Paris');
+
+    geocoder.on('results', once(function(e) {
+      t.ok(e.results.length, 'Event for results emitted');
+    }));
+
     geocoder.on('result', once(function(e) {
-      window.setTimeout(function() {
-        var center = map.getCenter();
-        t.equals(center.lng, 0, 'center.lng is unchanged');
-        t.equals(center.lat, 0, 'center.lat is unchanged');
-      }, 3000);
+      var center = map.getCenter();
+      t.equals(center.lng, 0, 'center.lng is unchanged');
+      t.equals(center.lat, 0, 'center.lat is unchanged');
       t.equals(e.result.place_name, 'Paris, France', 'one result is returned with expected place name');
     }));
   });

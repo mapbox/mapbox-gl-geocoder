@@ -149,6 +149,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
         this._typeahead.selected = null;
       }
 
+      this.fire('results', { results: body.features });
       this._typeahead.update(body.features);
       return callback(body.features);
     }.bind(this));
@@ -215,8 +216,10 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
   /**
    * Subscribe to events that happen within the plugin.
    * @param {String} type name of event. Available events and the data passed into their respective event objects are:
+   *
    * - __clear__ `Emitted when the input is cleared`
    * - __loading__ `Emitted when the geocoder is looking up a query`
+   * - __results__ `{ results } Fired when the geocoder returns a response`
    * - __result__ `{ result } Fired when input is set`
    * - __error__ `{ error } Error as string
    * @param {Function} fn function that's called when the event is emitted.
