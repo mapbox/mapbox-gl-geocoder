@@ -71,7 +71,9 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
       this._queryFromInput(e.target.value);
     }.bind(this)), 200);
 
-    input.addEventListener('change', function() {
+    input.addEventListener('change', function(e) {
+      if (e.target.value) this._clearEl.classList.add('active');
+
       var selected = this._typeahead.selected;
       if (selected) {
         if (this.options.flyTo) {
@@ -190,6 +192,23 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
     }.bind(this));
   },
 
+  _setInput: function(input) {
+    if (!input) return;
+    if (typeof input === 'object' && input.length) {
+      input = [
+        mapboxgl.util.wrap(input[0], -180, 180),
+        mapboxgl.util.wrap(input[1], -180, 180)
+      ].join();
+    }
+
+    // Set input value to passed value and clear everything else.
+    this._inputEl.value = input;
+    this._input = null;
+    this._typeahead.selected = null;
+    this._typeahead.clear();
+    this._change();
+  },
+
   _clear: function() {
     this._input = null;
     this._inputEl.value = '';
@@ -210,12 +229,22 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
   },
 
   /**
-   * Set input
+   * Set & query the input
    * @param {Array|String} query An array of coordinates [lng, lat] or location name as a string.
    * @returns {Geocoder} this
    */
   query: function(query) {
     this._query(query);
+    return this;
+  },
+
+  /**
+   * Set input
+   * @param {Array|String} value An array of coordinates [lng, lat] or location name as a string. Calling this function just sets the input and does not trigger an API request.
+   * @returns {Geocoder} this
+   */
+  setInput: function(value) {
+    this._setInput(value);
     return this;
   },
 

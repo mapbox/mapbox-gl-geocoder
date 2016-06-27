@@ -21,7 +21,7 @@ test('Geocoder#inputControl', function(tt) {
 
   tt.test('input', function(t) {
     setup();
-    t.plan(4);
+    t.plan(8);
     var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
     var clearEl = container.querySelector('.mapboxgl-ctrl-geocoder button');
     inputEl.addEventListener('change', once(function() {
@@ -36,6 +36,12 @@ test('Geocoder#inputControl', function(tt) {
 
     geocoder.on('clear', once(function() {
       t.ok('input was cleared');
+      t.notOk(clearEl.classList.contains('active'), 'clear link removed');
+
+      geocoder.setInput('Paris');
+      t.equals(inputEl.value, 'Paris', 'value populates in input');
+      t.ok(clearEl.classList.contains('active'), 'clear link is active');
+      t.notOk(geocoder.getResult(), 'input is set but result is null');
     }));
 
     geocoder.query([-79, 43]);
