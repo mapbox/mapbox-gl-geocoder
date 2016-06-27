@@ -173,8 +173,14 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
 
   _query: function(input) {
     if (!input) return;
-    var q = (typeof input === 'string') ? input : input.join();
-    this._geocode(q, function(results) {
+    if (typeof input === 'object' && input.length) {
+      input = [
+        mapboxgl.util.wrap(input[0], -180, 180),
+        mapboxgl.util.wrap(input[1], -180, 180)
+      ].join();
+    }
+
+    this._geocode(input, function(results) {
       if (!results.length) return;
       var result = results[0];
       this._results = results;
