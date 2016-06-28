@@ -6,7 +6,8 @@ if (!mapboxgl) throw new Error('include mapboxgl before mapbox-gl-geocoder.js');
 var Typeahead = require('suggestions');
 var debounce = require('lodash.debounce');
 var extend = require('xtend');
-var request = require('request');
+require('es6-promise').polyfill();
+var fetch = require('isomorphic-fetch');
 var EventEmitter = require('events').EventEmitter;
 
 // Mapbox Geocoder version
@@ -127,22 +128,37 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
 
     var options = {};
 
-    if (this.options.proximity) options.proximity = this.options.proximity.join();
-    if (this.options.country) options.country = this.options.country;
-    if (this.options.types) options.types = this.options.types;
 
-    options.access_token = this.options.accessToken ?
+    var token = this.options.accessToken ?
       this.options.accessToken :
       mapboxgl.accessToken;
 
-    if (this.request) this.request.abort();
+    var url = API + encodeURIComponent(q.trim()) + '.json?access_token=' + token
 
-    this.request = request({
-      url: API + encodeURIComponent(q.trim()) + '.json',
-      qs: options,
-      json: true
-    }, function(err, res, body) {
-      if (err) return this.fire('error', { error: err.message });
+    if (this.options.proximity){
+      url = url + '&proximity=' + this.options.proximity.join();
+    }
+    if (this.options.country){
+      url = url + '&country=' + this.options.country;
+    }
+    if (this.options.types){
+      url = url + '&types=' + this.options.types;
+    }
+
+    //REVISIT: the original code used to cancel existing requests at
+    //this point:
+    //if (this.request) this.request.cancel();
+    //Canceling a fetch is not currently possible, but is under discussion here:
+    //https://github.com/whatwg/fetch/issues/27
+    this.request = fetch(url)
+    .then(function(response) {
+      if (response.status >= 400) {
+        this._loadingEl.classList.remove('active');
+        return this.fire('error', { error: err.message });
+      }
+      return response.json();
+    }.bind(this))
+    .then(function(body) {
       this._loadingEl.classList.remove('active');
       if (body.features.length) {
         this._clearEl.classList.add('active');
@@ -150,7 +166,6 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
         this._clearEl.classList.remove('active');
         this._typeahead.selected = null;
       }
-
       this.fire('results', { results: body.features });
       this._typeahead.update(body.features);
       return callback(body.features);
