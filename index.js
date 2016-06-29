@@ -6,7 +6,6 @@ if (!mapboxgl) throw new Error('include mapboxgl before mapbox-gl-geocoder.js');
 var Typeahead = require('suggestions');
 var debounce = require('lodash.debounce');
 var extend = require('xtend');
-var request = require('request');
 var EventEmitter = require('events').EventEmitter;
 
 // Mapbox Geocoder version
@@ -46,6 +45,8 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
   },
 
   onAdd: function(map) {
+    this.request = new XMLHttpRequest();
+
     this.container = this.options.container ?
       typeof this.options.container === 'string' ?
       document.getElementById(this.options.container) :
@@ -125,36 +126,41 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
     this._loadingEl.classList.add('active');
     this.fire('loading');
 
-    var options = {};
+    var options = [];
+    if (this.options.proximity) options.push('proximity=' + this.options.proximity.join());
+    if (this.options.country) options.push('country=' + this.options.country);
+    if (this.options.types) options.push('types=' + this.options.types);
 
-    if (this.options.proximity) options.proximity = this.options.proximity.join();
-    if (this.options.country) options.country = this.options.country;
-    if (this.options.types) options.types = this.options.types;
+    var accessToken = this.options.accessToken ? this.options.accessToken : mapboxgl.accessToken;
+    options.push('access_token=' + accessToken);
 
-    options.access_token = this.options.accessToken ?
-      this.options.accessToken :
-      mapboxgl.accessToken;
-
-    if (this.request) this.request.abort();
-
-    this.request = request({
-      url: API + encodeURIComponent(q.trim()) + '.json',
-      qs: options,
-      json: true
-    }, function(err, res, body) {
-      if (err) return this.fire('error', { error: err.message });
+    this.request.abort();
+    this.request.open('GET', API + encodeURIComponent(q.trim()) + '.json?' + options.join('&'), true);
+    this.request.onload = function() {
       this._loadingEl.classList.remove('active');
-      if (body.features.length) {
-        this._clearEl.classList.add('active');
-      } else {
-        this._clearEl.classList.remove('active');
-        this._typeahead.selected = null;
-      }
+      if (this.request.status >= 200 && this.request.status < 400) {
+        var data = JSON.parse(this.request.responseText);
+        if (data.features.length) {
+          this._clearEl.classList.add('active');
+        } else {
+          this._clearEl.classList.remove('active');
+          this._typeahead.selected = null;
+        }
 
-      this.fire('results', { results: body.features });
-      this._typeahead.update(body.features);
-      return callback(body.features);
-    }.bind(this));
+        this.fire('results', { results: data.features });
+        this._typeahead.update(data.features);
+        return callback(data.features);
+      } else {
+        this.fire('error', { error: JSON.parse(this.request.responseText).message });
+      }
+    }.bind(this);
+
+    this.request.onerror = function() {
+      this._loadingEl.classList.remove('active');
+      this.fire('error', { error: JSON.parse(this.request.responseText).message });
+    }.bind(this);
+
+    this.request.send();
   },
 
   _queryFromInput: function(q) {
