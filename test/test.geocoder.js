@@ -56,6 +56,22 @@ test('geocoder', function(tt) {
     }));
   });
 
+  tt.test('options.bbox', function(t) {
+    t.plan(2);
+    setup({
+      bbox: [
+        -122.71901248631752,37.62347223479118,
+        -122.18070124967602, 37.87996631184369
+      ]
+    });
+
+    geocoder.query('Paris');
+    geocoder.on('results', once(function(e) {
+      t.ok(e.results.length, 'Event for results emitted');
+      t.equals(e.results[0].text, 'Paris Jewelry', 'Result is returned within a bbox');
+    }));
+  });
+
   tt.test('options:zoom', function(t) {
     t.plan(1);
     setup({ zoom: 12 });

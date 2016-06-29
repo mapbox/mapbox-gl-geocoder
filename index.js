@@ -20,6 +20,7 @@ var API = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
  * @param {String} [options.accessToken=null] Required unless `mapboxgl.accessToken` is set globally
  * @param {string|element} options.container html element to initialize the map in (or element id as string). if no container is passed map.getcontainer() is used instead.
  * @param {Array<Array<number>>} options.proximity If set, search results closer to these coordinates will be given higher priority.
+ * @param {Array<Array<number>>} options.bbox Limit results to a given bounding box provided as `[minX, minY, maxX, maxY]`.
  * @param {Number} [options.zoom=16] On geocoded result what zoom level should the map animate to.
  * @param {Boolean} [options.flyTo=true] If false, animating the map to a selected result is disabled.
  * @param {String} [options.placeholder="Search"] Override the default placeholder attribute value.
@@ -128,6 +129,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
 
     var options = [];
     if (this.options.proximity) options.push('proximity=' + this.options.proximity.join());
+    if (this.options.bbox) options.push('bbox=' + this.options.bbox.join());
     if (this.options.country) options.push('country=' + this.options.country);
     if (this.options.types) options.push('types=' + this.options.types);
 
