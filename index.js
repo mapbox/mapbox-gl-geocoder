@@ -18,7 +18,7 @@ var API = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
  * @param {Object} options
  * @param {String} [options.position="top-right"] A string indicating the control's position on the map. Options are `top-right`, `top-left`, `bottom-right`, `bottom-left`
  * @param {String} [options.accessToken=null] Required unless `mapboxgl.accessToken` is set globally
- * @param {string|element} options.container html element to initialize the map in (or element id as string). if no container is passed map.getcontainer() is used instead.
+ * @param {string|element} options.container The HTML element to append the Geocoder input to. if container is not specified, `map.getcontainer()` is used.
  * @param {Array<Array<number>>} options.proximity If set, search results closer to these coordinates will be given higher priority.
  * @param {Array<Array<number>>} options.bbox Limit results to a given bounding box provided as `[minX, minY, maxX, maxY]`.
  * @param {Number} [options.zoom=16] On geocoded result what zoom level should the map animate to.
