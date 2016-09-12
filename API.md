@@ -25,13 +25,13 @@ A geocoder component using Mapbox Geocoding APi
     -   `options.country` **string** a comma seperated list of country codes to limit results to specified country or countries.
     -   `options.accessToken` **[String]** Required unless `mapboxgl.accessToken` is set globally (optional, default `null`)
     -   `options.container` **string or element** The HTML element to append the Geocoder input to. if container is not specified, `map.getcontainer()` is used.
-    -   `options.proximity` **Array&lt;Array&lt;number&gt;&gt;** If set, search results closer to these coordinates will be given higher priority.
+    -   `options.proximity` **Array&lt;number&gt;** If set, search results closer to these coordinates will be given higher priority.
     -   `options.position` **[String]** A string indicating the control's position on the map. Options are `top-right`, `top-left`, `bottom-right`, `bottom-left` (optional, default `"top-right"`)
     -   `options.zoom` **[Number]** On geocoded result what zoom level should the map animate to. (optional, default `16`)
     -   `options.flyTo` **[Boolean]** If false, animating the map to a selected result is disabled. (optional, default `true`)
     -   `options.placeholder` **[String]** Override the default placeholder attribute value. (optional, default `"Search"`)
     -   `options.types` **string** a comma seperated list of types that filter results to match those specified. See <https://www.mapbox.com/developers/api/geocoding/#filter-type> for available types.
-    -   `options.bbox` **Array&lt;Array&lt;number&gt;&gt;** Limit results to a given bounding box provided as `[minX, minY, maxX, maxY]`.
+    -   `options.bbox` **Array&lt;number&gt;** Limit results to a given bounding box provided as `[minX, minY, maxX, maxY]`.
 
 **Examples**
 
