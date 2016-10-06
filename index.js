@@ -1,7 +1,11 @@
 'use strict';
 
-/* global mapboxgl */
-if (typeof mapboxgl === 'undefined') throw new Error('include mapboxgl before mapbox-gl-geocoder.js');
+var mapboxgl
+if (typeof window === 'undefined' || typeof window.mapbox === 'undefined') {
+  mapboxgl = require('mapbox-gl');
+} else {
+  mapboxgl = window.mapboxgl;
+}
 
 var Typeahead = require('suggestions');
 var debounce = require('lodash.debounce');
