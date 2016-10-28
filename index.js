@@ -37,7 +37,16 @@ function Geocoder(options) {
   this.options = extend({}, this.options, options);
 }
 
-Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
+function inherit(parent, props) {
+  var parentProto = typeof parent === 'function' ? parent.prototype : parent,
+    proto = Object.create(parentProto);
+  for (var i in props) {
+    Object.defineProperty(proto, i, Object.getOwnPropertyDescriptor(props, i));
+  }
+  return proto;
+}
+
+Geocoder.prototype = inherit(mapboxgl.Control, {
 
   options: {
     position: 'top-left',
