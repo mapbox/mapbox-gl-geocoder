@@ -46,6 +46,12 @@ function inherit(parent, props) {
   return proto;
 }
 
+function wrap(n, min, max) {
+    var d = max - min;
+    var w = ((n - min) % d + d) % d + min;
+    return (w === min) ? max : w;
+}
+
 Geocoder.prototype = inherit(mapboxgl.Control, {
 
   options: {
@@ -204,8 +210,8 @@ Geocoder.prototype = inherit(mapboxgl.Control, {
     if (!input) return;
     if (typeof input === 'object' && input.length) {
       input = [
-        mapboxgl.util.wrap(input[0], -180, 180),
-        mapboxgl.util.wrap(input[1], -180, 180)
+        wrap(input[0], -180, 180),
+        wrap(input[1], -180, 180)
       ].join();
     }
 
@@ -223,8 +229,8 @@ Geocoder.prototype = inherit(mapboxgl.Control, {
     if (!input) return;
     if (typeof input === 'object' && input.length) {
       input = [
-        mapboxgl.util.wrap(input[0], -180, 180),
-        mapboxgl.util.wrap(input[1], -180, 180)
+        wrap(input[0], -180, 180),
+        wrap(input[1], -180, 180)
       ].join();
     }
 
