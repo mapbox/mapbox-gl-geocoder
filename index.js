@@ -71,7 +71,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
       // TAB, ESC, LEFT, RIGHT, ENTER, UP, DOWN
       if (e.metaKey || [9, 27, 37, 39, 13, 38, 40].indexOf(e.keyCode) !== -1) return;
       this._queryFromInput(e.target.value);
-    }.bind(this)), 200);
+    }.bind(this), 200));
 
     input.addEventListener('change', function(e) {
       if (e.target.value) this._clearEl.classList.add('active');
