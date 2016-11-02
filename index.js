@@ -7,6 +7,7 @@ var Typeahead = require('suggestions');
 var debounce = require('lodash.debounce');
 var extend = require('xtend');
 var EventEmitter = require('events').EventEmitter;
+var exceptions = require('./exceptions.json');
 
 // Mapbox Geocoder version
 var API = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
@@ -79,10 +80,16 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
       var selected = this._typeahead.selected;
       if (selected) {
         if (this.options.flyTo) {
-          if (selected.bbox && selected.context && selected.context.length <= 3 ||
-              selected.bbox && !selected.context) {
+          if (!exceptions[selected.id] &&
+              (selected.bbox && selected.context && selected.context.length <= 3 ||
+              selected.bbox && !selected.context)) {
             var bbox = selected.bbox;
             map.fitBounds([[bbox[0], bbox[1]],[bbox[2], bbox[3]]]);
+          } else if (exceptions[selected.id]) {
+            map.flyTo({
+              center: selected.center,
+              zoom: exceptions[selected.id].zoom
+            });
           } else {
             map.flyTo({
               center: selected.center,

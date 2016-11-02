@@ -83,6 +83,36 @@ test('geocoder', function(tt) {
     }));
   });
 
+  tt.test('country bbox', function(t) {
+    t.plan(1);
+    setup({});
+    geocoder.query('Spain');
+    geocoder.on('result', once(function(e) {
+      map.once(map.on('moveend', function() {
+        var mapBBox = Array.prototype.concat.apply([], map.getBounds().toArray());
+
+        t.ok(mapBBox.some(function(coord, i) {
+          return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
+        }));
+      }));
+    }));
+  });
+
+  tt.test('country bbox exception', function(t) {
+    t.plan(1);
+    setup({});
+    geocoder.query('United States');
+    geocoder.on('result', once(function(e) {
+      map.once(map.on('moveend', function() {
+        var mapBBox = Array.prototype.concat.apply([], map.getBounds().toArray());
+
+        t.ok(mapBBox.every(function(coord, i) {
+          return coord.toPrecision(4) != e.result.bbox[i].toPrecision(4);
+        }));
+      }));
+    }));
+  });
+
   tt.test('fire', function(t) {
     t.plan(2);
     setup();
