@@ -86,6 +86,12 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
             var bbox = selected.bbox;
             map.fitBounds([[bbox[0], bbox[1]],[bbox[2], bbox[3]]]);
           } else if (exceptions[selected.id]) {
+            // Certain geocoder search results return (and therefore zoom to fit)
+            // an unexpectedly large bounding box: for example, both Russia and the
+            // USA span both sides of -180/180, or France includes the island of
+            // Reunion in the Indian Ocean. An incomplete list of these exceptions
+            // at ./exceptions.json provides "reasonable" bounding boxes as a
+            // short-term solution; this may be amended as necessary.
             map.fitBounds(exceptions[selected.id].bbox);
           } else {
             map.flyTo({
