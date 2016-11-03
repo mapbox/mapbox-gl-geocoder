@@ -83,6 +83,51 @@ test('geocoder', function(tt) {
     }));
   });
 
+  tt.test('country bbox', function(t) {
+    t.plan(1);
+    setup({});
+    geocoder.query('Spain');
+    geocoder.on('result', once(function(e) {
+      map.once(map.on('moveend', function() {
+        var mapBBox = Array.prototype.concat.apply([], map.getBounds().toArray());
+
+        t.ok(mapBBox.some(function(coord, i) {
+          return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
+        }));
+      }));
+    }));
+  });
+
+  tt.test('country bbox exception', function(t) {
+    t.plan(1);
+    setup({});
+    geocoder.query('United States');
+    geocoder.on('result', once(function(e) {
+      map.once(map.on('moveend', function() {
+        var mapBBox = Array.prototype.concat.apply([], map.getBounds().toArray());
+
+        t.ok(mapBBox.every(function(coord, i) {
+          return coord.toPrecision(4) != e.result.bbox[i].toPrecision(4);
+        }));
+      }));
+    }));
+  });
+
+  tt.test('lint exceptions file', function(t) {
+    var exceptions = require('../exceptions.json');
+    t.plan(Object.keys(exceptions).length * 5);
+
+    for (var id in exceptions) {
+      var ex = exceptions[id];
+
+      t.ok(ex.name, 'exception includes place name');
+      t.ok(ex.bbox, 'exception includes bbox');
+      t.ok(Array.isArray(ex.bbox), 'exception bbox is array');
+      t.equals(ex.bbox.length, 2, 'exception bbox has two corners');
+      t.ok(ex.bbox.every(function(corner) { return Array.isArray(corner) && corner.length === 2; }), 'exception bbox corners each have two components');
+    }
+  });
+
   tt.test('fire', function(t) {
     t.plan(2);
     setup();
