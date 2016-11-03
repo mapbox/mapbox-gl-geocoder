@@ -86,10 +86,7 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
             var bbox = selected.bbox;
             map.fitBounds([[bbox[0], bbox[1]],[bbox[2], bbox[3]]]);
           } else if (exceptions[selected.id]) {
-            map.flyTo({
-              center: selected.center,
-              zoom: exceptions[selected.id].zoom
-            });
+            map.fitBounds(exceptions[selected.id].bbox);
           } else {
             map.flyTo({
               center: selected.center,
