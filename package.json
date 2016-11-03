@@ -32,7 +32,7 @@
     "envify": "^3.4.1",
     "eslint": "^2.13.1",
     "lodash.once": "^4.0.0",
-    "mapbox-gl": "^0.20.1",
+    "mapbox-gl": "0.26.0",
     "smokestack": "^3.3.1",
     "tap-status": "^1.0.1",
     "tape": "^4.6.0",

@@ -37,7 +37,16 @@ function Geocoder(options) {
   this.options = extend({}, this.options, options);
 }
 
-Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
+function inherit(parent, props) {
+  var parentProto = typeof parent === 'function' ? parent.prototype : parent,
+    proto = Object.create(parentProto);
+  for (var i in props) {
+    Object.defineProperty(proto, i, Object.getOwnPropertyDescriptor(props, i));
+  }
+  return proto;
+}
+
+Geocoder.prototype = inherit(mapboxgl.Control, {
 
   options: {
     position: 'top-left',
@@ -194,10 +203,8 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
   _query: function(input) {
     if (!input) return;
     if (typeof input === 'object' && input.length) {
-      input = [
-        mapboxgl.util.wrap(input[0], -180, 180),
-        mapboxgl.util.wrap(input[1], -180, 180)
-      ].join();
+      // wrap to [-180, 180]
+      input = mapboxgl.LngLat.convert(input).wrap().toArray().join();
     }
 
     this._geocode(input, function(results) {
@@ -213,10 +220,8 @@ Geocoder.prototype = mapboxgl.util.inherit(mapboxgl.Control, {
   _setInput: function(input) {
     if (!input) return;
     if (typeof input === 'object' && input.length) {
-      input = [
-        mapboxgl.util.wrap(input[0], -180, 180),
-        mapboxgl.util.wrap(input[1], -180, 180)
-      ].join();
+      // wrap to [-180, 180]
+      input = mapboxgl.LngLat.convert(input).wrap().toArray().join();
     }
 
     // Set input value to passed value and clear everything else.

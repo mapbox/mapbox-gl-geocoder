@@ -65,10 +65,10 @@ test('geocoder', function(tt) {
       ]
     });
 
-    geocoder.query('Paris');
+    geocoder.query('London');
     geocoder.on('results', once(function(e) {
       t.ok(e.results.length, 'Event for results emitted');
-      t.equals(e.results[0].text, 'Paris Jewelry', 'Result is returned within a bbox');
+      t.equals(e.results[0].text, 'London Sole', 'Result is returned within a bbox');
     }));
   });
 
@@ -78,7 +78,7 @@ test('geocoder', function(tt) {
     geocoder.query('1714 14th St NW');
     geocoder.on('result', once(function() {
       map.once(map.on('moveend', function() {
-        t.equals(map.getZoom(), 12, 'Custom zoom is supported');
+        t.equals(parseInt(map.getZoom()), 12, 'Custom zoom is supported');
       }));
     }));
   });
