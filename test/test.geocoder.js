@@ -113,6 +113,21 @@ test('geocoder', function(tt) {
     }));
   });
 
+  tt.test('lint exceptions file', function(t) {
+    var exceptions = require('../exceptions.json');
+    t.plan(Object.keys(exceptions).length * 5);
+
+    for (var id in exceptions) {
+      var ex = exceptions[id];
+
+      t.ok(ex.name, 'exception includes place name');
+      t.ok(ex.bbox, 'exception includes bbox');
+      t.ok(Array.isArray(ex.bbox), 'exception bbox is array');
+      t.equals(ex.bbox.length, 2, 'exception bbox has two corners');
+      t.ok(ex.bbox.every(function(corner) { return Array.isArray(corner) && corner.length === 2; }), 'exception bbox corners each have two components');
+    }
+  });
+
   tt.test('fire', function(t) {
     t.plan(2);
     setup();
