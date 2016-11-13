@@ -4,7 +4,7 @@
   "description": "A geocoder control for Mapbox GL JS",
   "main": "index.js",
   "scripts": {
-    "start": "budo example/index.js:example/bundle.js --live",
+    "start": "budo example/index.js --live",
     "build": "NODE_ENV=production && browserify index.js | uglifyjs -c -m > dist/mapbox-gl-geocoder.js",
     "test": "npm run lint && browserify -t envify test/index.js | smokestack -b firefox | tap-status",
     "docs": "documentation index.js --format=md > API.md",
@@ -32,7 +32,7 @@
     "envify": "^3.4.1",
     "eslint": "^2.13.1",
     "lodash.once": "^4.0.0",
-    "mapbox-gl": "0.26.0",
+    "mapbox-gl": "0.27.0",
     "smokestack": "^3.3.1",
     "tap-status": "^1.0.1",
     "tape": "^4.6.0",
