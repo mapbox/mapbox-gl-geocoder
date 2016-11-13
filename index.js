@@ -51,10 +51,10 @@ MapboxGeocoder.prototype = {
     icon.className = 'geocoder-icon geocoder-icon-search';
 
     var input = this._inputEl = document.createElement('input');
-    input.type = 'text';
-    input.placeholder = this.options.placeholder;
+    this._inputEl.type = 'text';
+    this._inputEl.placeholder = this.options.placeholder;
 
-    input.addEventListener('keydown', debounce(function(e) {
+    this._inputEl.addEventListener('keydown', debounce(function(e) {
       if (!e.target.value) return this._clearEl.classList.remove('active');
 
       // TAB, ESC, LEFT, RIGHT, ENTER, UP, DOWN
@@ -62,7 +62,7 @@ MapboxGeocoder.prototype = {
       this._queryFromInput(e.target.value);
     }.bind(this), 200));
 
-    input.addEventListener('change', function(e) {
+    this._inputEl.addEventListener('change', function(e) {
       if (e.target.value) this._clearEl.classList.add('active');
 
       var selected = this._typeahead.selected;
@@ -107,10 +107,10 @@ MapboxGeocoder.prototype = {
     actions.appendChild(this._loadingEl);
 
     el.appendChild(icon);
-    el.appendChild(input);
+    el.appendChild(this._inputEl);
     el.appendChild(actions);
 
-    this._typeahead = new Typeahead(input, [], { filter: false });
+    this._typeahead = new Typeahead(this._inputEl, [], { filter: false });
     this._typeahead.getItemValue = function(item) { return item.place_name; };
 
     return el;
@@ -176,11 +176,6 @@ MapboxGeocoder.prototype = {
 
   _query: function(input) {
     if (!input) return;
-    if (typeof input === 'object' && input.length) {
-      // wrap to [-180, 180]
-      input = mapboxgl.LngLat.convert(input).wrap().toArray().join();
-    }
-
     this._geocode(input, function(results) {
       if (!results.length) return;
       var result = results[0];
@@ -193,11 +188,6 @@ MapboxGeocoder.prototype = {
 
   _setInput: function(input) {
     if (!input) return;
-    if (typeof input === 'object' && input.length) {
-      // wrap to [-180, 180]
-      input = mapboxgl.LngLat.convert(input).wrap().toArray().join();
-    }
-
     // Set input value to passed value and clear everything else.
     this._inputEl.value = input;
     this._input = null;
@@ -227,7 +217,7 @@ MapboxGeocoder.prototype = {
 
   /**
    * Set & query the input
-   * @param {Array|String} query An array of coordinates [lng, lat] or location name as a string.
+   * @param {string} query location name or other search input
    * @returns {Geocoder} this
    */
   query: function(query) {
@@ -237,7 +227,7 @@ MapboxGeocoder.prototype = {
 
   /**
    * Set input
-   * @param {Array|String} value An array of coordinates [lng, lat] or location name as a string. Calling this function just sets the input and does not trigger an API request.
+   * @param {string} query location name or other search input
    * @returns {Geocoder} this
    */
   setInput: function(value) {
