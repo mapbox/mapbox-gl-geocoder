@@ -114,7 +114,7 @@ test('geocoder', function(tt) {
   });
 
   tt.test('lint exceptions file', function(t) {
-    var exceptions = require('../exceptions.json');
+    var exceptions = require('./exceptions.js');
     t.plan(Object.keys(exceptions).length * 5);
 
     for (var id in exceptions) {

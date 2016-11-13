@@ -50,7 +50,7 @@ MapboxGeocoder.prototype = {
     var icon = document.createElement('span');
     icon.className = 'geocoder-icon geocoder-icon-search';
 
-    var input = this._inputEl = document.createElement('input');
+    this._inputEl = document.createElement('input');
     this._inputEl.type = 'text';
     this._inputEl.placeholder = this.options.placeholder;
 
@@ -126,7 +126,7 @@ MapboxGeocoder.prototype = {
     if (this.options.country) options.push('country=' + this.options.country);
     if (this.options.types) options.push('types=' + this.options.types);
 
-    var accessToken = this.options.accessToken ? this.options.accessToken : mapboxgl.accessToken;
+    var accessToken = this.options.accessToken;
     options.push('access_token=' + accessToken);
 
     this.request.abort();
