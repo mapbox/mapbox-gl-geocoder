@@ -1,6 +1,11 @@
 'use strict';
 var mapboxgl = require('mapbox-gl');
+var insertCss = require('insert-css');
+var fs = require('fs');
 mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
+
+insertCss(fs.readFileSync('./lib/mapbox-gl-geocoder.css', 'utf8'));
+insertCss(fs.readFileSync('./node_modules/mapbox-gl/dist/mapbox-gl.css', 'utf8'));
 
 var MapboxGeocoder = require('../');
 
@@ -14,7 +19,10 @@ var map = new mapboxgl.Map({
   zoom: 13
 });
 
-var geocoder = new MapboxGeocoder();
+var geocoder = new MapboxGeocoder({
+  accessToken: window.localStorage.getItem('MapboxAccessToken')
+});
+
 var button = document.createElement('button');
 button.textContent = 'click me';
 
@@ -28,7 +36,7 @@ map.on('load', function() {
 });
 
 geocoder.on('results', function(e) {
-  console.log('results: ', e.results);
+  console.log('results: ', e.features);
 });
 
 geocoder.on('error', function(e) {
