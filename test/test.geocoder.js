@@ -128,20 +128,5 @@ test('geocoder', function(tt) {
     }
   });
 
-  tt.test('fire', function(t) {
-    t.plan(2);
-    setup();
-
-    function custom(e) {
-      t.equals(e.custom, 'data');
-      geocoder.off('custom', custom);
-    }
-
-    geocoder.on('custom', custom);
-    geocoder.fire('custom', { custom: 'data'});
-    geocoder.fire('custom', { custom: 'data'});
-    t.ok(true, 'event fires only once');
-  });
-
   tt.end();
 });

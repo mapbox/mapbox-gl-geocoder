@@ -1,3 +1,14 @@
+### v2.0.0
+
+- Support for the Mapbox GL JS 0.27.0 API
+
+Breaking changes:
+
+- `setInput` and `query` methods no longer accept a `[lng, lat]` array. If you'd
+  like to search for a location and you have that data as `[lng, lat]`, call
+  `.join()` on the array before passing it to the geocoder control.
+- `.fire` method removed
+
 ### v1.3.2
 
 - Eliminate reliance on mapboxgl.util in preparation for [mapbox-gl-js#1408](https://github.com/mapbox/mapbox-gl-js/issues/1408)
