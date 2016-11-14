@@ -21,7 +21,7 @@ test('Geocoder#inputControl', function(tt) {
     opts.accessToken = process.env.MapboxAccessToken;
     container = document.createElement('div');
     map = new mapboxgl.Map({ container: container });
-    geocoder = MapboxGeocoder(opts);
+    geocoder = new MapboxGeocoder(opts);
     map.addControl(geocoder);
   }
 
@@ -67,23 +67,6 @@ test('Geocoder#inputControl', function(tt) {
   tt.test('placeholder', function(t) {
     setup({ placeholder: 'foo to the bar' });
     t.equal(map.getContainer().querySelector('.mapboxgl-ctrl-geocoder input').placeholder, 'foo to the bar', 'placeholder is custom');
-    t.end();
-  });
-
-  tt.test('container', function(t) {
-    container = document.createElement('div');
-    map = new mapboxgl.Map({ container: container });
-
-    var customEl = document.createElement('div');
-    customEl.id = 'custom';
-    map.getContainer().appendChild(customEl);
-
-    geocoder = MapboxGeocoder({
-      container: customEl
-    });
-
-    map.addControl(geocoder);
-    t.ok(map.getContainer().querySelector('#custom .mapboxgl-ctrl-geocoder'), 'appended to custom container');
     t.end();
   });
 

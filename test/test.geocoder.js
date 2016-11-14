@@ -26,7 +26,6 @@ test('geocoder', function(tt) {
   });
 
   tt.test('set/get input', function(t) {
-    t.plan(4);
     setup({ proximity: { longitude: -79.45, latitude: 43.65 } });
     geocoder.query('Queen Street');
     geocoder.on('result', once(function(e) {
@@ -35,6 +34,7 @@ test('geocoder', function(tt) {
         var center = map.getCenter();
         t.notEquals(center.lng, 0, 'center.lng changed');
         t.notEquals(center.lat, 0, 'center.lat changed');
+        t.end();
       });
     }));
   });
@@ -50,7 +50,7 @@ test('geocoder', function(tt) {
     geocoder.query('Paris');
 
     geocoder.on('results', once(function(e) {
-      t.ok(e.results.length, 'Event for results emitted');
+      t.ok(e.features.length, 'Event for results emitted');
     }));
 
     geocoder.on('result', once(function(e) {
@@ -72,8 +72,8 @@ test('geocoder', function(tt) {
 
     geocoder.query('London');
     geocoder.on('results', once(function(e) {
-      t.ok(e.results.length, 'Event for results emitted');
-      t.equals(e.results[0].text, 'London Sole', 'Result is returned within a bbox');
+      t.ok(e.features.length, 'Event for results emitted');
+      t.equals(e.features[0].text, 'London Sole', 'Result is returned within a bbox');
     }));
   });
 
