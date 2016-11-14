@@ -58,7 +58,6 @@
   top:10px;
   display:none;
   }
-  .mapboxgl-ctrl-geocoder .geocoder-pin-right *.active { display:block; }
 
 .mapboxgl-ctrl-geocoder,
 .mapboxgl-ctrl-geocoder ul {
