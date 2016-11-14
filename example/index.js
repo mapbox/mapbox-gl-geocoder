@@ -23,6 +23,8 @@ var geocoder = new MapboxGeocoder({
   accessToken: window.localStorage.getItem('MapboxAccessToken')
 });
 
+window.geocoder = geocoder;
+
 var button = document.createElement('button');
 button.textContent = 'click me';
 
