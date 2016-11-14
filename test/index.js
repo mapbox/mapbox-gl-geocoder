@@ -1,10 +1,6 @@
 'use strict';
 
 var test = require('tape');
-window.mapboxgl = require('mapbox-gl');
-require('../');
-
-mapboxgl.accessToken = process.env.MapboxAccessToken;
 
 // Tests
 require('./test.geocoder');

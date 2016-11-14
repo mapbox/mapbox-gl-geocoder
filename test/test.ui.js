@@ -1,7 +1,11 @@
 'use strict';
 
 var once = require('lodash.once');
+var MapboxGeocoder = require('../');
+var mapboxgl = require('mapbox-gl');
 var test = require('tape');
+
+mapboxgl.accessToken = process.env.MapboxAccessToken;
 
 test('Geocoder#inputControl', function(tt) {
   var container, map, geocoder;
@@ -13,9 +17,11 @@ test('Geocoder#inputControl', function(tt) {
   clickEvent.initEvent('click', true, false);
 
   function setup(opts) {
+    opts = opts || {};
+    opts.accessToken = process.env.MapboxAccessToken;
     container = document.createElement('div');
     map = new mapboxgl.Map({ container: container });
-    geocoder = new mapboxgl.Geocoder(opts);
+    geocoder = MapboxGeocoder(opts);
     map.addControl(geocoder);
   }
 
@@ -72,7 +78,7 @@ test('Geocoder#inputControl', function(tt) {
     customEl.id = 'custom';
     map.getContainer().appendChild(customEl);
 
-    geocoder = new mapboxgl.Geocoder({
+    geocoder = MapboxGeocoder({
       container: customEl
     });
 

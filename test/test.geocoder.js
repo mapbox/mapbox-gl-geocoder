@@ -1,15 +1,21 @@
 'use strict';
 
 var test = require('tape');
+var MapboxGeocoder = require('../');
+var mapboxgl = require('mapbox-gl');
 var once = require('lodash.once');
+
+mapboxgl.accessToken = process.env.MapboxAccessToken;
 
 test('geocoder', function(tt) {
   var container, map, geocoder;
 
   function setup(opts) {
+    opts = opts || {};
+    opts.accessToken = process.env.MapboxAccessToken;
     container = document.createElement('div');
     map = new mapboxgl.Map({ container: container });
-    geocoder = new mapboxgl.Geocoder(opts);
+    geocoder = new MapboxGeocoder(opts);
     map.addControl(geocoder);
   }
 
@@ -21,15 +27,15 @@ test('geocoder', function(tt) {
 
   tt.test('set/get input', function(t) {
     t.plan(4);
-    setup({ proximity: [-79.45, 43.65] });
+    setup({ proximity: { longitude: -79.45, latitude: 43.65 } });
     geocoder.query('Queen Street');
     geocoder.on('result', once(function(e) {
       t.ok(e.result, 'feature is in the event object');
-      map.once(map.on('moveend', function() {
+      map.once('moveend', function() {
         var center = map.getCenter();
         t.notEquals(center.lng, 0, 'center.lng changed');
         t.notEquals(center.lat, 0, 'center.lat changed');
-      }));
+      });
     }));
   });
 
@@ -76,9 +82,9 @@ test('geocoder', function(tt) {
     setup({ zoom: 12 });
     geocoder.query('1714 14th St NW');
     geocoder.on('result', once(function() {
-      map.once(map.on('moveend', function() {
+      map.once('moveend', function() {
         t.equals(parseInt(map.getZoom()), 12, 'Custom zoom is supported');
-      }));
+      });
     }));
   });
 
@@ -87,13 +93,13 @@ test('geocoder', function(tt) {
     setup({});
     geocoder.query('Spain');
     geocoder.on('result', once(function(e) {
-      map.once(map.on('moveend', function() {
+      map.once('moveend', function() {
         var mapBBox = Array.prototype.concat.apply([], map.getBounds().toArray());
 
         t.ok(mapBBox.some(function(coord, i) {
           return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
         }));
-      }));
+      });
     }));
   });
 
@@ -102,18 +108,18 @@ test('geocoder', function(tt) {
     setup({});
     geocoder.query('United States');
     geocoder.on('result', once(function(e) {
-      map.once(map.on('moveend', function() {
+      map.once('moveend', function() {
         var mapBBox = Array.prototype.concat.apply([], map.getBounds().toArray());
 
         t.ok(mapBBox.every(function(coord, i) {
           return coord.toPrecision(4) != e.result.bbox[i].toPrecision(4);
         }));
-      }));
+      });
     }));
   });
 
   tt.test('lint exceptions file', function(t) {
-    var exceptions = require('./exceptions.js');
+    var exceptions = require('../lib/exceptions.js');
     t.plan(Object.keys(exceptions).length * 5);
 
     for (var id in exceptions) {
