@@ -24,7 +24,6 @@ test('geocoder', function(tt) {
     setup({ proximity: [-79.45, 43.65] });
     geocoder.query('Queen Street');
     geocoder.on('result', once(function(e) {
-      t.ok(geocoder.getResult(), 'feature is present from get');
       t.ok(e.result, 'feature is in the event object');
       map.once(map.on('moveend', function() {
         var center = map.getCenter();

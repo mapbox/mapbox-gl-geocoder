@@ -27,16 +27,9 @@ map.on('load', function() {
   });
 });
 
-geocoder.on('result', getResult);
-
 geocoder.on('results', function(e) {
   console.log('results: ', e.results);
 });
-
-function getResult() {
-  console.log('Fetched', geocoder.getResult());
-  geocoder.off('result', getResult);
-}
 
 geocoder.on('error', function(e) {
   console.log('Error is', e.error);

@@ -41,7 +41,6 @@ test('Geocoder#inputControl', function(tt) {
       geocoder.setInput('Paris');
       t.equals(inputEl.value, 'Paris', 'value populates in input');
       t.ok(clearEl.classList.contains('active'), 'clear link is active');
-      t.notOk(geocoder.getResult(), 'input is set but result is null');
 
       geocoder.setInput([90, 45]);
       t.equals(inputEl.value, '90,45', 'valid LngLat value populates in input');
