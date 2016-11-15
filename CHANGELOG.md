@@ -8,6 +8,10 @@ Breaking changes:
 - `setInput` and `query` methods no longer accept a `[lng, lat]` array. If you'd
   like to search for a location and you have that data as `[lng, lat]`, call
   `.join()` on the array before passing it to the geocoder control.
+- `container` option removed - attaching the control outside of the map is no longer supported
+- `position` option removed - the `addControl` method now specifies the position
+- `proximity` option is now specified as a `{ longitude, latitude }` object instead of a two-element array
+- Other geocoder options match the API of the Mapbox JavaScript SDK
 - `.fire` method removed
 - Now exports `MapboxGeocoder` rather than attaches to `mapbox.Geocoder`
 
