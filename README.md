@@ -7,6 +7,15 @@ A geocoder control for [mapbox-gl-js](https://github.com/mapbox/mapbox-gl-js) us
 
 https://www.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder/
 
+## Usage with a module bundler
+
+This module exports a single class called MapboxGeocoder as its default export,
+so in browserify or webpack, you can require it like:
+
+```js
+var MapboxGeocoder = require('mapbox-gl-geocoder');
+```
+
 ### Deeper dive
 
 See [API.md](https://github.com/mapbox/mapbox-gl-geocoder/blob/master/API.md) for complete reference.
