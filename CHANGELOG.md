@@ -1,6 +1,7 @@
 ### v2.0.0
 
-- Support for the Mapbox GL JS 0.27.0 API
+- Support for the Mapbox GL JS 0.27.0 API. This is compatible with 0.27.0
+  and later, and not compatible with earlier versions.
 
 Breaking changes:
 
@@ -8,6 +9,7 @@ Breaking changes:
   like to search for a location and you have that data as `[lng, lat]`, call
   `.join()` on the array before passing it to the geocoder control.
 - `.fire` method removed
+- Now exports `MapboxGeocoder` rather than attaches to `mapbox.Geocoder`
 
 ### v1.3.2
 

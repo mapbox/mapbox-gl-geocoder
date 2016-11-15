@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "budo example/index.js --live -- -t brfs ",
-    "prepublish": "NODE_ENV=production && mkdir -p dist && browserify lib/index.js | uglifyjs -c -m > dist/mapbox-gl-geocoder.min.js",
+    "prepublish": "NODE_ENV=production && mkdir -p dist && browserify --standalone MapboxGeocoder lib/index.js | uglifyjs -c -m > dist/mapbox-gl-geocoder.min.js",
     "test": "npm run lint && browserify -t envify test/index.js | smokestack -b firefox | tap-status",
     "docs": "documentation index.js --format=md > API.md",
     "lint": "eslint lib"
