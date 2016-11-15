@@ -1,17 +1,30 @@
 'use strict';
-/* global mapboxgl */
-
-require('../');
+var mapboxgl = require('mapbox-gl');
+var insertCss = require('insert-css');
+var fs = require('fs');
 mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
 
+insertCss(fs.readFileSync('./lib/mapbox-gl-geocoder.css', 'utf8'));
+insertCss(fs.readFileSync('./node_modules/mapbox-gl/dist/mapbox-gl.css', 'utf8'));
+
+var MapboxGeocoder = require('../');
+
+var mapDiv = document.body.appendChild(document.createElement('div'));
+mapDiv.style = 'position:absolute;top:0;right:0;left:0;bottom:0;';
+
 var map = new mapboxgl.Map({
-  container: 'map',
+  container: mapDiv,
   style: 'mapbox://styles/mapbox/streets-v9',
   center: [-79.4512, 43.6568],
   zoom: 13
 });
 
-var geocoder = new mapboxgl.Geocoder();
+var geocoder = new MapboxGeocoder({
+  accessToken: window.localStorage.getItem('MapboxAccessToken')
+});
+
+window.geocoder = geocoder;
+
 var button = document.createElement('button');
 button.textContent = 'click me';
 
@@ -24,16 +37,9 @@ map.on('load', function() {
   });
 });
 
-geocoder.on('result', getResult);
-
 geocoder.on('results', function(e) {
-  console.log('results: ', e.results);
+  console.log('results: ', e.features);
 });
-
-function getResult() {
-  console.log('Fetched', geocoder.getResult());
-  geocoder.off('result', getResult);
-}
 
 geocoder.on('error', function(e) {
   console.log('Error is', e.error);

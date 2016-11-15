@@ -1,2 +1,2 @@
 env.test.sh
-node_modules/
+dist

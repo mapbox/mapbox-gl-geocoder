@@ -1,3 +1,20 @@
+### v2.0.0
+
+- Support for the Mapbox GL JS 0.27.0 API. This is compatible with 0.27.0
+  and later, and not compatible with earlier versions.
+
+Breaking changes:
+
+- `setInput` and `query` methods no longer accept a `[lng, lat]` array. If you'd
+  like to search for a location and you have that data as `[lng, lat]`, call
+  `.join()` on the array before passing it to the geocoder control.
+- `container` option removed - attaching the control outside of the map is no longer supported
+- `position` option removed - the `addControl` method now specifies the position
+- `proximity` option is now specified as a `{ longitude, latitude }` object instead of a two-element array
+- Other geocoder options match the API of the Mapbox JavaScript SDK
+- `.fire` method removed
+- Now exports `MapboxGeocoder` rather than attaches to `mapbox.Geocoder`
+
 ### v1.3.2
 
 - Eliminate reliance on mapboxgl.util in preparation for [mapbox-gl-js#1408](https://github.com/mapbox/mapbox-gl-js/issues/1408)
