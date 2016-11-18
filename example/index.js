@@ -28,6 +28,10 @@ window.geocoder = geocoder;
 var button = document.createElement('button');
 button.textContent = 'click me';
 
+var removeBtn = document.body.appendChild(document.createElement('button'));
+removeBtn.style = 'position:absolute;z-index:10;top:10px;left:10px;';
+removeBtn.textContent = 'Remove geocoder control';
+
 map.getContainer().querySelector('.mapboxgl-ctrl-bottom-left').appendChild(button);
 map.addControl(geocoder);
 
@@ -35,6 +39,9 @@ map.on('load', function() {
   button.addEventListener('click', function() {
     geocoder.query('Montreal Quebec');
   });
+  removeBtn.addEventListener('click', function() {
+    map.removeControl(geocoder);
+  })
 });
 
 geocoder.on('results', function(e) {
