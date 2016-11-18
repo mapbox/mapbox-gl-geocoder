@@ -1,3 +1,7 @@
+### v2.0.1
+
+- Add `.onRemove` method to be used by the Mapbox GL JS [IControl API](https://www.mapbox.com/mapbox-gl-js/api/#IControl#onRemove)
+
 ### v2.0.0
 
 - Support for the Mapbox GL JS 0.27.0 API. This is compatible with 0.27.0
