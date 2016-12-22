@@ -13,7 +13,7 @@ This module exports a single class called MapboxGeocoder as its default export,
 so in browserify or webpack, you can require it like:
 
 ```js
-var MapboxGeocoder = require('mapbox-gl-geocoder');
+var MapboxGeocoder = require('@mapbox/mapbox-gl-geocoder');
 ```
 
 ### Deeper dive
