@@ -25,5 +25,4 @@ Lastly, run the test command from the console:
 - `git tag -a vX.X.X -m 'vX.X.X'`
 - `git push --tags`
 - `npm publish`
-- Deploy packaged plugin in [mapbox-gl-plugins](https://github.com/mapbox/mapbox-gl-plugins)
-- Update version links in documentation
+- Update version number in GL JS examples ([one](https://github.com/mapbox/mapbox-gl-js/blob/mb-pages/docs/_posts/examples/3400-01-12-mapbox-gl-geocoder.html), [two](https://github.com/mapbox/mapbox-gl-js/blob/mb-pages/docs/_posts/examples/3400-01-16-point-from-geocoder-result.html))
