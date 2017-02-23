@@ -73,7 +73,7 @@ test('geocoder', function(tt) {
     geocoder.query('London');
     geocoder.on('results', once(function(e) {
       t.ok(e.features.length, 'Event for results emitted');
-      t.equals(e.features[0].text, 'London Sole', 'Result is returned within a bbox');
+      t.equals(e.features[0].text, 'Jack London Square', 'Result is returned within a bbox');
     }));
   });
 
