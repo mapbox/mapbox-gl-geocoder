@@ -8,7 +8,7 @@ A geocoder component using Mapbox Geocoding API
 
 -   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
     -   `options.accessToken` **\[[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)]** Required. (optional, default `null`)
-    -   `options.zoom` **\[[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)]** On geocoded result what zoom level should the map animate to. (optional, default `16`)
+    -   `options.zoom` **\[[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)]** On geocoded result what zoom level should the map animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`. (optional, default `16`)
     -   `options.flyTo` **\[[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)]** If false, animating the map to a selected result is disabled. (optional, default `true`)
     -   `options.placeholder` **\[[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)]** Override the default placeholder attribute value. (optional, default `"Search"`)
 
