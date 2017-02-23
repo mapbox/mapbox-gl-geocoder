@@ -77,6 +77,19 @@ test('geocoder', function(tt) {
     }));
   });
 
+  tt.test('options.limit', function(t) {
+    t.plan(1);
+    setup({
+      flyTo: false,
+      limit: 6
+    });
+
+    geocoder.query('London');
+    geocoder.on('results', once(function(e) {
+      t.equal(e.features.length, 6, 'Results limit applied');
+    }));
+  });
+
   tt.test('options:zoom', function(t) {
     t.plan(1);
     setup({ zoom: 12 });

@@ -23,6 +23,8 @@ A geocoder component using Mapbox Geocoding API
         for available types.
     -   `options.country` **\[[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)]** a comma separated list of country codes to
         limit results to specified country or countries.
+    -   `options.minLength` **\[[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)]** Minimum number of characters to enter before results are shown. (optional, default `2`)
+    -   `options.limit` **\[[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)]** Maximum number of results to show. (optional, default `5`)
 
 **Examples**
 
