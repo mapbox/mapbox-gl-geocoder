@@ -11,6 +11,18 @@ A geocoder component using Mapbox Geocoding API
     -   `options.zoom` **\[[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)]** On geocoded result what zoom level should the map animate to. (optional, default `16`)
     -   `options.flyTo` **\[[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)]** If false, animating the map to a selected result is disabled. (optional, default `true`)
     -   `options.placeholder` **\[[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)]** Override the default placeholder attribute value. (optional, default `"Search"`)
+    -   `options.proximity` **\[[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** a proximity argument: this is
+        a geographical point given as an object with latitude and longitude
+        properties. Search results closer to this point will be given
+        higher priority.
+    -   `options.bbox` **\[[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)]** a bounding box argument: this is
+        a bounding box given as an array in the format [minX, minY, maxX, maxY].
+        Search results will be limited to the bounding box.
+    -   `options.types` **\[[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)]** a comma seperated list of types that filter
+        results to match those specified. See <https://www.mapbox.com/developers/api/geocoding/#filter-type>
+        for available types.
+    -   `options.country` **\[[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)]** a comma separated list of country codes to
+        limit results to specified country or countries.
 
 **Examples**
 
