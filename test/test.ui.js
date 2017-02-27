@@ -30,10 +30,11 @@ test('Geocoder#inputControl', function(tt) {
     var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
     var clearEl = container.querySelector('.mapboxgl-ctrl-geocoder button');
 
-    geocoder.query('-79,43');
+    t.plan(6);
 
-    geocoder.on('loading', once(function() {
+    geocoder.on('loading', once(function(e) {
       t.pass('load event was emitted');
+      t.equals(e.query, '-79,43', 'loading event passes query parameter');
     }));
 
     geocoder.on('result', once(function() {
@@ -52,6 +53,7 @@ test('Geocoder#inputControl', function(tt) {
       t.end();
     }));
 
+    geocoder.query('-79,43');
   });
 
   tt.test('placeholder', function(t) {
