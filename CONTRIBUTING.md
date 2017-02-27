@@ -18,7 +18,7 @@ Lastly, run the test command from the console:
 
 ## Deploying
 
-- `npm run build && npm run docs`
+- `npm run prepublish && npm run docs`
 - Update the version key in [package.json](https://github.com/mapbox/mapbox-gl-geocoder/blob/master/package.json#L3)
 - Outline changes in [CHANGELOG.md](https://github.com/mapbox/mapbox-gl-geocoder/blob/master/CHANGELOG.md)
 - Commit and push
