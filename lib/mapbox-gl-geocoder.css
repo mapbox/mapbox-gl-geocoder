@@ -97,10 +97,15 @@
     color:#404040;
     }
     .mapboxgl-ctrl-geocoder ul > li:last-child > a { border-bottom:none; }
-    .mapboxgl-ctrl-geocoder ul > li.active > a,
     .mapboxgl-ctrl-geocoder ul > li > a:hover {
       color:#202020;
-      background-color:#eee;
+      background-color:#f3f3f3;
+      text-decoration:none;
+      cursor:pointer;
+      }
+    .mapboxgl-ctrl-geocoder ul > li.active > a {
+      color:#202020;
+      background-color:#e3e3e3;
       text-decoration:none;
       cursor:pointer;
       }
