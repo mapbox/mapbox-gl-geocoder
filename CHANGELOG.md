@@ -1,3 +1,12 @@
+### v2.1.0
+
+- Different background colors for hover and active states [#110](https://github.com/mapbox/mapbox-gl-geocoder/pull/110)
+- Add limit and minLength options [#103](https://github.com/mapbox/mapbox-gl-geocoder/pull/103)
+- Add query parameter to loading event [#102](https://github.com/mapbox/mapbox-gl-geocoder/pull/102)
+- Add automatic deployment to s3 [#100](https://github.com/mapbox/mapbox-gl-geocoder/pull/100)
+- Move package to @mapbox namespace [#90](https://github.com/mapbox/mapbox-gl-geocoder/pull/90)
+- Various bug and documentation fixes
+
 ### v2.0.1
 
 - Add `.onRemove` method to be used by the Mapbox GL JS [IControl API](https://www.mapbox.com/mapbox-gl-js/api/#IControl#onRemove)
