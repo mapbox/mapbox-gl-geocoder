@@ -62,10 +62,10 @@ Subscribe to events that happen within the plugin.
 **Parameters**
 
 -   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** name of event. Available events and the data passed into their respective event objects are:-   **clear** `Emitted when the input is cleared`
-    -   **loading** `{ query } Emitted when the geocoder is looking up a query`
-    -   **results** `{ results } Fired when the geocoder returns a response`
-    -   **result** `{ result } Fired when input is set`
-    -   **error** \`{ error } Error as string
+    -   **loading** `{ query }` Emitted when the geocoder is looking up a query
+    -   **results** `{ results }` Fired when the geocoder returns a response
+    -   **result** `{ result }` Fired when input is set
+    -   **error** `{ error }` Error as string
 -   `fn` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** function that's called when the event is emitted.
 
 Returns **[MapboxGeocoder](#mapboxgeocoder)** this;
