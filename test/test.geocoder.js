@@ -101,6 +101,32 @@ test('geocoder', function(tt) {
     }));
   });
 
+  tt.test('options.localGeocoder', function(t) {
+    t.plan(3);
+    setup({
+      flyTo: false,
+      limit: 6,
+      localGeocoder: function(q) {
+          return q;
+      }
+    });
+
+    geocoder.query('-30,150');
+    geocoder.once('results', once(function(e) {
+      t.equal(e.features.length, 1, 'Local geocoder used');
+
+      geocoder.query('London');
+      geocoder.once('results', once(function(e) {
+        t.equal(e.features.length, 7, 'Local geocoder suppliment remote response');
+
+        geocoder.query('London');
+        geocoder.once('results', once(function(e) {
+          t.equal(e.features[0], 'London', 'Local geocoder results above remote response');
+        }));
+      }));
+    }));
+  });
+
   tt.test('country bbox', function(t) {
     t.plan(1);
     setup({});
