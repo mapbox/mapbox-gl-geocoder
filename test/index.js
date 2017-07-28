@@ -7,9 +7,9 @@ require('./test.geocoder');
 require('./test.ui');
 
 // close the smokestack window once tests are complete
-test('shutdown', (t) => {
+test('shutdown', function(t) {
   t.end();
-  setTimeout(() => {
+  setTimeout(function() {
     window.close();
-  });
+  }, 0);
 });

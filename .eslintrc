@@ -3,5 +3,9 @@
     "node": true,
     "browser": true
   },
-  "extends": "eslint:recommended"
+  "extends": "eslint:recommended",
+  "rules": {
+    "indent": ["error", 2],
+    "no-console": "warn"
+  }
 }
