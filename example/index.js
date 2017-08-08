@@ -10,7 +10,11 @@ insertCss(fs.readFileSync('./node_modules/mapbox-gl/dist/mapbox-gl.css', 'utf8')
 var MapboxGeocoder = require('../');
 
 var mapDiv = document.body.appendChild(document.createElement('div'));
-mapDiv.style = 'position:absolute;top:0;right:0;left:0;bottom:0;';
+mapDiv.style.position = 'absolute';
+mapDiv.style.top = 0;
+mapDiv.style.right = 0;
+mapDiv.style.left = 0;
+mapDiv.style.bottom = 0;
 
 var map = new mapboxgl.Map({
   container: mapDiv,
@@ -29,7 +33,10 @@ var button = document.createElement('button');
 button.textContent = 'click me';
 
 var removeBtn = document.body.appendChild(document.createElement('button'));
-removeBtn.style = 'position:absolute;z-index:10;top:10px;left:10px;';
+removeBtn.style.position = 'absolute';
+removeBtn.style.zIndex = 10;
+removeBtn.style.top = '10px';
+removeBtn.style.left = '10px';
 removeBtn.textContent = 'Remove geocoder control';
 
 map.getContainer().querySelector('.mapboxgl-ctrl-bottom-left').appendChild(button);
