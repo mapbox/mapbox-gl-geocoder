@@ -1,3 +1,7 @@
+### v2.1.1
+
+- Adds option for language parameter [#126](https://github.com/mapbox/mapbox-gl-geocoder/pull/126). 
+
 ### v2.1.0
 
 - Different background colors for hover and active states [#110](https://github.com/mapbox/mapbox-gl-geocoder/pull/110)
