@@ -1,3 +1,10 @@
+### v2.1.2
+
+- Bump suggestions version which includes:
+   - [bug] prevent form submission on selecting a result from the list [#15](https://github.com/tristen/suggestions/pull/15)
+   - [bug] ensure paste events open list [#17](https://github.com/tristen/suggestions/pull/17)
+   - [bug] use mouseup rather than mousedown for list selection [#18](https://github.com/tristen/suggestions/pull/18)
+
 ### v2.1.1
 
 - Adds option for language parameter [#126](https://github.com/mapbox/mapbox-gl-geocoder/pull/126). 
