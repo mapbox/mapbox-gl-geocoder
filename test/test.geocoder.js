@@ -146,5 +146,37 @@ test('geocoder', function(tt) {
     }
   });
 
+  tt.test('options.filter', function(t) {
+    t.plan(2);
+    /* testing filter by searching for a place Heathcote in New South Wales, Australia,
+     * which also exists in a part of Victoria which is still inside the New South Wales bbox. */
+    setup({
+      country: 'au',
+      types: 'locality',
+      bbox: [
+        140.999260,-37.595494,
+        159.516770,-28.071477
+      ], // bbox for New South Wales, but Heathcote, Victoria is still within this bbox
+      filter: function (item) {
+        // returns true if item contains 'New South Wales' as the region
+        return item.context.map((i) => {
+            return (i.id.startsWith('region') && i.text == "New South Wales")
+        }).reduce((acc, cur) => {
+            return acc || cur;
+        });
+      }
+    });
+
+    geocoder.query('Heathcote');
+    geocoder.on('results', once(function(e) {
+      t.ok(e.features.map((feature) => {
+          return feature.place_name;
+      }).includes('Heathcote, Sydney, New South Wales, Australia'), 'feature included in filter');
+      t.notOk(e.features.map((feature) => {
+          return feature.place_name;
+      }).includes('Heathcote, Heathcote, Victoria, Australia'), 'feature excluded in filter');
+    }));
+  });
+
   tt.end();
 });
