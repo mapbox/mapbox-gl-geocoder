@@ -4,6 +4,11 @@ var insertCss = require('insert-css');
 var fs = require('fs');
 mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
 
+var meta = document.createElement('meta');
+meta.name = 'viewport';
+meta.content = 'initial-scale=1,maximum-scale=1,user-scalable=no';
+document.getElementsByTagName('head')[0].appendChild(meta);
+
 insertCss(fs.readFileSync('./lib/mapbox-gl-geocoder.css', 'utf8'));
 insertCss(fs.readFileSync('./node_modules/mapbox-gl/dist/mapbox-gl.css', 'utf8'));
 
