@@ -3,6 +3,7 @@
   "version": "2.1.2",
   "description": "A geocoder control for Mapbox GL JS",
   "main": "lib/index.js",
+  "style": "lib/mapbox-gl-geocoder.css",
   "scripts": {
     "start": "budo example/index.js --live -- -t brfs ",
     "prepublish": "NODE_ENV=production && mkdir -p dist && browserify --standalone MapboxGeocoder lib/index.js | uglifyjs -c -m > dist/mapbox-gl-geocoder.min.js && cp lib/mapbox-gl-geocoder.css dist/",
