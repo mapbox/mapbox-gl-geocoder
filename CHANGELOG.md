@@ -1,3 +1,9 @@
+### v2.2.0
+
+- Add filter option [#133](https://github.com/mapbox/mapbox-gl-geocoder/pull/133)
+- Add localGeocoder option [#136](https://github.com/mapbox/mapbox-gl-geocoder/pull/136)
+- Check for shadowRoot retargeting for keypressdown event [#134](https://github.com/mapbox/mapbox-gl-geocoder/pull/134)
+
 ### v2.1.2
 
 - Bump suggestions version which includes:
