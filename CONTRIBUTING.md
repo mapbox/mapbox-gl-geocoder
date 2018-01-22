@@ -25,4 +25,4 @@ Lastly, run the test command from the console:
 - `git tag -a vX.X.X -m 'vX.X.X'`
 - `git push --tags`
 - `npm publish`
-- Update version number in GL JS examples ([one](https://github.com/mapbox/mapbox-gl-js/blob/mb-pages/docs/_posts/examples/3400-01-12-mapbox-gl-geocoder.html), [two](https://github.com/mapbox/mapbox-gl-js/blob/mb-pages/docs/_posts/examples/3400-01-16-point-from-geocoder-result.html))
+- Update version number in GL JS examples ([one](https://github.com/mapbox/mapbox-gl-js/blob/gh-pages/docs/pages/example/mapbox-gl-geocoder.html), [two](https://github.com/mapbox/mapbox-gl-js/blob/gh-pages/docs/pages/example/point-from-geocoder-result.html), [three](https://github.com/mapbox/mapbox-gl-js/blob/gh-pages/docs/pages/example/mapbox-gl-geocoder-outside-the-map.html), [four](https://github.com/mapbox/mapbox-gl-js/blob/gh-pages/docs/pages/example/mapbox-gl-geocoder-limit-region.html), [five](https://github.com/mapbox/mapbox-gl-js/blob/gh-pages/docs/pages/example/mapbox-gl-geocoder-local-geocoder.html), [six](https://github.com/mapbox/mapbox-gl-js/blob/gh-pages/docs/pages/example/mapbox-gl-geocoder-proximity-bias.html))
