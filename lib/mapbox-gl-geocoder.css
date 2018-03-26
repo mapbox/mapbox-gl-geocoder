@@ -137,3 +137,9 @@
         -ms-animation: rotate 400ms linear infinite;
             animation: rotate 400ms linear infinite;
     }
+
+ .suggestions a img {
+    width: 20px;
+    margin-left: -5px;
+    margin-right: 3px;
+}
