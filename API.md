@@ -3,6 +3,7 @@
 ### Table of Contents
 
 -   [MapboxGeocoder](#mapboxgeocoder)
+    -   [clear](#clear)
     -   [query](#query)
     -   [setInput](#setinput)
     -   [setProximity](#setproximity)
@@ -47,6 +48,10 @@ map.addControl(geocoder);
 ```
 
 Returns **[MapboxGeocoder](#mapboxgeocoder)** `this`
+
+### clear
+
+Clear the input
 
 ### query
 
