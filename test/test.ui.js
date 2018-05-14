@@ -26,7 +26,9 @@ test('Geocoder#inputControl', function(tt) {
   }
 
   tt.test('input', function(t) {
-    setup();
+    setup({
+      types: 'place'
+    });
     var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
     var clearEl = container.querySelector('.mapboxgl-ctrl-geocoder button');
 
