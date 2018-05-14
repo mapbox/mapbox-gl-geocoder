@@ -73,7 +73,7 @@ test('geocoder', function(tt) {
     geocoder.query('London');
     geocoder.on('results', once(function(e) {
       t.ok(e.features.length, 'Event for results emitted');
-      t.equals(e.features[0].text, 'Jack London Square', 'Result is returned within a bbox');
+      t.equals(e.features[0].text, 'London Street', 'Result is returned within a bbox');
     }));
   });
 
@@ -95,7 +95,7 @@ test('geocoder', function(tt) {
     setup({ zoom: 12 });
     geocoder.query('1714 14th St NW');
     geocoder.on('result', once(function() {
-      map.once('moveend', function() {
+      map.once('zoomend', function() {
         t.equals(parseInt(map.getZoom()), 12, 'Custom zoom is supported');
       });
     }));
@@ -107,20 +107,20 @@ test('geocoder', function(tt) {
       flyTo: false,
       limit: 6,
       localGeocoder: function(q) {
-          return q;
+          return [q];
       }
     });
 
     geocoder.query('-30,150');
-    geocoder.once('results', once(function(e) {
+    geocoder.on('results', once(function(e) {
       t.equal(e.features.length, 1, 'Local geocoder used');
 
       geocoder.query('London');
-      geocoder.once('results', once(function(e) {
+      geocoder.on('results', once(function(e) {
         t.equal(e.features.length, 7, 'Local geocoder suppliment remote response');
 
         geocoder.query('London');
-        geocoder.once('results', once(function(e) {
+        geocoder.on('results', once(function(e) {
           t.equal(e.features[0], 'London', 'Local geocoder results above remote response');
         }));
       }));
@@ -197,14 +197,14 @@ test('geocoder', function(tt) {
     geocoder.on('results', once(function(e) {
       t.ok(e.features.map((feature) => {
           return feature.place_name;
-      }).includes('Heathcote, Sydney, New South Wales, Australia'), 'feature included in filter');
+      }).includes('Heathcote, New South Wales, Australia'), 'feature included in filter');
       t.notOk(e.features.map((feature) => {
           return feature.place_name;
-      }).includes('Heathcote, Heathcote, Victoria, Australia'), 'feature excluded in filter');
+      }).includes('Heathcote, Victoria, Australia'), 'feature excluded in filter');
     }));
   });
 
-  tt.test('options.trackProximity', function (t) {
+  tt.test('options.trackProximity', function(t) {
     t.plan(2);
 
     setup({
