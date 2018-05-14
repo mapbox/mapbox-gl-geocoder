@@ -204,5 +204,20 @@ test('geocoder', function(tt) {
     }));
   });
 
+  tt.test('options.trackProximity', function (t) {
+    t.plan(2);
+
+    setup({
+      trackProximity: true
+    });
+
+    map.setZoom(10);
+    map.setCenter([15, 10]);
+    t.deepEquals(geocoder.getProximity(), { longitude: 15, latitude: 10 }, 'proximity updates after setCenter');
+
+    map.setZoom(9);
+    t.notOk(geocoder.getProximity(), 'proximity unset after zooming out');
+  });
+
   tt.end();
 });
