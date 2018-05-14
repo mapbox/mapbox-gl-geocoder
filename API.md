@@ -95,7 +95,7 @@ Subscribe to events that happen within the plugin.
     -   **loading** `{ query } Emitted when the geocoder is looking up a query`
     -   **results** `{ results } Fired when the geocoder returns a response`
     -   **result** `{ result } Fired when input is set`
-    -   **error** \`{ error } Error as string
+    -   **error** `{ error } Error as string`
 -   `fn` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** function that's called when the event is emitted.
 
 Returns **[MapboxGeocoder](#mapboxgeocoder)** this;
