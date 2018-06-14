@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/mapbox-gl-geocoder",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "A geocoder control for Mapbox GL JS",
   "main": "lib/index.js",
   "style": "lib/mapbox-gl-geocoder.css",
