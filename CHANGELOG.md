@@ -1,3 +1,8 @@
+### v2.3.0
+
+- Add trackProximity option [#151](https://github.com/mapbox/mapbox-gl-geocoder/pull/151)
+- Always fit to bbox if exists in Geocoding API response [#148](https://github.com/mapbox/mapbox-gl-geocoder/pull/148)
+
 ### v2.2.0
 
 - Add filter option [#133](https://github.com/mapbox/mapbox-gl-geocoder/pull/133)
