@@ -70,6 +70,7 @@ var coordinatesGeocoder = function (query) {
 
 var geocoder = new MapboxGeocoder({
   accessToken: window.localStorage.getItem('MapboxAccessToken'),
+  trackProximity: true,
   localGeocoder: function (query) {
       return coordinatesGeocoder(query);
   }
