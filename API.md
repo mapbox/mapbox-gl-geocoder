@@ -16,7 +16,7 @@ A geocoder component using Mapbox Geocoding API
 
 **Parameters**
 
--   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
     -   `options.accessToken` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Required.
     -   `options.zoom` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** On geocoded result what zoom level should the map animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`. (optional, default `16`)
     -   `options.flyTo` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If false, animating the map to a selected result is disabled. (optional, default `true`)
@@ -91,7 +91,8 @@ Subscribe to events that happen within the plugin.
 
 **Parameters**
 
--   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** name of event. Available events and the data passed into their respective event objects are:-   **clear** `Emitted when the input is cleared`
+-   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** name of event. Available events and the data passed into their respective event objects are:
+    -   **clear** `Emitted when the input is cleared`
     -   **loading** `{ query } Emitted when the geocoder is looking up a query`
     -   **results** `{ results } Fired when the geocoder returns a response`
     -   **result** `{ result } Fired when input is set`
