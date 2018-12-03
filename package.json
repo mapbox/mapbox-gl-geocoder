@@ -3,6 +3,7 @@
   "version": "2.3.0",
   "description": "A geocoder control for Mapbox GL JS",
   "main": "lib/index.js",
+  "unpkg": "dist/mapbox-gl-geocoder.min.js",
   "style": "lib/mapbox-gl-geocoder.css",
   "scripts": {
     "start": "budo debug/index.js --live -- -t brfs ",
