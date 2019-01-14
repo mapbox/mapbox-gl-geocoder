@@ -1,4 +1,4 @@
-Mapbox GL Geocoder [![CircleCI](https://circleci.com/gh/mapbox/mapbox-gl-geocoder.svg?style=svg)](https://circleci.com/gh/mapbox/mapbox-gl-geocoder)
+Mapbox GL Geocoder [![Build Status](https://travis-ci.com/mapbox/mapbox-gl-geocoder.svg?branch=master)](https://travis-ci.com/mapbox/mapbox-gl-geocoder)
 ---
 
 A geocoder control for [mapbox-gl-js](https://github.com/mapbox/mapbox-gl-js) using the [Mapbox Geocoding API](https://www.mapbox.com/api-documentation/#geocoding).
