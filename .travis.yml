@@ -2,11 +2,14 @@ language: node_js
 node_js: '4'
 env:
   global: MapboxAccessToken
-# before_install:
-#   - sudo apt-get install xvfb
-# addons:
-#   apt:
-#     update: true
+addons:
+  apt:
+    update: true
+    packages:
+      - xvfb
+install:
+  - export DISPLAY=':99.0'
+  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+  - npm install
 script:
-  - xvfb-run make test
   - npm test
