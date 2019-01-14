@@ -1,7 +1,7 @@
 'use strict';
 
 var once = require('lodash.once');
-var MapboxGeocoder = require('../');
+var MapboxGeocoder = require('../lib/index');
 var mapboxgl = require('mapbox-gl');
 var test = require('tape');
 
@@ -18,7 +18,7 @@ test('Geocoder#inputControl', function(tt) {
 
   function setup(opts) {
     opts = opts || {};
-    opts.accessToken = process.env.MapboxAccessToken;
+    opts.accessToken = mapboxgl.accessToken;
     container = document.createElement('div');
     map = new mapboxgl.Map({ container: container });
     geocoder = new MapboxGeocoder(opts);
@@ -37,6 +37,7 @@ test('Geocoder#inputControl', function(tt) {
     geocoder.on('loading', once(function(e) {
       t.pass('load event was emitted');
       t.equals(e.query, '-79,43', 'loading event passes query parameter');
+      t.end();
     }));
 
     geocoder.on('result', once(function() {

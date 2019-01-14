@@ -64,12 +64,11 @@ var coordinatesGeocoder = function (query) {
         geocodes.push(coordinateFeature(coord1, coord2));
         geocodes.push(coordinateFeature(coord2, coord1));
     }
-    console.log(geocodes);
     return geocodes;
 };
 
 var geocoder = new MapboxGeocoder({
-  accessToken: window.localStorage.getItem('MapboxAccessToken'),
+  accessToken: mapboxgl.accessToken,
   trackProximity: true,
   localGeocoder: function (query) {
       return coordinatesGeocoder(query);

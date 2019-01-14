@@ -12,7 +12,7 @@ test('geocoder', function(tt) {
 
   function setup(opts) {
     opts = opts || {};
-    opts.accessToken = process.env.MapboxAccessToken;
+    opts.accessToken = mapboxgl.accessToken;
     container = document.createElement('div');
     map = new mapboxgl.Map({ container: container });
     geocoder = new MapboxGeocoder(opts);
@@ -117,7 +117,7 @@ test('geocoder', function(tt) {
 
       geocoder.query('London');
       geocoder.on('results', once(function(e) {
-        t.equal(e.features.length, 7, 'Local geocoder suppliment remote response');
+        t.equal(e.features.length, 7, 'Local geocoder supplement remote response');
 
         geocoder.query('London');
         geocoder.on('results', once(function(e) {
