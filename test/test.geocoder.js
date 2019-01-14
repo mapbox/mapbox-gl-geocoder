@@ -73,7 +73,7 @@ test('geocoder', function(tt) {
     geocoder.query('London');
     geocoder.on('results', once(function(e) {
       t.ok(e.features.length, 'Event for results emitted');
-      t.equals(e.features[0].text, 'London Street', 'Result is returned within a bbox');
+      t.equals(e.features[0].text, 'London Market', 'Result is returned within a bbox');
     }));
   });
 
@@ -145,7 +145,7 @@ test('geocoder', function(tt) {
   tt.test('country bbox exception', function(t) {
     t.plan(1);
     setup({});
-    geocoder.query('United States');
+    geocoder.query('Canada');
     geocoder.on('result', once(function(e) {
       map.once('moveend', function() {
         var mapBBox = Array.prototype.concat.apply([], map.getBounds().toArray());
