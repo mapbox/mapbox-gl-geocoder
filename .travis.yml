@@ -7,4 +7,6 @@ env:
 # addons:
 #   apt:
 #     update: true
-script: xvfb-run make test
+script:
+  - xvfb-run make test
+  - npm test
