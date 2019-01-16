@@ -34,26 +34,39 @@ test('Geocoder#inputControl', function(tt) {
 
     t.plan(6);
 
-    geocoder.on('loading', once(function(e) {
-      t.pass('load event was emitted');
-      t.equals(e.query, '-79,43', 'loading event passes query parameter');
-    }));
+    geocoder.on(
+      'loading',
+      once(function(e) {
+        t.pass('load event was emitted');
+        t.equals(e.query, '-79,43', 'loading event passes query parameter');
+      })
+    );
 
-    geocoder.on('result', once(function() {
-      t.ok(inputEl.value, 'value populates in input');
-      clearEl.dispatchEvent(clickEvent);
-    }));
+    geocoder.on(
+      'result',
+      once(function() {
+        t.ok(inputEl.value, 'value populates in input');
+        clearEl.dispatchEvent(clickEvent);
+      })
+    );
 
-    geocoder.on('clear', once(function() {
-      t.pass('input was cleared');
+    geocoder.on(
+      'clear',
+      once(function() {
+        t.pass('input was cleared');
 
-      geocoder.setInput('Paris');
-      t.equals(inputEl.value, 'Paris', 'value populates in input');
+        geocoder.setInput('Paris');
+        t.equals(inputEl.value, 'Paris', 'value populates in input');
 
-      geocoder.setInput('90,45');
-      t.equals(inputEl.value, '90,45', 'valid LngLat value populates in input');
-      t.end();
-    }));
+        geocoder.setInput('90,45');
+        t.equals(
+          inputEl.value,
+          '90,45',
+          'valid LngLat value populates in input'
+        );
+        t.end();
+      })
+    );
 
     geocoder.query('-79,43');
   });
@@ -61,7 +74,12 @@ test('Geocoder#inputControl', function(tt) {
   tt.test('placeholder', function(t) {
     t.plan(1);
     setup({ placeholder: 'foo to the bar' });
-    t.equal(map.getContainer().querySelector('.mapboxgl-ctrl-geocoder input').placeholder, 'foo to the bar', 'placeholder is custom');
+    t.equal(
+      map.getContainer().querySelector('.mapboxgl-ctrl-geocoder input')
+        .placeholder,
+      'foo to the bar',
+      'placeholder is custom'
+    );
     t.end();
   });
 
