@@ -37,7 +37,6 @@ test('Geocoder#inputControl', function(tt) {
     geocoder.on('loading', once(function(e) {
       t.pass('load event was emitted');
       t.equals(e.query, '-79,43', 'loading event passes query parameter');
-      t.end();
     }));
 
     geocoder.on('result', once(function() {
@@ -60,6 +59,7 @@ test('Geocoder#inputControl', function(tt) {
   });
 
   tt.test('placeholder', function(t) {
+    t.plan(1);
     setup({ placeholder: 'foo to the bar' });
     t.equal(map.getContainer().querySelector('.mapboxgl-ctrl-geocoder input').placeholder, 'foo to the bar', 'placeholder is custom');
     t.end();
