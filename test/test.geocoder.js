@@ -74,6 +74,12 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test('custom endpoint', function(t) {
+    t.plan(1);
+    setup({ origin: 'localhost:2999' });
+    t.equals(geocoder.options.origin, 'localhost:2999', 'options picks up custom endpoint')
+  });
+
   tt.test('options.bbox', function(t) {
     t.plan(2);
     setup({
