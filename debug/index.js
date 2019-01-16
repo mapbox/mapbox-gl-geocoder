@@ -71,6 +71,7 @@ var coordinatesGeocoder = function(query) {
 
 var geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
+  origin: 'localhost:2999',
   trackProximity: true,
   localGeocoder: function(query) {
     return coordinatesGeocoder(query);
