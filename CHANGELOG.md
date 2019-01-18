@@ -1,3 +1,14 @@
+### v3.0.0
+
+- Uses mapbox-sdk-js to handle the client [#175](https://github.com/mapbox/mapbox-gl-geocoder/pull/175)
+- Adds support for reverse geocoding [#175](https://github.com/mapbox/mapbox-gl-geocoder/pull/175)
+- Supports custom origin [#175](https://github.com/mapbox/mapbox-gl-geocoder/pull/175)
+- Adds `reverseMode` as an option for sorting results [#175](https://github.com/mapbox/mapbox-gl-geocoder/pull/175)
+
+Breaking changes:
+
+- `country` is now `countries` for options to pass into geocoder
+
 ### v2.3.0
 
 - Add trackProximity option [#151](https://github.com/mapbox/mapbox-gl-geocoder/pull/151)
@@ -18,7 +29,7 @@
 
 ### v2.1.1
 
-- Adds option for language parameter [#126](https://github.com/mapbox/mapbox-gl-geocoder/pull/126). 
+- Adds option for language parameter [#126](https://github.com/mapbox/mapbox-gl-geocoder/pull/126).
 
 ### v2.1.0
 
