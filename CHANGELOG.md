@@ -1,3 +1,7 @@
+### v3.0.1
+
+- Increment version to publish public package
+
 ### v3.0.0
 
 - Uses mapbox-sdk-js to handle the client [#175](https://github.com/mapbox/mapbox-gl-geocoder/pull/175)
