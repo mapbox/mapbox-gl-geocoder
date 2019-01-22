@@ -109,6 +109,63 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test('options.reverseGeocode - true by default', function(t) {
+    t.plan(3);
+    setup();
+    geocoder.query('34.5177548, -6.1933875');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.equal(e.features.length, 1, 'One result returned');
+        t.equal(e.features[0].place_name, 'Singida, Tanzania', 'returns expected result');
+        t.equal(e.config.limit, 1, 'sets limit to 1 for reverse geocodes');
+      })
+    );
+  });
+
+  tt.test('options.reverseGeocode - false', function(t) {
+    t.plan(2);
+    setup({
+      reverseGeocode: false
+    });
+
+    geocoder.query('34.5177548, -6.1933875');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.equal(e.features.length, 0, 'No results returned');
+      })
+    );
+    geocoder.on('error',
+    once(function(e) {
+      t.equal(e.error.statusCode, 422, 'should error')
+    }))
+  });
+
+  tt.test('parses options correctly', function(t) {
+    t.plan(4);
+    setup({
+      language: 'en, es, zh',
+      types: 'district, locality, neighborhood, postcode',
+      countries: 'us, mx'
+    });
+
+    var languages = ['en', 'es', 'zh'];
+    var types = ['district', 'locality', 'neighborhood', 'postcode'];
+    var countries = ['us', 'mx'];
+
+    geocoder.query('Hartford');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.equal(e.features.length, 5, 'Five results returned');
+        t.deepEquals(e.config.language, languages, 'converts language options to array');
+        t.deepEquals(e.config.types, types, 'converts types options to array');
+        t.deepEquals(e.config.countries, countries, 'converts countries options to array')
+      })
+    );
+  });
+
   tt.test('options.limit', function(t) {
     t.plan(1);
     setup({
