@@ -151,7 +151,7 @@ test('geocoder', function(tt) {
   tt.test('parses options correctly', function(t) {
     t.plan(4);
     setup({
-      language: 'en, es, zh',
+      language: 'en,es,zh',
       types: 'district, locality, neighborhood, postcode',
       countries: 'us, mx'
     });
@@ -168,7 +168,7 @@ test('geocoder', function(tt) {
         t.deepEquals(
           e.config.language,
           languages,
-          'converts language options to array'
+          'converts language options with no spaces to array'
         );
         t.deepEquals(e.config.types, types, 'converts types options to array');
         t.deepEquals(
