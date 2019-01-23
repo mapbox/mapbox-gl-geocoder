@@ -117,7 +117,11 @@ test('geocoder', function(tt) {
       'results',
       once(function(e) {
         t.equal(e.features.length, 1, 'One result returned');
-        t.equal(e.features[0].place_name, 'Singida, Tanzania', 'returns expected result');
+        t.equal(
+          e.features[0].place_name,
+          'Singida, Tanzania',
+          'returns expected result'
+        );
         t.equal(e.config.limit, 1, 'sets limit to 1 for reverse geocodes');
       })
     );
@@ -136,10 +140,12 @@ test('geocoder', function(tt) {
         t.equal(e.features.length, 0, 'No results returned');
       })
     );
-    geocoder.on('error',
-    once(function(e) {
-      t.equal(e.error.statusCode, 422, 'should error')
-    }))
+    geocoder.on(
+      'error',
+      once(function(e) {
+        t.equal(e.error.statusCode, 422, 'should error');
+      })
+    );
   });
 
   tt.test('parses options correctly', function(t) {
@@ -159,9 +165,17 @@ test('geocoder', function(tt) {
       'results',
       once(function(e) {
         t.equal(e.features.length, 5, 'Five results returned');
-        t.deepEquals(e.config.language, languages, 'converts language options to array');
+        t.deepEquals(
+          e.config.language,
+          languages,
+          'converts language options to array'
+        );
         t.deepEquals(e.config.types, types, 'converts types options to array');
-        t.deepEquals(e.config.countries, countries, 'converts countries options to array')
+        t.deepEquals(
+          e.config.countries,
+          countries,
+          'converts countries options to array'
+        );
       })
     );
   });
