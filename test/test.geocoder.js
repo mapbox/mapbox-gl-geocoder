@@ -127,12 +127,28 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test('options.reverseGeocode - interprets coordinates correctly', function(t) {
+    t.plan(3);
+    setup({
+      types: 'country'
+    });
+    geocoder.query('-7.0926 31.791');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        console.log(e);
+        t.deepEquals(e.query, [ -7.0926, 31.791 ], 'parses query');
+        t.deepEquals(e.config.types.toString(), 'country', 'uses correct type passed to config' );
+        t.equal(e.features[0].place_name, 'Morocco', 'returns expected result');
+      })
+    );
+  });
+
   tt.test('options.reverseGeocode - false', function(t) {
     t.plan(2);
     setup({
       reverseGeocode: false
     });
-
     geocoder.query('34.5177548, -6.1933875');
     geocoder.on(
       'results',
