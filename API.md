@@ -42,7 +42,7 @@ A geocoder component using Mapbox Geocoding API
     -   `options.filter` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** A function which accepts a Feature in the [Carmen GeoJSON](https://github.com/mapbox/carmen/blob/master/carmen-geojson.md) format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
     -   `options.localGeocoder` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** A function accepting the query string which performs local geocoding to supplement results from the Mapbox Geocoding API. Expected to return an Array of GeoJSON Features in the [Carmen GeoJSON](https://github.com/mapbox/carmen/blob/master/carmen-geojson.md) format.
     -   `options.reverseMode` **(`"distance"` \| `"score"`)** Set the factors that are used to sort nearby results. (optional, default `'distance'`)
-    -   `options.reverseGeocode` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** Enable reverse geocoding. Defaults to true.
+    -   `options.reverseGeocode` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** Enable reverse geocoding. Defaults to true. Expects coordinates to be lon, lat.
 
 **Examples**
 
