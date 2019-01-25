@@ -114,7 +114,7 @@ test('geocoder', function(tt) {
     setup({
       reverseGeocode: true
     });
-    geocoder.query('34.5177548, -6.1933875');
+    geocoder.query('-6.1933875, 34.5177548');
     geocoder.on(
       'results',
       once(function(e) {
@@ -135,7 +135,7 @@ test('geocoder', function(tt) {
       types: 'country',
       reverseGeocode: true
     });
-    geocoder.query('-7.0926 31.791');
+    geocoder.query('31.791, -7.0926');
     geocoder.on(
       'results',
       once(function(e) {
@@ -150,7 +150,7 @@ test('geocoder', function(tt) {
   tt.test('options.reverseGeocode - false by default', function(t) {
     t.plan(2);
     setup();
-    geocoder.query('34.5177548, -6.1933875');
+    geocoder.query('-6.1933875, 34.5177548');
     geocoder.on(
       'results',
       once(function(e) {
