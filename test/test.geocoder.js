@@ -109,9 +109,11 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.reverseGeocode - true by default', function(t) {
+  tt.test('options.reverseGeocode - true', function(t) {
     t.plan(3);
-    setup();
+    setup({
+      reverseGeocode: true
+    });
     geocoder.query('34.5177548, -6.1933875');
     geocoder.on(
       'results',
@@ -127,10 +129,11 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.reverseGeocode - interprets coordinates correctly', function(t) {
+  tt.test('options.reverseGeocode - interprets coordinates & options correctly', function(t) {
     t.plan(3);
     setup({
-      types: 'country'
+      types: 'country',
+      reverseGeocode: true
     });
     geocoder.query('-7.0926 31.791');
     geocoder.on(
@@ -144,11 +147,9 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.reverseGeocode - false', function(t) {
+  tt.test('options.reverseGeocode - false by default', function(t) {
     t.plan(2);
-    setup({
-      reverseGeocode: false
-    });
+    setup();
     geocoder.query('34.5177548, -6.1933875');
     geocoder.on(
       'results',
