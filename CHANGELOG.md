@@ -1,3 +1,9 @@
+### v3.1.0
+
+- Makes `reverseGeocode` an option (defaults to false) [#177](https://github.com/mapbox/mapbox-gl-geocoder/pull/177)
+- Fixes string parsing for multiple values passed to `countries`, `types`, and `languages` [#177](https://github.com/mapbox/mapbox-gl-geocoder/pull/177)
+- More generous coordinate parsing for reverse geocodes [#177](https://github.com/mapbox/mapbox-gl-geocoder/pull/177)
+
 ### v3.0.1
 
 - Increment version to publish public package
