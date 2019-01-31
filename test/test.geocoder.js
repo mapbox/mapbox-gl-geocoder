@@ -399,5 +399,26 @@ test('geocoder', function(tt) {
     t.notOk(geocoder.getProximity(), 'proximity unset after zooming out');
   });
 
+  tt.test('options.setProximity', function(t) {
+    t.plan(1);
+
+    setup({});
+
+    map.setZoom(13);
+    map.setCenter([-79.4512, 43.6568]);
+    geocoder.setProximity({ longitude: -79.4512, latitude: 43.6568});
+
+    geocoder.query('high');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.ok(
+          e.features[0].place_name.indexOf('Toronto') !== -1,
+          'proximity applied in geocoding request'
+        );
+      })
+    );
+  });
+
   tt.end();
 });
