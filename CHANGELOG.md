@@ -1,3 +1,7 @@
+### v3.1.1
+
+- Ensures proximity is passed to client [180](https://github.com/mapbox/mapbox-gl-geocoder/pull/180)
+
 ### v3.1.0
 
 - Makes `reverseGeocode` an option (defaults to false) [#177](https://github.com/mapbox/mapbox-gl-geocoder/pull/177)
