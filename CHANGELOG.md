@@ -1,3 +1,7 @@
+## v3.1.2
+
+- Enable inaction event logging
+
 ### v3.1.1
 
 - [bug] Ensures proximity is passed to client [#180](https://github.com/mapbox/mapbox-gl-geocoder/pull/180)

@@ -2,7 +2,9 @@
 var mapboxgl = require('mapbox-gl');
 var insertCss = require('insert-css');
 var fs = require('fs');
+
 mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
+
 
 var meta = document.createElement('meta');
 meta.name = 'viewport';
@@ -74,7 +76,8 @@ var geocoder = new MapboxGeocoder({
   trackProximity: true,
   localGeocoder: function(query) {
     return coordinatesGeocoder(query);
-  }
+  },
+  language: 'en'
 });
 
 window.geocoder = geocoder;
