@@ -76,8 +76,7 @@ var geocoder = new MapboxGeocoder({
   trackProximity: true,
   localGeocoder: function(query) {
     return coordinatesGeocoder(query);
-  },
-  language: 'en'
+  }
 });
 
 window.geocoder = geocoder;
