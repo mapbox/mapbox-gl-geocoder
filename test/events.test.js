@@ -193,16 +193,25 @@ test('get selected index', (assert)=>{
 });
 
 test('should enable logging', (assert)=>{
-    var eventsManager = new MapboxEventsManager({
+    var nonMapboxOptions = {
         accessToken: 'abc123',
         origin: 'https://my.server.endpoint'
-    });
-    assert.false(eventsManager.shouldEnableLogging(), 'logging is not enabled when origin is not mapbox');
-    
-    var eventsManagerMapbox = new MapboxEventsManager({
+    }
+    var eventsManager = new MapboxEventsManager(nonMapboxOptions);
+    assert.false(eventsManager.shouldEnableLogging(nonMapboxOptions), 'logging is not enabled when origin is not mapbox');
+    var mapboxOptions = {
         accessToken: 'abc123',
         origin: 'https://api.mapbox.com'
-    });
-    assert.true(eventsManagerMapbox.shouldEnableLogging(), 'logging is enabled when origin is mapbox');
+    }
+    var eventsManagerMapbox = new MapboxEventsManager(mapboxOptions);
+    assert.true(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is enabled when origin is mapbox');
+    
+    mapboxOptions.filter = function(){return true};
+    assert.false(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom filter is enabled');
+
+    mapboxOptions.filter = undefined;
+    mapboxOptions.localGeocoder = function(){return 'abc'}
+    assert.false(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom geocoder is enabled');
+
     assert.end();
 })
