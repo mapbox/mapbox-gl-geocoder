@@ -32,7 +32,7 @@ test('Geocoder#inputControl', function(tt) {
     var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
     var clearEl = container.querySelector('.mapboxgl-ctrl-geocoder button');
 
-    t.plan(6);
+    t.plan(7);
 
     geocoder.on(
       'loading',
@@ -54,6 +54,7 @@ test('Geocoder#inputControl', function(tt) {
       'clear',
       once(function() {
         t.pass('input was cleared');
+        t.equals(geocoder.fresh, false, 'the geocoder is fresh again')
 
         geocoder.setInput('Paris');
         t.equals(inputEl.value, 'Paris', 'value populates in input');

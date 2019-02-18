@@ -2,7 +2,9 @@
 var mapboxgl = require('mapbox-gl');
 var insertCss = require('insert-css');
 var fs = require('fs');
+
 mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
+
 
 var meta = document.createElement('meta');
 meta.name = 'viewport';

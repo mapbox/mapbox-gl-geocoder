@@ -4,6 +4,8 @@ var test = require('tape');
 var MapboxGeocoder = require('../');
 var mapboxgl = require('mapbox-gl');
 var once = require('lodash.once');
+var mapboxEvents = require('./../lib/events');
+var sinon = require('sinon');
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
 
@@ -22,6 +24,9 @@ test('geocoder', function(tt) {
   tt.test('initialized', function(t) {
     setup();
     t.ok(geocoder, 'geocoder is initialized');
+    t.ok(geocoder.fresh, 'geocoder is initialized with fresh status to enable turnstile event');
+    t.equals(geocoder.inputString, '', 'geocoder is initialized with an input string for keeping track of state');
+    t.ok(geocoder.eventManager instanceof mapboxEvents, 'the geocoder has a mapbox event manager');
     t.end();
   });
 
@@ -43,7 +48,7 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options', function(t) {
-    t.plan(4);
+    t.plan(8);
     setup({
       flyTo: false,
       country: 'fr',
@@ -51,11 +56,17 @@ test('geocoder', function(tt) {
     });
 
     geocoder.query('Paris');
+    var startEventMethod = sinon.stub(geocoder.eventManager, "start")
 
     geocoder.on(
       'results',
       once(function(e) {
+        console.log(e)
         t.ok(e.features.length, 'Event for results emitted');
+        t.equals(geocoder.inputString, 'Paris', 'input string keeps track of state');
+        t.equals(geocoder.fresh, false, 'once a search has been completed, the geocoder is no longer fresh');
+        t.ok(startEventMethod.called, 'a search start event was issued');
+        t.ok(startEventMethod.calledOnce, 'a search start event was issued only once');
       })
     );
 
