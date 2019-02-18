@@ -26,6 +26,9 @@ test('it constructs a new event manager instance with the correct properties', f
     assert.equals(typeof eventsManager.start, 'function', 'start event is a function');
     assert.ok(eventsManager.select, 'defines a select event');
     assert.equals(typeof eventsManager.select, 'function', 'select event is a function');
+    assert.equals(typeof eventsManager.version, 'string', 'it has a version string');
+    assert.ok(eventsManager.userAgent.startsWith('mapbox-gl-geocoder.0.0.1'), 'has a user agent string of the correct format');
+    assert.ok(eventsManager.origin, 'has an origin');
     assert.end();
 });
 
@@ -41,6 +44,24 @@ test('send event', function (assert) {
     eventsManager.send(payload, function (err, res) {
         assert.ok(requestMethod.called, 'the http request was made');
         assert.ok(requestMethod.calledOnce, 'the request method was called exactly once');
+        assert.end();
+    })
+});
+
+test('send event with disabled logging', function (assert) {
+    var eventsManager = new MapboxEventsManager({
+        accessToken: 'abc123'
+    });
+
+    eventsManager.enableEventLogging = false;
+
+    var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
+
+    var payload = {
+        event: 'test.event'
+    };
+    eventsManager.send(payload, function (err, res) {
+        assert.ok(requestMethod.notCalled, 'the http request was not made');
         assert.end();
     })
 });
@@ -168,5 +189,20 @@ test('get selected index', (assert)=>{
     };
     assert.ok(typeof eventsManager.getSelectedIndex(needle, geocoder), 'number', 'returns the right type');
     assert.equals( eventsManager.getSelectedIndex(needle, geocoder), 1, 'returns the right index');
+    assert.end();
+});
+
+test('should enable logging', (assert)=>{
+    var eventsManager = new MapboxEventsManager({
+        accessToken: 'abc123',
+        origin: 'https://my.server.endpoint'
+    });
+    assert.false(eventsManager.shouldEnableLogging(), 'logging is not enabled when origin is not mapbox');
+    
+    var eventsManagerMapbox = new MapboxEventsManager({
+        accessToken: 'abc123',
+        origin: 'https://api.mapbox.com'
+    });
+    assert.true(eventsManagerMapbox.shouldEnableLogging(), 'logging is enabled when origin is mapbox');
     assert.end();
 })
