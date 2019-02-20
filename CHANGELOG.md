@@ -1,6 +1,6 @@
 ## v3.1.2
 
-- Enable inaction event logging
+- Enable interaction event logging
 
 ### v3.1.1
 
