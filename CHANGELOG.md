@@ -1,3 +1,8 @@
+## v3.1.3
+
+- Enable developers to opt out of events collection by setting `options.enableEventLogging` to `false`
+
+
 ## v3.1.2
 
 - Enable interaction event logging
