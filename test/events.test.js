@@ -214,4 +214,20 @@ test('should enable logging', (assert)=>{
     assert.false(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom geocoder is enabled');
 
     assert.end();
+});
+
+test('events are not logged if logging is disabled', (assert)=>{
+    var eventsManager = new MapboxEventsManager({
+        accessToken: 'abc123',
+        enableEventLogging: false
+    })
+    var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
+
+    var payload = {
+        event: 'test.event'
+    };
+    eventsManager.send(payload, function () {
+        assert.ok(requestMethod.notCalled, 'the http request was not made');
+        assert.end();
+    })
 })
