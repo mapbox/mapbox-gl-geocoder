@@ -1,3 +1,7 @@
+## v3.1.3
+
+- Fix bug where events were logging -1 as resultIndex
+
 ## v3.1.2
 
 - Enable interaction event logging
