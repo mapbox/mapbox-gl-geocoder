@@ -33,7 +33,7 @@ A geocoder component using Mapbox Geocoding API
     -   `options.countries` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** a comma separated list of country codes to
         limit results to specified country or countries.
     -   `options.types` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** a comma seperated list of types that filter
-        results to match those specified. See <https://www.mapbox.com/developers/api/geocoding/#filter-type>
+        results to match those specified. See <https://docs.mapbox.com/api/search/#data-types>
         for available types.
         If reverseGeocode is enabled, you should specify one type. If you configure more than one type, the first type will be used.
     -   `options.minLength` **[Number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Minimum number of characters to enter before results are shown. (optional, default `2`)
