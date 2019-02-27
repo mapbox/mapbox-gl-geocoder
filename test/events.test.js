@@ -15,7 +15,7 @@ test('it constructs a new event manager instance with the correct properties', f
         limit: 2
     }
     var eventsManager = new MapboxEventsManager(options)
-    assert.equals(eventsManager.endpoint, 'https://api.mapbox.com/events/v2', 'the correct event endpoint is set');
+    assert.equals(eventsManager.endpoint, '/events/v2', 'the correct event endpoint is set');
     assert.equals(eventsManager.access_token, options.accessToken, 'sets the right access tokens for the request');
     assert.deepEqual(eventsManager.countries, ['CA', 'US'], 'correctly parses the country parameter into an array');
     assert.deepEqual(eventsManager.language, ['en', 'fr'], 'correctly parses the language parameter into an array');
@@ -75,9 +75,9 @@ test('get requst options', function(assert){
         event: 'test.event'
     };
     assert.equals(eventsManager.getRequestOptions(payload).method, 'POST', 'http method is set to POST');
-    assert.equals(eventsManager.getRequestOptions(payload).url, 'https://api.mapbox.com/events/v2', 'http request is made to the right uri');
+    assert.equals(eventsManager.getRequestOptions(payload).host, 'https://api.mapbox.com', 'http request is made to the right host');
+    assert.equals(eventsManager.getRequestOptions(payload).path, '/events/v2?access_token=abc123', 'http request is made to the right host');
     assert.deepEqual(eventsManager.getRequestOptions(payload).headers, {'Content-Type': 'application/json'}, 'content type is json');
-    assert.equals(eventsManager.getRequestOptions(payload).qs.access_token, 'abc123', 'http request is sent with the right access token');
     assert.deepEqual(eventsManager.getRequestOptions(payload).body, JSON.stringify([payload]), 'the right payload is set for the request');
     assert.end();
 })
