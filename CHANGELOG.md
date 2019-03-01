@@ -1,3 +1,8 @@
+## v3.1.4
+
+- Emit a `clear` event when the user backspaces into an empty search bar or selects all existing text and deletes it.
+
+
 ## v3.1.3
 
 - Fix bug where events were logging -1 as resultIndex
