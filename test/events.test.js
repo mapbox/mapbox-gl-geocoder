@@ -148,11 +148,17 @@ test('search selects event', function(assert){
     var sendMethod = sinon.spy(eventsManager, "send")
     var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
     var geocoder = new MapboxGeocoder({accessToken: 'abc123'});
-    eventsManager.start(geocoder, function (err, res) {
+    var selectedFeature = {
+        id: 'layer.1234',
+        place_name: 'Peets Coffee, 123 Main Street, San Francisco, CA, 94122, United States',
+    }
+    eventsManager.select(selectedFeature, geocoder, function (err, res) {
         assert.ok(requestMethod.called, 'the http request was initated');
         assert.ok(requestMethod.calledOnce, 'the send method was called exactly once');
         var calledWithArgs = sendMethod.args[0][0];
-        assert.ok(calledWithArgs.event, 'search.select', 'sends the correct event type')
+        assert.ok(calledWithArgs.event, 'search.select', 'sends the correct event type');
+        assert.ok(calledWithArgs.resultId, 'layer.1234', 'sends the correct result id');
+        assert.ok(calledWithArgs.resultId, 'Peets Coffee, 123 Main Street, San Francisco, CA, 94122, United States', 'sends the correct place name');
         assert.end();
     })
 })
