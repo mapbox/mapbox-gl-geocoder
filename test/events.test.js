@@ -27,7 +27,7 @@ test('it constructs a new event manager instance with the correct properties', f
     assert.ok(eventsManager.select, 'defines a select event');
     assert.equals(typeof eventsManager.select, 'function', 'select event is a function');
     assert.equals(typeof eventsManager.version, 'string', 'it has a version string');
-    assert.ok(eventsManager.userAgent.startsWith('mapbox-gl-geocoder.0.0.1'), 'has a user agent string of the correct format');
+    assert.ok(eventsManager.userAgent.startsWith('mapbox-gl-geocoder.0.2.0'), 'has a user agent string of the correct format');
     assert.ok(eventsManager.origin, 'has an origin');
     assert.end();
 });
@@ -214,4 +214,23 @@ test('should enable logging', (assert)=>{
     assert.false(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom geocoder is enabled');
 
     assert.end();
+});
+
+
+test('should properly handle keylogging events', (assert)=>{
+    const testEvent = {key: 'S', code :'KeyS', metaKey: false, keyCode: 83, shiftKey: true};
+    var eventsManager = new MapboxEventsManager({
+        accessToken: 'abc123'
+    })
+    var sendMethod = sinon.spy(eventsManager, "send")
+    var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
+    var geocoder = new MapboxGeocoder({accessToken: 'abc123'});
+    eventsManager.keystroke(testEvent, geocoder, function (err, res) {
+        assert.ok(requestMethod.called, 'the http request was initated');
+        assert.ok(requestMethod.calledOnce, 'the send method was called exactly once');
+        var calledWithArgs = sendMethod.args[0][0];
+        assert.ok(calledWithArgs.event, 'search.keystroke', 'sends the correct event type');
+        assert.ok(calledWithArgs.lastAction, 'S', 'sends the right key action');
+        assert.end();
+    })
 })
