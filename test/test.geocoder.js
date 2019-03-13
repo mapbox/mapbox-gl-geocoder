@@ -121,7 +121,7 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options.reverseGeocode - true', function(t) {
-    t.plan(3);
+    t.plan(4);
     setup({
       reverseGeocode: true
     });
@@ -130,9 +130,12 @@ test('geocoder', function(tt) {
       'results',
       once(function(e) {
         t.equal(e.features.length, 1, 'One result returned');
-        t.equal(
-          e.features[0].place_name,
-          'Singida, Tanzania',
+        t.ok(
+          e.features[0].place_name.indexOf('Tanzania') > -1, 
+          'returns expected result'
+        );
+        t.ok(
+          e.features[0].place_name.indexOf('Singida') > -1, 
           'returns expected result'
         );
         t.equal(e.config.limit, 1, 'sets limit to 1 for reverse geocodes');
