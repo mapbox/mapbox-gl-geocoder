@@ -1,3 +1,6 @@
+## Unreleased
+- Obtain language from user's browser settings [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
+
 ## v3.1.4
 
 - Emit a `clear` event when the user backspaces into an empty search bar or selects all existing text and deletes it.
