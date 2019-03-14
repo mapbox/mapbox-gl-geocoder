@@ -1,3 +1,6 @@
+## v3.1.6
+-  Resolve npm publish failure
+
 ## v3.1.5
 
 - Reduce bundle size by removing unnecessary dependencies needed for event logging [#188](https://github.com/mapbox/mapbox-gl-geocoder/issues/188)
