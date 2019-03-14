@@ -7,6 +7,7 @@
     -   [setInput](#setinput)
     -   [setProximity](#setproximity)
     -   [getProximity](#getproximity)
+    -   [getLanguage](#getlanguage)
     -   [on](#on)
     -   [off](#off)
 
@@ -88,6 +89,14 @@ Returns **[MapboxGeocoder](#mapboxgeocoder)** this
 Get proximity
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The geocoder proximity
+
+### getLanguage
+
+Get the language to use in UI elements and when making search requests
+
+Look first at the explicitly set options otherwise use the browser's language settings
+
+Returns **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The language used by the geocoder
 
 ### on
 
