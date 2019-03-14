@@ -163,7 +163,7 @@ test('generate session id', function(assert){
     })
     assert.ok(typeof eventsManager.generateSessionID(), 'string', 'generates a string id');
     assert.notEqual(eventsManager.generateSessionID(), eventsManager.generateSessionID(), 'session id is generated randomly');
-    assert.equals(eventsManager.generateSessionID().length, 64, 'generates an ID of the correct length');
+    assert.equals(eventsManager.generateSessionID().length, 21, 'generates an ID of the correct length');
     assert.end();
 });
 
@@ -205,7 +205,7 @@ test('should enable logging', (assert)=>{
     }
     var eventsManagerMapbox = new MapboxEventsManager(mapboxOptions);
     assert.true(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is enabled when origin is mapbox');
-    
+
     mapboxOptions.filter = function(){return true};
     assert.false(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom filter is enabled');
 
