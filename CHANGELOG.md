@@ -1,3 +1,6 @@
+## Unreleased
+- Localize placeholder based on language set in constructor options [#150](https://github.com/mapbox/mapbox-gl-geocoder/issues/150)
+
 ## v3.1.4
 
 - Emit a `clear` event when the user backspaces into an empty search bar or selects all existing text and deletes it.
