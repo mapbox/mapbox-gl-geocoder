@@ -163,7 +163,7 @@ test('generate session id', function(assert){
   })
   assert.ok(typeof eventsManager.generateSessionID(), 'string', 'generates a string id');
   assert.notEqual(eventsManager.generateSessionID(), eventsManager.generateSessionID(), 'session id is generated randomly');
-  assert.equals(eventsManager.generateSessionID().length, 64, 'generates an ID of the correct length');
+  assert.equals(eventsManager.generateSessionID().length, 21, 'generates an ID of the correct length');
   assert.end();
 });
 
@@ -192,7 +192,7 @@ test('get selected index', function(assert){
   assert.end();
 });
 
-test('should enable logging', function(assert){
+test('should enable logging', function(assert) {
   var nonMapboxOptions = {
     accessToken: 'abc123',
     origin: 'https://my.server.endpoint'
