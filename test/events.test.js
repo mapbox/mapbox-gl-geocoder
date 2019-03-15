@@ -26,7 +26,10 @@ test('it constructs a new event manager instance with the correct properties', f
     assert.equals(typeof eventsManager.start, 'function', 'start event is a function');
     assert.ok(eventsManager.select, 'defines a select event');
     assert.equals(typeof eventsManager.select, 'function', 'select event is a function');
+    assert.equals(typeof eventsManager.keyevent, 'function', 'key event is a function');
     assert.equals(typeof eventsManager.version, 'string', 'it has a version string');
+    assert.equals(eventsManager.flushInterval, 1000, 'the correct default flush interval is set');
+    assert.equals(eventsManager.maxQueueSize, 100, 'the correct default queue size is set');
     assert.ok(eventsManager.userAgent.startsWith('mapbox-gl-geocoder.0.2.0'), 'has a user agent string of the correct format');
     assert.ok(eventsManager.origin, 'has an origin');
     assert.end();
@@ -129,16 +132,19 @@ test('search start event', function(assert){
     var eventsManager = new MapboxEventsManager({
         accessToken: 'abc123'
     })
-    var sendMethod = sinon.spy(eventsManager, "send")
+    var sendMethod = sinon.spy(eventsManager, "send");
+    var pushMethod = sinon.spy(eventsManager, "push");
     var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
     var geocoder = new MapboxGeocoder({accessToken: 'abc123'});
-    eventsManager.start(geocoder, function (err, res) {
-        assert.ok(requestMethod.called, 'the http request was initated');
-        assert.ok(requestMethod.calledOnce, 'the send method was called exactly once');
-        var calledWithArgs = sendMethod.args[0][0];
-        assert.ok(calledWithArgs.event, 'search.start', 'sends the correct event type')
-        assert.end();
-    })
+    eventsManager.start(geocoder);
+    assert.ok(pushMethod.called, 'the event was pushed to the queue');
+    assert.notOk(sendMethod.called, 'the send method is not called on each event');
+    var calledWithArgs = pushMethod.args[0][0];
+    assert.ok(calledWithArgs.event, 'search.start', 'pushes the correct event type');
+    sendMethod.restore();
+    pushMethod.restore();
+    requestMethod.restore();
+    assert.end();
 });
 
 test('search selects event', function(assert){
@@ -147,20 +153,23 @@ test('search selects event', function(assert){
     })
     var sendMethod = sinon.spy(eventsManager, "send")
     var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
+    var pushMethod = sinon.spy(eventsManager, "push");
     var geocoder = new MapboxGeocoder({accessToken: 'abc123'});
     var selectedFeature = {
         id: 'layer.1234',
         place_name: 'Peets Coffee, 123 Main Street, San Francisco, CA, 94122, United States',
     }
-    eventsManager.select(selectedFeature, geocoder, function (err, res) {
-        assert.ok(requestMethod.called, 'the http request was initated');
-        assert.ok(requestMethod.calledOnce, 'the send method was called exactly once');
-        var calledWithArgs = sendMethod.args[0][0];
-        assert.equals(calledWithArgs.event, 'search.select', 'sends the correct event type');
-        assert.equals(calledWithArgs.resultId, 'layer.1234', 'sends the correct result id');
-        assert.equals(calledWithArgs.resultPlaceName, 'Peets Coffee, 123 Main Street, San Francisco, CA, 94122, United States', 'sends the correct place name');
-        assert.end();
-    })
+    eventsManager.select(selectedFeature, geocoder);
+    assert.ok(pushMethod.called, 'the event was pushed to the queue');
+    assert.notOk(sendMethod.called, 'the send method is not called on each event');
+    var calledWithArgs = pushMethod.args[0][0];
+    assert.equals(calledWithArgs.event, 'search.select', 'pushes the correct event type');
+    assert.equals(calledWithArgs.resultId, 'layer.1234', 'pushes the correct result id');
+    assert.equals(calledWithArgs.resultPlaceName, 'Peets Coffee, 123 Main Street, San Francisco, CA, 94122, United States', 'pushes the correct place name');
+    sendMethod.restore();
+    pushMethod.restore();
+    requestMethod.restore();
+    assert.end();
 })
 
 test('generate session id', function(assert){
@@ -228,15 +237,54 @@ test('should properly handle keypress events', (assert)=>{
     var eventsManager = new MapboxEventsManager({
         accessToken: 'abc123'
     })
-    var sendMethod = sinon.spy(eventsManager, "send")
+    var sendMethod = sinon.spy(eventsManager, "send");
+    var pushMethod =  sinon.spy(eventsManager, "push");
     var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
     var geocoder = new MapboxGeocoder({accessToken: 'abc123'});
-    eventsManager.keyevent(testEvent, geocoder, function (err, res) {
-        assert.ok(requestMethod.called, 'the http request was initated');
-        assert.ok(requestMethod.calledOnce, 'the send method was called exactly once');
-        var calledWithArgs = sendMethod.args[0][0];
-        assert.equals(calledWithArgs.event, 'search.keystroke', 'sends the correct event type');
-        assert.equals(calledWithArgs.lastAction, 'S', 'sends the right key action');
-        assert.end();
-    })
+    eventsManager.keyevent(testEvent, geocoder);
+    assert.ok(requestMethod.notCalled, 'the http request was not initated');
+    assert.ok(sendMethod.notCalled, "the send method was not called");
+    assert.ok(pushMethod.calledOnce, 'the event was pushed to the event queue');
+    var calledWithArgs = pushMethod.args[0][0];
+    assert.equals(calledWithArgs.event, 'search.keystroke', 'sends the correct event type');
+    assert.equals(calledWithArgs.lastAction, 'S', 'sends the right key action');
+    assert.equals(eventsManager.eventQueue.length, 1, 'the right number of events is in the queue');
+    sendMethod.restore();
+    pushMethod.restore();
+    requestMethod.restore();
+    assert.end();
+});
+
+test('it should properly flush events after the queue is full', (assert)=>{
+    var eventsManager = new MapboxEventsManager({
+        accessToken: 'abc123',
+        maxQueueSize: 5
+    });
+    var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
+    var flushMethod = sinon.spy(eventsManager, "flush");
+    for (var i =0; i < 10; i++){
+        eventsManager.push({event: 'test.event'});
+    };
+    assert.ok(flushMethod.calledTwice, 'the events were flushed with the correct frequency');
+    assert.equals(eventsManager.eventQueue.length, 0, 'the queue is emptied after the flush');
+
+    requestMethod.restore();
+    flushMethod.restore();
+    assert.end();
+});
+
+test('remove event manager', (assert)=>{
+    var eventsManager = new MapboxEventsManager({
+        accessToken: 'abc123'
+    });
+    var flushMethod = sinon.stub(eventsManager, "flush");
+    for (var i =0; i <= 10; i++){
+        eventsManager.push({event: 'test.event'});
+    };
+    eventsManager.remove();
+    assert.ok(flushMethod.calledOnce, 'flush is called when the manager is removed');
+    assert.ok(eventsManager.eventQueue.length, 0, 'no events remain after the manager is removed');
+
+    flushMethod.restore();
+    assert.end();
 })
