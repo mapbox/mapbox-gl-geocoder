@@ -1,5 +1,6 @@
 ## Unreleased
 - Obtain language from user's browser settings [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
+- `trackProximity` turned on by default [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
 
 ## v3.1.4
 
