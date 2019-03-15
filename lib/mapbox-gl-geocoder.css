@@ -86,7 +86,8 @@
   padding: 0;
   position: absolute;
   width: 100%;
-  top: 110%;
+  top: 110%; /* calc fallback */
+  top: calc(100% + 6px);
   z-index: 1000;
   overflow: hidden;
   font-size: 13px;
