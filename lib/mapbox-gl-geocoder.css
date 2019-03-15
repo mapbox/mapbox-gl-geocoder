@@ -118,12 +118,6 @@
   text-decoration: none;
   cursor: pointer;
 }
-.mapboxgl-ctrl-geocoder ul > li.active > a {
-  color: #404040;
-  background-color: #f1f1f1;
-  text-decoration: none;
-  cursor: pointer;
-}
 
 /* animation */
 @-webkit-keyframes rotate {
