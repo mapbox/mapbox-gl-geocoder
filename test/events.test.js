@@ -156,9 +156,9 @@ test('search selects event', function(assert){
         assert.ok(requestMethod.called, 'the http request was initated');
         assert.ok(requestMethod.calledOnce, 'the send method was called exactly once');
         var calledWithArgs = sendMethod.args[0][0];
-        assert.ok(calledWithArgs.event, 'search.select', 'sends the correct event type');
-        assert.ok(calledWithArgs.resultId, 'layer.1234', 'sends the correct result id');
-        assert.ok(calledWithArgs.resultId, 'Peets Coffee, 123 Main Street, San Francisco, CA, 94122, United States', 'sends the correct place name');
+        assert.equals(calledWithArgs.event, 'search.select', 'sends the correct event type');
+        assert.equals(calledWithArgs.resultId, 'layer.1234', 'sends the correct result id');
+        assert.equals(calledWithArgs.resultPlaceName, 'Peets Coffee, 123 Main Street, San Francisco, CA, 94122, United States', 'sends the correct place name');
         assert.end();
     })
 })
@@ -223,7 +223,7 @@ test('should enable logging', (assert)=>{
 });
 
 
-test('should properly handle keylogging events', (assert)=>{
+test('should properly handle keypress events', (assert)=>{
     const testEvent = {key: 'S', code :'KeyS', metaKey: false, keyCode: 83, shiftKey: true};
     var eventsManager = new MapboxEventsManager({
         accessToken: 'abc123'
@@ -235,8 +235,8 @@ test('should properly handle keylogging events', (assert)=>{
         assert.ok(requestMethod.called, 'the http request was initated');
         assert.ok(requestMethod.calledOnce, 'the send method was called exactly once');
         var calledWithArgs = sendMethod.args[0][0];
-        assert.ok(calledWithArgs.event, 'search.keystroke', 'sends the correct event type');
-        assert.ok(calledWithArgs.lastAction, 'S', 'sends the right key action');
+        assert.equals(calledWithArgs.event, 'search.keystroke', 'sends the correct event type');
+        assert.equals(calledWithArgs.lastAction, 'S', 'sends the right key action');
         assert.end();
     })
 })
