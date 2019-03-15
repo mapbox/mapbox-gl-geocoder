@@ -27,6 +27,7 @@ test('geocoder', function(tt) {
     t.ok(geocoder.fresh, 'geocoder is initialized with fresh status to enable turnstile event');
     t.equals(geocoder.inputString, '', 'geocoder is initialized with an input string for keeping track of state');
     t.ok(geocoder.eventManager instanceof mapboxEvents, 'the geocoder has a mapbox event manager');
+    t.true(geocoder.options.trackProximity, 'sets trackProximity to true by default');
     t.end();
   });
 
@@ -408,6 +409,16 @@ test('geocoder', function(tt) {
 
     map.setZoom(9);
     t.notOk(geocoder.getProximity(), 'proximity unset after zooming out');
+  });
+
+  tt.test('options.trackProximity=false', function(t) {
+    t.plan(2);
+
+    setup({
+      trackProximity: false
+    });
+    t.false(geocoder.options.trackProximity, 'track proximity is set to false');
+    t.notOk(geocoder.getProximity(), 'proximity is not available when trackProximity is set to false');
   });
 
   tt.test('options.setProximity', function(t) {
