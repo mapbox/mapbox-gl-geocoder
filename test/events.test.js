@@ -140,7 +140,7 @@ test('search start event', function(assert){
     assert.ok(pushMethod.called, 'the event was pushed to the queue');
     assert.notOk(sendMethod.called, 'the send method is not called on each event');
     var calledWithArgs = pushMethod.args[0][0];
-    assert.ok(calledWithArgs.event, 'search.start', 'pushes the correct event type');
+    assert.equals(calledWithArgs.event, 'search.start', 'pushes the correct event type');
     sendMethod.restore();
     pushMethod.restore();
     requestMethod.restore();
@@ -176,7 +176,7 @@ test('generate session id', function(assert){
     var eventsManager = new MapboxEventsManager({
         accessToken: 'abc123'
     })
-    assert.ok(typeof eventsManager.generateSessionID(), 'string', 'generates a string id');
+    assert.equals(typeof eventsManager.generateSessionID(), 'string', 'generates a string id');
     assert.notEqual(eventsManager.generateSessionID(), eventsManager.generateSessionID(), 'session id is generated randomly');
     assert.equals(eventsManager.generateSessionID().length, 64, 'generates an ID of the correct length');
     assert.end();
@@ -187,7 +187,7 @@ test('get user agent', function(assert){
     var eventsManager = new MapboxEventsManager({
         accessToken: 'abc123'
     })
-    assert.ok(typeof eventsManager.getUserAgent(), 'string', 'returns a string');
+    assert.equals(typeof eventsManager.getUserAgent(), 'string', 'returns a string');
     assert.ok( eventsManager.getUserAgent().includes('mapbox-gl-geocoder.'), 'includes an sdk identifier');
     assert.end();
 });
@@ -202,7 +202,7 @@ test('get selected index', (assert)=>{
     geocoder._typeahead = {
         data: haystack
     };
-    assert.ok(typeof eventsManager.getSelectedIndex(needle, geocoder), 'number', 'returns the right type');
+    assert.equals(typeof eventsManager.getSelectedIndex(needle, geocoder), 'number', 'returns the right type');
     assert.equals( eventsManager.getSelectedIndex(needle, geocoder), 1, 'returns the right index');
     assert.end();
 });
@@ -273,18 +273,41 @@ test('it should properly flush events after the queue is full', (assert)=>{
     assert.end();
 });
 
+test('it should properly flush events if forced', (assert)=>{
+    var eventsManager = new MapboxEventsManager({
+        accessToken: 'abc123',
+        maxQueueSize: 25
+    });
+    var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
+    var flushMethod = sinon.spy(eventsManager, "flush");
+    for (var i =0; i < 10; i++){
+        eventsManager.push({event: 'test.event'});
+    };
+    eventsManager.push({event: 'test.event'}, true);
+    assert.ok(flushMethod.calledOnce, 'the events were flushed');
+    assert.equals(eventsManager.eventQueue.length, 0, 'the queue is emptied after the flush');
+
+    requestMethod.restore();
+    flushMethod.restore();
+    assert.end();
+});
+
 test('remove event manager', (assert)=>{
     var eventsManager = new MapboxEventsManager({
         accessToken: 'abc123'
     });
-    var flushMethod = sinon.stub(eventsManager, "flush");
+    var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
+    var flushMethod = sinon.spy(eventsManager, "flush");
     for (var i =0; i <= 10; i++){
         eventsManager.push({event: 'test.event'});
     };
     eventsManager.remove();
+    assert.ok(requestMethod.calledOnce, 'send is called when the manager is removed');
     assert.ok(flushMethod.calledOnce, 'flush is called when the manager is removed');
-    assert.ok(eventsManager.eventQueue.length, 0, 'no events remain after the manager is removed');
+    assert.equals(eventsManager.eventQueue.length, 0, 'no events remain after the manager is removed');
 
     flushMethod.restore();
+    requestMethod.restore();
     assert.end();
-})
+});
+
