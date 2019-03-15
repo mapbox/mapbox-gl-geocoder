@@ -231,7 +231,7 @@ test('should properly handle keypress events', (assert)=>{
     var sendMethod = sinon.spy(eventsManager, "send")
     var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
     var geocoder = new MapboxGeocoder({accessToken: 'abc123'});
-    eventsManager.keystroke(testEvent, geocoder, function (err, res) {
+    eventsManager.keyevent(testEvent, geocoder, function (err, res) {
         assert.ok(requestMethod.called, 'the http request was initated');
         assert.ok(requestMethod.calledOnce, 'the send method was called exactly once');
         var calledWithArgs = sendMethod.args[0][0];
