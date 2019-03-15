@@ -102,12 +102,11 @@
   clear: both;
   cursor: default;
   display: block;
-  padding: 6px 12px;
+  padding: 9px 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   color: #404040;
 }
 .mapboxgl-ctrl-geocoder ul > li:last-child > a {
@@ -121,7 +120,7 @@
 }
 .mapboxgl-ctrl-geocoder ul > li.active > a {
   color: #404040;
-  background-color: #e3e3e3;
+  background-color: #f1f1f1;
   text-decoration: none;
   cursor: pointer;
 }
