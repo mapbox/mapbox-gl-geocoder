@@ -1,6 +1,8 @@
-## Unreleased
+## Master
 
 - `trackProximity` turned on by default [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
+- `keyevent` event added to Mapbox events manager 
+
 
 ## v3.1.4
 
