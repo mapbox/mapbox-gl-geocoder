@@ -6,6 +6,7 @@ var mapboxgl = require('mapbox-gl');
 var once = require('lodash.once');
 var mapboxEvents = require('./../lib/events');
 var sinon = require('sinon');
+var localization = require('./../lib/localization');
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
 
@@ -440,6 +441,14 @@ test('geocoder', function(tt) {
         );
       })
     );
+  });
+
+  tt.test('placeholder localization', (t)=>{
+    var ensureLanguages = ['de', 'en', 'fr', 'it', 'nl', 'ca', 'cs', 'fr', 'he', 'hu', 'is', 'ja', 'ka', 'ko', 'lv', 'ka', 'ko', 'lv', 'nb', 'pl', 'pt', 'sk', 'sl', 'sr', 'th', 'zh'];
+    ensureLanguages.forEach(function(languageTag){
+      t.equals(typeof(localization.placeholder[languageTag]), 'string', 'localized placeholder value is present for language=' + languageTag);
+    });
+    t.end();
   });
 
   tt.end();
