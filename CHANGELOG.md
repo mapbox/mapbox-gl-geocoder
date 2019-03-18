@@ -1,6 +1,7 @@
 ## Unreleased
 
 - `trackProximity` turned on by default [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
+- Bump suggestions to v1.3.4
 
 ## v3.1.4
 
