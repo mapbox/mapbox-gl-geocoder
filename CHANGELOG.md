@@ -1,3 +1,6 @@
+## Master
+- Pass `flyTo` options to the map on result selection.
+
 ## v3.1.4
 
 - Emit a `clear` event when the user backspaces into an empty search bar or selects all existing text and deletes it.
