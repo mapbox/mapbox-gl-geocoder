@@ -2,6 +2,7 @@
 - Localize placeholder based on language set in constructor options [#150](https://github.com/mapbox/mapbox-gl-geocoder/issues/150)
 - `trackProximity` turned on by default [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
 - Bump suggestions to v1.3.4
+- Remove hardcoded IDs in bounding box exception list
 
 ## v3.1.4
 
