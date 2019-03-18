@@ -32,6 +32,11 @@
   overflow: hidden;
 }
 
+/* hide input clear button in IE */
+.mapboxgl-ctrl-geocoder input::-ms-clear {
+  display: none;
+}
+
 .mapboxgl-ctrl-geocoder input:focus {
   color: #404040;
   color: rgba(0, 0, 0, 0.75);
