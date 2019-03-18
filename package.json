@@ -44,7 +44,7 @@
     "eslint": "^3.19.0",
     "insert-css": "2.0.0",
     "lodash.once": "^4.0.0",
-    "mapbox-gl": "^0.27.0",
+    "mapbox-gl": "^0.53.0",
     "smokestack": "^3.3.1",
     "tap-status": "^1.0.1",
     "tape": "^4.6.0",
@@ -53,6 +53,7 @@
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.5.0",
     "lodash.debounce": "^4.0.6",
+    "mapbox-gl": "^0.53.1",
     "request": "^2.88.0",
     "sinon": "^7.2.3",
     "subtag": "^0.5.0",
