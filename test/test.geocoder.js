@@ -7,6 +7,7 @@ var once = require('lodash.once');
 var mapboxEvents = require('./../lib/events');
 var sinon = require('sinon');
 var localization = require('./../lib/localization');
+var exceptions = require('./../lib/exceptions');
 
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
@@ -313,14 +314,16 @@ test('geocoder', function(tt) {
     var fitBoundsSpy = sinon.spy(map, "fitBounds");
     geocoder.on(
       'result',
-      once(function(e) {
+      once(function() {
         t.ok(fitBoundsSpy.calledOnce, 'the map#fitBounds method was called when an excepted feature was returned');
         var fitBoundsArgs = fitBoundsSpy.args[0][0];
         // flatten
         var mapBBox = [fitBoundsArgs[0][0], fitBoundsArgs[0][1], fitBoundsArgs[1][0], fitBoundsArgs[1][1]];
+        var expectedBBox = exceptions['ca'].bbox;
+        var expectedBBoxFlat = [expectedBBox[0][0], expectedBBox[0][1], expectedBBox[1][0], expectedBBox[1][1]]
         t.ok(
           mapBBox.some(function(coord, i) {
-            return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
+            return coord.toPrecision(4) === expectedBBoxFlat[i].toPrecision(4);
           })
         );
       })
