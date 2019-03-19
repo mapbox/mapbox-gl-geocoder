@@ -18,7 +18,7 @@
 }
 
 .mapboxgl-ctrl-geocoder input[type="text"] {
-  font-size: 15px;
+  font: inherit;
   width: 100%;
   border: 0;
   background-color: transparent;
