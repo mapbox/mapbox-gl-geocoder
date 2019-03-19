@@ -84,6 +84,21 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
+  tt.test('get language when a language is provided in the options', function(t){
+    t.plan(1);
+    setup({language: 'en-UK'});
+    t.equals(geocoder.options.language, 'en-UK', 'uses the right language when set directly as an option');
+  });
+
+  tt.test('get language when a language obtained from the browser', function(t){
+    t.plan(3);
+    setup({});
+    t.ok(geocoder.options.language, 'language is defined');
+    t.ok(typeof(geocoder.options.language), 'string', 'language is defined  as a string');
+    t.ok(geocoder.options.language.split("-").length, 2, 'language is defined as an iso tag with a subtag');
+  })
+
+
   tt.test('placeholder language localization', function(t){
     t.plan(1);
     setup({language: 'de-DE'});
