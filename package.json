@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/mapbox-gl-geocoder",
-  "version": "3.1.4",
+  "version": "3.1.6",
   "description": "A geocoder control for Mapbox GL JS",
   "main": "lib/index.js",
   "unpkg": "dist/mapbox-gl-geocoder.min.js",
@@ -11,7 +11,8 @@
     "test": "browserify -t envify test/index.js test/events.test.js | smokestack -b firefox | tap-status",
     "docs": "documentation build lib/index.js --format=md > API.md",
     "pretest": "npm run lint",
-    "lint": "eslint lib"
+    "lint": "eslint lib test",
+    "precommit": "lint-staged"
   },
   "files": [
     "lib",
@@ -42,22 +43,30 @@
     "documentation": "^4.0.0-beta13",
     "envify": "^3.4.1",
     "eslint": "^3.19.0",
+    "husky": "^1.3.1",
     "insert-css": "2.0.0",
+    "lint-staged": "^8.1.5",
     "lodash.once": "^4.0.0",
     "mapbox-gl": "^0.53.0",
     "smokestack": "^3.3.1",
     "tap-status": "^1.0.1",
     "tape": "^4.6.0",
-    "uglify-js": "^2.6.4"
+    "uglify-js": "^2.6.4",
+    "sinon": "^7.2.3"
   },
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.5.0",
     "lodash.debounce": "^4.0.6",
     "mapbox-gl": "^0.53.1",
-    "request": "^2.88.0",
-    "sinon": "^7.2.3",
     "subtag": "^0.5.0",
     "suggestions": "^1.3.4",
+    "nanoid": "^2.0.1",
     "xtend": "^4.0.1"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "git add"
+    ]
   }
 }
