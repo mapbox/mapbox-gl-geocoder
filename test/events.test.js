@@ -231,6 +231,16 @@ test('should enable logging', (assert)=>{
     assert.end();
 });
 
+test('should enable logging [opt-out]', (assert)=>{
+    var optOutOptions = {
+        accessToken: 'abc123',
+        enableEventLogging: false
+    }
+    var eventsManager = new MapboxEventsManager(optOutOptions);
+    assert.false(eventsManager.shouldEnableLogging(optOutOptions), 'logging is not enabled when origin is not mapbox');
+    assert.end();
+});
+
 
 test('should properly handle keypress events', (assert)=>{
     const testEvent = {key: 'S', code :'KeyS', metaKey: false, keyCode: 83, shiftKey: true};
