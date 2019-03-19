@@ -6,6 +6,7 @@ var mapboxgl = require('mapbox-gl');
 var once = require('lodash.once');
 var mapboxEvents = require('./../lib/events');
 var sinon = require('sinon');
+var localization = require('./../lib/localization');
 
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
@@ -28,6 +29,7 @@ test('geocoder', function(tt) {
     t.ok(geocoder.fresh, 'geocoder is initialized with fresh status to enable turnstile event');
     t.equals(geocoder.inputString, '', 'geocoder is initialized with an input string for keeping track of state');
     t.ok(geocoder.eventManager instanceof mapboxEvents, 'the geocoder has a mapbox event manager');
+    t.true(geocoder.options.trackProximity, 'sets trackProximity to true by default');
     t.end();
   });
 
@@ -122,7 +124,7 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options.reverseGeocode - true', function(t) {
-    t.plan(3);
+    t.plan(4);
     setup({
       reverseGeocode: true
     });
@@ -131,9 +133,12 @@ test('geocoder', function(tt) {
       'results',
       once(function(e) {
         t.equal(e.features.length, 1, 'One result returned');
-        t.equal(
-          e.features[0].place_name,
-          'Singida, Tanzania',
+        t.ok(
+          e.features[0].place_name.indexOf('Tanzania') > -1, 
+          'returns expected result'
+        );
+        t.ok(
+          e.features[0].place_name.indexOf('Singida') > -1, 
           'returns expected result'
         );
         t.equal(e.config.limit, 1, 'sets limit to 1 for reverse geocodes');
@@ -411,6 +416,16 @@ test('geocoder', function(tt) {
     t.notOk(geocoder.getProximity(), 'proximity unset after zooming out');
   });
 
+  tt.test('options.trackProximity=false', function(t) {
+    t.plan(2);
+
+    setup({
+      trackProximity: false
+    });
+    t.false(geocoder.options.trackProximity, 'track proximity is set to false');
+    t.notOk(geocoder.getProximity(), 'proximity is not available when trackProximity is set to false');
+  });
+
   tt.test('options.setProximity', function(t) {
     t.plan(1);
 
@@ -494,6 +509,14 @@ test('geocoder', function(tt) {
       })
     );
   })
+
+  tt.test('placeholder localization', (t)=>{
+    var ensureLanguages = ['de', 'en', 'fr', 'it', 'nl', 'ca', 'cs', 'fr', 'he', 'hu', 'is', 'ja', 'ka', 'ko', 'lv', 'ka', 'ko', 'lv', 'nb', 'pl', 'pt', 'sk', 'sl', 'sr', 'th', 'zh'];
+    ensureLanguages.forEach(function(languageTag){
+      t.equals(typeof(localization.placeholder[languageTag]), 'string', 'localized placeholder value is present for language=' + languageTag);
+    });
+    t.end();
+  });
 
   tt.end();
 });

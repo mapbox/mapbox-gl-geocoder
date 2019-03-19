@@ -7,6 +7,7 @@
     -   [setInput](#setinput)
     -   [setProximity](#setproximity)
     -   [getProximity](#getproximity)
+    -   [getLanguage](#getlanguage)
     -   [on](#on)
     -   [off](#off)
 
@@ -26,7 +27,7 @@ A geocoder component using Mapbox Geocoding API
         a geographical point given as an object with latitude and longitude
         properties. Search results closer to this point will be given
         higher priority.
-    -   `options.trackProximity` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If true, the geocoder proximity will automatically update based on the map view. (optional, default `false`)
+    -   `options.trackProximity` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If true, the geocoder proximity will automatically update based on the map view. (optional, default `true`)
     -   `options.bbox` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)?** a bounding box argument: this is
         a bounding box given as an array in the format [minX, minY, maxX, maxY].
         Search results will be limited to the bounding box.
@@ -88,6 +89,14 @@ Returns **[MapboxGeocoder](#mapboxgeocoder)** this
 Get proximity
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The geocoder proximity
+
+### getLanguage
+
+Get the language to use in UI elements and when making search requests
+
+Look first at the explicitly set options otherwise use the browser's language settings
+
+Returns **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The language used by the geocoder
 
 ### on
 
