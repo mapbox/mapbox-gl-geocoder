@@ -99,5 +99,29 @@ test('Geocoder#inputControl', function(tt) {
   })
 
 
+  tt.test('placeholder language localization', function(t){
+    t.plan(1);
+    setup({language: 'de-DE'});
+    t.equal(
+      map.getContainer().querySelector('.mapboxgl-ctrl-geocoder input')
+        .placeholder,
+      'Suche',
+      'placeholder is localized based on language'
+    );
+    t.end();
+  });
+
+  tt.test('placeholder language localization with more than one language specified', function(t){
+    t.plan(1);
+    setup({language: 'de-DE,lv'});
+    t.equal(
+      map.getContainer().querySelector('.mapboxgl-ctrl-geocoder input')
+        .placeholder,
+      'Suche',
+      'placeholder is localized based on language'
+    );
+    t.end();
+  })
+
   tt.end();
 });
