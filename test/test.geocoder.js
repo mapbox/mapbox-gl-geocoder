@@ -33,18 +33,18 @@ test('geocoder', function(tt) {
   });
 
   tt.test('set/get input', function(t) {
-    t.plan(1)
+    t.plan(4)
     setup({ proximity: { longitude: -79.45, latitude: 43.65 } });
     geocoder.query('Queen Street');
+    var mapMoveSpy = sinon.spy(map, "flyTo");
     geocoder.on(
       'result',
       once(function(e) {
         t.ok(e.result, 'feature is in the event object');
-        // map.once('moveend', function() {
-        //   var center = map.getCenter();
-        //   t.notEquals(center.lng, 0, 'center.lng changed');
-        //   t.notEquals(center.lat, 0, 'center.lat changed');
-        // });
+        var mapMoveArgs = mapMoveSpy.args[0][0];
+        t.ok(mapMoveSpy.calledOnce, 'the map#flyTo method was called when a result was selected');
+        t.notEquals(mapMoveArgs.center[0], 0, 'center.lng changed')
+        t.notEquals(mapMoveArgs.center[1], 0, 'center.lat changed')
       })
     );
   });
@@ -230,13 +230,12 @@ test('geocoder', function(tt) {
     t.plan(1);
     setup({ zoom: 12 });
     geocoder.query('1714 14th St NW');
+    var mapMoveSpy = sinon.spy(map, "flyTo");
     geocoder.on(
       'result',
       once(function() {
-        t.pass();
-        // map.once('zoomend', function() {
-        //   t.equals(parseInt(map.getZoom()), 12, 'Custom zoom is supported');
-        // });
+        var mapMoveArgs = mapMoveSpy.args[0][0];
+        t.equals(mapMoveArgs.zoom, 12, 'custom zoom is supported');
       })
     );
   });
@@ -285,49 +284,43 @@ test('geocoder', function(tt) {
   });
 
   tt.test('country bbox', function(t) {
-    t.plan(1);
+    t.plan(2);
     setup({});
     geocoder.query('Spain');
+    var fitBoundsSpy = sinon.spy(map, "fitBounds");
     geocoder.on(
       'result',
       once(function(e) {
-        t.pass();
-        // map.once('moveend', function() {
-        //   var mapBBox = Array.prototype.concat.apply(
-        //     [],
-        //     map.getBounds().toArray()
-        //   );
-
-        //   t.ok(
-        //     mapBBox.some(function(coord, i) {
-        //       return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
-        //     })
-        //   );
-        // });
+        t.ok(fitBoundsSpy.calledOnce, "map#fitBounds was called when a country-level feature was returned")
+        var fitBoundsArgs = fitBoundsSpy.args[0][0];
+        // flatten
+        var mapBBox = [fitBoundsArgs[0][0], fitBoundsArgs[0][1], fitBoundsArgs[1][0], fitBoundsArgs[1][1]];
+        t.ok(
+          mapBBox.some(function(coord, i) {
+            return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
+          })
+        );
       })
     );
   });
 
   tt.test('country bbox exception', function(t) {
-    t.plan(1);
+    t.plan(2);
     setup({});
     geocoder.query('Canada');
+    var fitBoundsSpy = sinon.spy(map, "fitBounds");
     geocoder.on(
       'result',
       once(function(e) {
-        t.pass();
-        // map.once('moveend', function() {
-        //   var mapBBox = Array.prototype.concat.apply(
-        //     [],
-        //     map.getBounds().toArray()
-        //   );
-
-        //   t.ok(
-        //     mapBBox.every(function(coord, i) {
-        //       return coord.toPrecision(4) != e.result.bbox[i].toPrecision(4);
-        //     })
-        //   );
-        // });
+        t.ok(fitBoundsSpy.calledOnce, 'the map#fitBounds method was called when an excepted feature was returned');
+        var fitBoundsArgs = fitBoundsSpy.args[0][0];
+        // flatten
+        var mapBBox = [fitBoundsArgs[0][0], fitBoundsArgs[0][1], fitBoundsArgs[1][0], fitBoundsArgs[1][1]];
+        t.ok(
+          mapBBox.some(function(coord, i) {
+            return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
+          })
+        );
       })
     );
   });
