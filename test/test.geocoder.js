@@ -133,11 +133,11 @@ test('geocoder', function(tt) {
       once(function(e) {
         t.equal(e.features.length, 1, 'One result returned');
         t.ok(
-          e.features[0].place_name.indexOf('Tanzania') > -1, 
+          e.features[0].place_name.indexOf('Tanzania') > -1,
           'returns expected result'
         );
         t.ok(
-          e.features[0].place_name.indexOf('Singida') > -1, 
+          e.features[0].place_name.indexOf('Singida') > -1,
           'returns expected result'
         );
         t.equal(e.config.limit, 1, 'sets limit to 1 for reverse geocodes');
@@ -451,6 +451,55 @@ test('geocoder', function(tt) {
     ensureLanguages.forEach(function(languageTag){
       t.equals(typeof(localization.placeholder[languageTag]), 'string', 'localized placeholder value is present for language=' + languageTag);
     });
+    t.end();
+  });
+
+  tt.test('options.collapsed=true', function(t) {
+    t.plan(1);
+    setup({
+      collapsed: true
+    });
+    var wrapper = container.querySelector('.mapboxgl-ctrl-geocoder');
+    t.equal(wrapper.classList.contains('geocoder-collapsed'), true, 'mapboxgl-ctrl-geocoder has `geocoder-collapsed` class');
+    t.end();
+  });
+
+  tt.test('options.collapsed=true, focus', function(t) {
+    t.plan(1);
+    setup({
+      collapsed: true
+    });
+    var wrapper = container.querySelector('.mapboxgl-ctrl-geocoder');
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    // focus input, remove geocoder-collapsed
+    var focusEvent = document.createEvent('Event');
+    focusEvent.initEvent("focus", true, true);
+    inputEl.dispatchEvent(focusEvent);
+    t.equal(wrapper.classList.contains('geocoder-collapsed'), false, 'mapboxgl-ctrl-geocoder does not have `geocoder-collapsed` class when inputEl in focus');
+    t.end();
+  });
+
+  tt.test('options.collapsed=true, hover', function(t) {
+    t.plan(1);
+    setup({
+      collapsed: true
+    });
+    var wrapper = container.querySelector('.mapboxgl-ctrl-geocoder');
+    // hover input, remove geocoder-collapsed
+    var hoverEvent = document.createEvent('Event');
+    hoverEvent.initEvent("mouseenter", true, true);
+    wrapper.dispatchEvent(hoverEvent);
+    t.equal(wrapper.classList.contains('geocoder-collapsed'), false, 'mapboxgl-ctrl-geocoder does not have `geocoder-collapsed` class when wrapper hovered');
+    t.end();
+  });
+
+  tt.test('options.collapsed=false', function(t) {
+    t.plan(1);
+    setup({
+      collapsed: false
+    });
+    var wrapper = container.querySelector('.mapboxgl-ctrl-geocoder');
+    t.equal(wrapper.classList.contains('geocoder-collapsed'), false, 'mapboxgl-ctrl-geocoder does not have `geocoder-collapsed` class');
     t.end();
   });
 
