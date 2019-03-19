@@ -8,6 +8,14 @@
 - Remove hardcoded IDs in bounding box exception list
 - Fix duplicate event bug
 
+## v3.1.6
+-  Resolve npm publish failure
+
+## v3.1.5
+
+- Reduce bundle size by removing unnecessary dependencies needed for event logging [#188](https://github.com/mapbox/mapbox-gl-geocoder/issues/188)
+- Fix IE11 bug originating from event logging [#194](https://github.com/mapbox/mapbox-gl-geocoder/issues/194)
+
 ## v3.1.4
 
 - Emit a `clear` event when the user backspaces into an empty search bar or selects all existing text and deletes it.
