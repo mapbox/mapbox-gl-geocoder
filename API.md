@@ -7,6 +7,7 @@
     -   [setInput](#setinput)
     -   [setProximity](#setproximity)
     -   [getProximity](#getproximity)
+    -   [getLanguage](#getlanguage)
     -   [on](#on)
     -   [off](#off)
 
@@ -20,7 +21,7 @@ A geocoder component using Mapbox Geocoding API
     -   `options.accessToken` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Required.
     -   `options.origin` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Use to set a custom API origin. Defaults to <https://api.mapbox.com>.
     -   `options.zoom` **[Number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** On geocoded result what zoom level should the map animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`. (optional, default `16`)
-    -   `options.flyTo` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If false, animating the map to a selected result is disabled. (optional, default `true`)
+    -   `options.flyTo` **([Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))?** If false, animating the map to a selected result is disabled. If true, animating the map will use the default animation parameters. If an object, the object will be passed to the flyTo map method to specify a custom animation.
     -   `options.placeholder` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Override the default placeholder attribute value. (optional, default `"Search"`)
     -   `options.proximity` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** a proximity argument: this is
         a geographical point given as an object with latitude and longitude
@@ -88,6 +89,14 @@ Returns **[MapboxGeocoder](#mapboxgeocoder)** this
 Get proximity
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The geocoder proximity
+
+### getLanguage
+
+Get the language to use in UI elements and when making search requests
+
+Look first at the explicitly set options otherwise use the browser's language settings
+
+Returns **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The language used by the geocoder
 
 ### on
 

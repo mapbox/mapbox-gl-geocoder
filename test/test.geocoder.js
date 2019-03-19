@@ -6,6 +6,8 @@ var mapboxgl = require('mapbox-gl');
 var once = require('lodash.once');
 var mapboxEvents = require('./../lib/events');
 var sinon = require('sinon');
+var localization = require('./../lib/localization');
+
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
 
@@ -122,7 +124,7 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options.reverseGeocode - true', function(t) {
-    t.plan(3);
+    t.plan(4);
     setup({
       reverseGeocode: true
     });
@@ -131,9 +133,12 @@ test('geocoder', function(tt) {
       'results',
       once(function(e) {
         t.equal(e.features.length, 1, 'One result returned');
-        t.equal(
-          e.features[0].place_name,
-          'Singida, Tanzania',
+        t.ok(
+          e.features[0].place_name.indexOf('Tanzania') > -1, 
+          'returns expected result'
+        );
+        t.ok(
+          e.features[0].place_name.indexOf('Singida') > -1, 
           'returns expected result'
         );
         t.equal(e.config.limit, 1, 'sets limit to 1 for reverse geocodes');
@@ -440,6 +445,77 @@ test('geocoder', function(tt) {
         );
       })
     );
+  });
+
+  tt.test('options.flyTo [false]', function(t){
+    t.plan(1)
+    setup({
+      flyTo: false
+    });
+
+    var mapFlyMethod =  sinon.spy(map, "flyTo");
+    geocoder.query('Golden Gate Bridge');
+    geocoder.on(
+      'result',
+      once(function(e) {
+        // console.log(geocoder._typeahead)
+        t.ok(mapFlyMethod.notCalled, "The map flyTo was not called when the option was set to false")
+      })
+    );
+  });
+
+
+  tt.test('options.flyTo [true]', function(t){
+    t.plan(3)
+    setup({
+      flyTo: true
+    });
+
+    var mapFlyMethod =  sinon.spy(map, "flyTo");
+    geocoder.query('Golden Gate Bridge');
+    geocoder.on(
+      'result',
+      once(function(e) {
+        // console.log(geocoder._typeahead)
+        t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
+        var calledWithArgs = mapFlyMethod.args[0][0];
+        t.deepEqual(calledWithArgs.center, [ -122.47846, 37.819378 ], 'the map is directed to fly to the right place');
+        t.deepEqual(calledWithArgs.zoom, 16, 'the map is directed to fly to the right zoom');
+      })
+    );
+  });
+
+  tt.test('options.flyTo [object]', function(t){
+    t.plan(4)
+    setup({
+      flyTo: {
+        speed: 5,
+        zoom: 4,
+        center: [0, 0]
+      }
+    });
+
+    var mapFlyMethod =  sinon.spy(map, "flyTo");
+    geocoder.query('Golden Gate Bridge');
+    geocoder.on(
+      'result',
+      once(function(e) {
+        // console.log(geocoder._typeahead)
+        t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
+        var calledWithArgs = mapFlyMethod.args[0][0];
+        t.deepEqual(calledWithArgs.center, [ -122.47846, 37.819378 ], 'the selected result overrides the constructor center option');
+        t.deepEqual(calledWithArgs.zoom, 16, 'the selected result overrides the constructor zoom optiopn');
+        t.deepEqual(calledWithArgs.speed, 5, 'speed argument is passed to the flyTo method');
+      })
+    );
+  })
+
+  tt.test('placeholder localization', (t)=>{
+    var ensureLanguages = ['de', 'en', 'fr', 'it', 'nl', 'ca', 'cs', 'fr', 'he', 'hu', 'is', 'ja', 'ka', 'ko', 'lv', 'ka', 'ko', 'lv', 'nb', 'pl', 'pt', 'sk', 'sl', 'sr', 'th', 'zh'];
+    ensureLanguages.forEach(function(languageTag){
+      t.equals(typeof(localization.placeholder[languageTag]), 'string', 'localized placeholder value is present for language=' + languageTag);
+    });
+    t.end();
   });
 
   tt.end();
