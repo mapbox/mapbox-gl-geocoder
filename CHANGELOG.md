@@ -4,6 +4,7 @@
 - `trackProximity` turned on by default [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
 - Bump suggestions to v1.3.4
 - Fix duplicate event bug
+- Add `collapsed` option to collapse the geocoder controller into a button until hovered or focused [#222](https://github.com/mapbox/mapbox-gl-geocoder/issues/222)
 
 ## v3.1.4
 
