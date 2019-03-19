@@ -4,6 +4,7 @@
 - `trackProximity` turned on by default [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
 - Bump suggestions to v1.3.4
 - Fix duplicate event bug
+- Fix trapped focus [#220](https://github.com/mapbox/mapbox-gl-geocoder/issues/220)
 
 ## v3.1.4
 
