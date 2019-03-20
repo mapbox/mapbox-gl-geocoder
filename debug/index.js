@@ -110,6 +110,18 @@ geocoder.on('results', function(e) {
   console.log('results: ', e.features);
 });
 
+geocoder.on('result', function(e) {
+  console.log('result: ', e.result);
+});
+
+geocoder.on('clear', function(e) {
+  console.log('clear');
+});
+
+geocoder.on('loading', function(e) {
+  console.log('loading:', e.query);
+});
+
 geocoder.on('error', function(e) {
   console.log('Error is', e.error);
 });
