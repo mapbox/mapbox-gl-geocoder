@@ -6,6 +6,8 @@ var mapboxgl = require('mapbox-gl');
 var once = require('lodash.once');
 var mapboxEvents = require('./../lib/events');
 var sinon = require('sinon');
+var localization = require('./../lib/localization');
+
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
 
@@ -62,7 +64,6 @@ test('geocoder', function(tt) {
     geocoder.on(
       'results',
       once(function(e) {
-        console.log(e)
         t.ok(e.features.length, 'Event for results emitted');
         t.equals(geocoder.inputString, 'Paris', 'input string keeps track of state');
         t.equals(geocoder.fresh, false, 'once a search has been completed, the geocoder is no longer fresh');
@@ -122,7 +123,7 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options.reverseGeocode - true', function(t) {
-    t.plan(3);
+    t.plan(4);
     setup({
       reverseGeocode: true
     });
@@ -131,9 +132,12 @@ test('geocoder', function(tt) {
       'results',
       once(function(e) {
         t.equal(e.features.length, 1, 'One result returned');
-        t.equal(
-          e.features[0].place_name,
-          'Singida, Tanzania',
+        t.ok(
+          e.features[0].place_name.indexOf('Tanzania') > -1, 
+          'returns expected result'
+        );
+        t.ok(
+          e.features[0].place_name.indexOf('Singida') > -1, 
           'returns expected result'
         );
         t.equal(e.config.limit, 1, 'sets limit to 1 for reverse geocodes');
@@ -151,7 +155,6 @@ test('geocoder', function(tt) {
     geocoder.on(
       'results',
       once(function(e) {
-        console.log(e);
         t.deepEquals(e.query, [ -7.0926, 31.791 ], 'parses query');
         t.deepEquals(e.config.types.toString(), 'country', 'uses correct type passed to config' );
         t.equal(e.features[0].place_name, 'Morocco', 'returns expected result');
@@ -359,10 +362,10 @@ test('geocoder', function(tt) {
       filter: function(item) {
         // returns true if item contains 'New South Wales' as the region
         return item.context
-          .map(i => {
+          .map(function(i) {
             return i.id.startsWith('region') && i.text == 'New South Wales';
           })
-          .reduce((acc, cur) => {
+          .reduce(function (acc, cur) {
             return acc || cur;
           });
       }
@@ -374,7 +377,7 @@ test('geocoder', function(tt) {
       once(function(e) {
         t.ok(
           e.features
-            .map(feature => {
+            .map(function(feature) {
               return feature.place_name;
             })
             .includes('Heathcote, New South Wales, Australia'),
@@ -382,7 +385,7 @@ test('geocoder', function(tt) {
         );
         t.notOk(
           e.features
-            .map(feature => {
+            .map(function(feature) {
               return feature.place_name;
             })
             .includes('Heathcote, Victoria, Australia'),
@@ -440,6 +443,74 @@ test('geocoder', function(tt) {
         );
       })
     );
+  });
+
+  tt.test('options.flyTo [false]', function(t){
+    t.plan(1)
+    setup({
+      flyTo: false
+    });
+
+    var mapFlyMethod =  sinon.spy(map, "flyTo");
+    geocoder.query('Golden Gate Bridge');
+    geocoder.on(
+      'result',
+      once(function() {
+        t.ok(mapFlyMethod.notCalled, "The map flyTo was not called when the option was set to false")
+      })
+    );
+  });
+
+
+  tt.test('options.flyTo [true]', function(t){
+    t.plan(3)
+    setup({
+      flyTo: true
+    });
+
+    var mapFlyMethod =  sinon.spy(map, "flyTo");
+    geocoder.query('Golden Gate Bridge');
+    geocoder.on(
+      'result',
+      once(function() {
+        t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
+        var calledWithArgs = mapFlyMethod.args[0][0];
+        t.deepEqual(calledWithArgs.center, [ -122.47846, 37.819378 ], 'the map is directed to fly to the right place');
+        t.deepEqual(calledWithArgs.zoom, 16, 'the map is directed to fly to the right zoom');
+      })
+    );
+  });
+
+  tt.test('options.flyTo [object]', function(t){
+    t.plan(4)
+    setup({
+      flyTo: {
+        speed: 5,
+        zoom: 4,
+        center: [0, 0]
+      }
+    });
+
+    var mapFlyMethod =  sinon.spy(map, "flyTo");
+    geocoder.query('Golden Gate Bridge');
+    geocoder.on(
+      'result',
+      once(function() {
+        t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
+        var calledWithArgs = mapFlyMethod.args[0][0];
+        t.deepEqual(calledWithArgs.center, [ -122.47846, 37.819378 ], 'the selected result overrides the constructor center option');
+        t.deepEqual(calledWithArgs.zoom, 16, 'the selected result overrides the constructor zoom optiopn');
+        t.deepEqual(calledWithArgs.speed, 5, 'speed argument is passed to the flyTo method');
+      })
+    );
+  })
+
+  tt.test('placeholder localization', function(t){
+    var ensureLanguages = ['de', 'en', 'fr', 'it', 'nl', 'ca', 'cs', 'fr', 'he', 'hu', 'is', 'ja', 'ka', 'ko', 'lv', 'ka', 'ko', 'lv', 'nb', 'pl', 'pt', 'sk', 'sl', 'sr', 'th', 'zh'];
+    ensureLanguages.forEach(function(languageTag){
+      t.equals(typeof(localization.placeholder[languageTag]), 'string', 'localized placeholder value is present for language=' + languageTag);
+    });
+    t.end();
   });
 
   tt.end();

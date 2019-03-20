@@ -4,6 +4,7 @@ var once = require('lodash.once');
 var MapboxGeocoder = require('../lib/index');
 var mapboxgl = require('mapbox-gl');
 var test = require('tape');
+var sinon = require('sinon');
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
 
@@ -81,6 +82,79 @@ test('Geocoder#inputControl', function(tt) {
       'foo to the bar',
       'placeholder is custom'
     );
+    t.end();
+  });
+
+  tt.test('get language when a language is provided in the options', function(t){
+    t.plan(1);
+    setup({language: 'en-UK'});
+    t.equals(geocoder.options.language, 'en-UK', 'uses the right language when set directly as an option');
+  });
+
+  tt.test('get language when a language obtained from the browser', function(t){
+    t.plan(3);
+    setup({});
+    t.ok(geocoder.options.language, 'language is defined');
+    t.ok(typeof(geocoder.options.language), 'string', 'language is defined  as a string');
+    t.ok(geocoder.options.language.split("-").length, 2, 'language is defined as an iso tag with a subtag');
+  })
+
+
+  tt.test('placeholder language localization', function(t){
+    t.plan(1);
+    setup({language: 'de-DE'});
+    t.equal(
+      map.getContainer().querySelector('.mapboxgl-ctrl-geocoder input')
+        .placeholder,
+      'Suche',
+      'placeholder is localized based on language'
+    );
+    t.end();
+  });
+
+  tt.test('placeholder language localization with more than one language specified', function(t){
+    t.plan(1);
+    setup({language: 'de-DE,lv'});
+    t.equal(
+      map.getContainer().querySelector('.mapboxgl-ctrl-geocoder input')
+        .placeholder,
+      'Suche',
+      'placeholder is localized based on language'
+    );
+    t.end();
+  })
+
+  tt.test('_clear is not called on keydown (tab), no focus trap', function(t){
+    t.plan(3);
+    setup({});
+
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    var focusSpy = sinon.spy(inputEl, 'focus');
+    inputEl.focus();
+    t.equal(focusSpy.called, true, 'input is focused');
+    var keySpy = sinon.spy(geocoder,'_onKeyDown');
+    var clearSpy = sinon.spy(geocoder, '_clear');
+    geocoder._onKeyDown(new KeyboardEvent('keydown',{ code: 9, keyCode: 9 }));
+    t.equal(keySpy.called, true, '_onKeyDown called');
+    t.equal(clearSpy.called, false, '_clear should not be called');
+
+    t.end();
+  });
+
+  tt.test('_clear is called on keydown (not tab)', function(t){
+    t.plan(3);
+    setup({});
+
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    var focusSpy = sinon.spy(inputEl, 'focus');
+    inputEl.focus();
+    t.equal(focusSpy.called, true, 'input is focused');
+    var keySpy = sinon.spy(geocoder,'_onKeyDown');
+    var clearSpy = sinon.spy(geocoder, '_clear');
+    geocoder._onKeyDown(new KeyboardEvent('keydown',{ code: 1, keyCode: 1 }));
+    t.equal(keySpy.called, true, '_onKeyDown called');
+    t.equal(clearSpy.called, true, '_clear should be called');
+
     t.end();
   });
 
