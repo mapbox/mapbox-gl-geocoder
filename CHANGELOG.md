@@ -7,6 +7,7 @@
 - Upgrade dev dependencies
 - Remove hardcoded IDs in bounding box exception list
 - Fix duplicate event bug
+- Fix trapped focus [#220](https://github.com/mapbox/mapbox-gl-geocoder/issues/220)
 
 ## v3.1.6
 -  Resolve npm publish failure
