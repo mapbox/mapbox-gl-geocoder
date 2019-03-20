@@ -141,5 +141,22 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
+  tt.test('_clear is called on keydown (not tab)', function(t){
+    t.plan(3);
+    setup({});
+
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    var focusSpy = sinon.spy(inputEl, 'focus');
+    inputEl.focus();
+    t.equal(focusSpy.called, true, 'input is focused');
+    var keySpy = sinon.spy(geocoder,'_onKeyDown');
+    var clearSpy = sinon.spy(geocoder, '_clear');
+    geocoder._onKeyDown(new KeyboardEvent('keydown',{ code: 1, keyCode: 1 }));
+    t.equal(keySpy.called, true, '_onKeyDown called');
+    t.equal(clearSpy.called, true, '_clear should be called');
+
+    t.end();
+  });
+
   tt.end();
 });
