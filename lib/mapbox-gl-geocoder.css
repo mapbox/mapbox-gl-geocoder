@@ -99,6 +99,10 @@
   cursor: pointer;
 }
 
+.geocoder-suggestion-title {
+  font-weight: bold;
+}
+
 /* Icons */
 .geocoder-icon {
   display: inline-block;
