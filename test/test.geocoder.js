@@ -516,7 +516,8 @@ test('geocoder', function(tt) {
     t.plan(2);
 
     setup({
-      marker: true
+      marker: true,
+      mapboxgl: mapboxgl
     });
     var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
 
@@ -540,7 +541,8 @@ test('geocoder', function(tt) {
         color: "purple",
         draggable: true,
         anchor: 'top'
-      }
+      },
+      mapboxgl: mapboxgl
     });
     var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
 

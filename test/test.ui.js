@@ -27,7 +27,8 @@ test('Geocoder#inputControl', function(tt) {
 
   tt.test('input', function(t) {
     setup({
-      types: 'place'
+      types: 'place',
+      mapboxgl: mapboxgl
     });
     var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
     var clearEl = container.querySelector('.mapboxgl-ctrl-geocoder button');
@@ -123,7 +124,7 @@ test('Geocoder#inputControl', function(tt) {
       'placeholder is localized based on language'
     );
     t.end();
-  })
-
+  });
+  
   tt.end();
 });
