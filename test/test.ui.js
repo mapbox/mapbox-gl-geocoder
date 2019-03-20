@@ -4,6 +4,7 @@ var once = require('lodash.once');
 var MapboxGeocoder = require('../lib/index');
 var mapboxgl = require('mapbox-gl');
 var test = require('tape');
+var sinon = require('sinon');
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
 
@@ -122,6 +123,40 @@ test('Geocoder#inputControl', function(tt) {
     );
     t.end();
   })
+
+  tt.test('_clear is not called on keydown (tab), no focus trap', function(t){
+    t.plan(3);
+    setup({});
+
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    var focusSpy = sinon.spy(inputEl, 'focus');
+    inputEl.focus();
+    t.equal(focusSpy.called, true, 'input is focused');
+    var keySpy = sinon.spy(geocoder,'_onKeyDown');
+    var clearSpy = sinon.spy(geocoder, '_clear');
+    geocoder._onKeyDown(new KeyboardEvent('keydown',{ code: 9, keyCode: 9 }));
+    t.equal(keySpy.called, true, '_onKeyDown called');
+    t.equal(clearSpy.called, false, '_clear should not be called');
+
+    t.end();
+  });
+
+  tt.test('_clear is called on keydown (not tab)', function(t){
+    t.plan(3);
+    setup({});
+
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    var focusSpy = sinon.spy(inputEl, 'focus');
+    inputEl.focus();
+    t.equal(focusSpy.called, true, 'input is focused');
+    var keySpy = sinon.spy(geocoder,'_onKeyDown');
+    var clearSpy = sinon.spy(geocoder, '_clear');
+    geocoder._onKeyDown(new KeyboardEvent('keydown',{ code: 1, keyCode: 1 }));
+    t.equal(keySpy.called, true, '_onKeyDown called');
+    t.equal(clearSpy.called, true, '_clear should be called');
+
+    t.end();
+  });
 
   tt.end();
 });
