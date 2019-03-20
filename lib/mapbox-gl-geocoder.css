@@ -91,6 +91,7 @@
   color: #404040;
 }
 
+.mapboxgl-ctrl-geocoder ul > .active > a,
 .mapboxgl-ctrl-geocoder ul > li > a:hover {
   color: #404040;
   background-color: #f3f3f3;
