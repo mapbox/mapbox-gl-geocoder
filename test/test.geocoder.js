@@ -512,11 +512,11 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('options.addToMap', function(t) {
+  tt.test('options.marker [true]', function(t) {
     t.plan(2);
 
     setup({
-      addToMap: true
+      marker: true
     });
     var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
 
@@ -532,12 +532,11 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.markerOptions', function(t) {
+  tt.test('options.marker  [constructor properties]', function(t) {
     t.plan(4);
 
     setup({
-      addToMap: true,
-      markerOptions: {
+      marker: {
         color: "purple",
         draggable: true,
         anchor: 'top'
@@ -559,16 +558,11 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.addToMap [false]', function(t) {
+  tt.test('options.marker [false]', function(t) {
     t.plan(1);
 
     setup({
-      addToMap: false,
-      markerOptions: {
-        color: "purple",
-        draggable: true,
-        anchor: 'top'
-      }
+      marker: false
     });
     var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
 

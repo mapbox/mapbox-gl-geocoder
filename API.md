@@ -44,8 +44,7 @@ A geocoder component using Mapbox Geocoding API
     -   `options.localGeocoder` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** A function accepting the query string which performs local geocoding to supplement results from the Mapbox Geocoding API. Expected to return an Array of GeoJSON Features in the [Carmen GeoJSON](https://github.com/mapbox/carmen/blob/master/carmen-geojson.md) format.
     -   `options.reverseMode` **(`"distance"` \| `"score"`)** Set the factors that are used to sort nearby results. (optional, default `'distance'`)
     -   `options.reverseGeocode` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** Enable reverse geocoding. Defaults to false. Expects coordinates to be lat, lon.
-    -   `options.addToMap` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Indicates that the location of the user-selected result should be added to the map as a [mapbox-gl#Marker](https://docs.mapbox.com/mapbox-gl-js/api/#marker) (optional, default `true`)
-    -   `options.markerOptions` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** An object specifying the properties to use when constructing the marker, if `addToMap` is true
+    -   `options.marker` **([Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** If `true`, a [Marker](https://docs.mapbox.com/mapbox-gl-js/api/#marker) will be added to the map at the location of the user-selected result using a default set of Marker properties.  If the value is an object, the marker will be constructed using these properties. If `false`, no marker will be added to the map. (optional, default `true`)
 
 **Examples**
 
