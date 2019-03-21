@@ -1,14 +1,22 @@
 ## Master
-- Pass `flyTo` options to the map on result selection.
+
+### ⚠Breaking Changes ⚠️
 - Obtain language from user's browser settings [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
 - Localize placeholder based on language set in constructor options [#150](https://github.com/mapbox/mapbox-gl-geocoder/issues/150)
 - `trackProximity` turned on by default [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
-- Bump suggestions to v1.3.4
-- Upgrade dev dependencies
-- Remove hardcoded IDs in bounding box exception list
-- Fix duplicate event bug
-- Fix trapped focus [#220](https://github.com/mapbox/mapbox-gl-geocoder/issues/220)
+
+
+### Features / Improvements 🚀
+- Pass `flyTo` options to the map on result selection.
 - Add `collapsed` option to collapse the geocoder controller into a button until hovered or focused [#222](https://github.com/mapbox/mapbox-gl-geocoder/issues/222)
+
+### Bug Fixes 🐛
+- Upgrade dev dependencies [#216](https://github.com/mapbox/mapbox-gl-geocoder/pull/216)
+- Remove hardcoded IDs in bounding box exception list [#217](https://github.com/mapbox/mapbox-gl-geocoder/pull/217)
+- Fix double map `moveend` event [#229](https://github.com/mapbox/mapbox-gl-geocoder/pull/229)
+- Fix duplicate `result` event bug [#218](https://github.com/mapbox/mapbox-gl-geocoder/pull/218)
+- Fix trapped focus bug [#220](https://github.com/mapbox/mapbox-gl-geocoder/issues/220)
+
 
 ## v3.1.6
 -  Resolve npm publish failure
