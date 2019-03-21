@@ -15,6 +15,7 @@
   max-width: 360px;
   z-index: 1;
   border-radius: 4px;
+  transition: width .25s, min-width .25s;
 }
 
 .mapboxgl-ctrl-geocoder input[type="text"] {
@@ -22,7 +23,6 @@
   width: 100%;
   border: 0;
   background-color: transparent;
-  height: 40px;
   margin: 0;
   color: #404040; /* fallback */
   color: rgba(0, 0, 0, 0.75);
@@ -48,14 +48,21 @@
   background-color: #fff;
   z-index: 2;
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: 5px;
+  top: 7px;
   display: none;
 }
 
 .mapboxgl-ctrl-geocoder,
 .mapboxgl-ctrl-geocoder ul {
   box-shadow: 0 0 10px 2px rgba(0,0,0,.1);
+}
+
+/* Collapsed */
+.geocoder-collapsed {
+  width: 30px;
+  min-width: 30px;
+  transition: width .25s, min-width .25s;
 }
 
 /* Suggestions */
