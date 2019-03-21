@@ -4,9 +4,12 @@
 - Localize placeholder based on language set in constructor options [#150](https://github.com/mapbox/mapbox-gl-geocoder/issues/150)
 - `trackProximity` turned on by default [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
 - Bump suggestions to v1.3.4
-- Add constructor properties that allow adding the selected result to the map as a mapbox-gl#marker. Adding the result to the map is now the default behavior. 
+- Adds the `marker` constructor option that allows adding the selected result to the map as a [marker](https://docs.mapbox.com/mapbox-gl-js/api/#marker). Adding the marker to the map is now the default behavior. [#219](https://github.com/mapbox/mapbox-gl-geocoder/pull/219)
+- Upgrade dev dependencies
 - Remove hardcoded IDs in bounding box exception list
 - Fix duplicate event bug
+- Fix trapped focus [#220](https://github.com/mapbox/mapbox-gl-geocoder/issues/220)
+- Add `collapsed` option to collapse the geocoder controller into a button until hovered or focused [#222](https://github.com/mapbox/mapbox-gl-geocoder/issues/222)
 
 ## v3.1.6
 -  Resolve npm publish failure

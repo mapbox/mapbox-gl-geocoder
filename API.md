@@ -7,6 +7,8 @@
     -   [setInput](#setinput)
     -   [setProximity](#setproximity)
     -   [getProximity](#getproximity)
+    -   [setRenderFunction](#setrenderfunction)
+    -   [getRenderFunction](#getrenderfunction)
     -   [getLanguage](#getlanguage)
     -   [on](#on)
     -   [off](#off)
@@ -28,6 +30,7 @@ A geocoder component using Mapbox Geocoding API
         properties. Search results closer to this point will be given
         higher priority.
     -   `options.trackProximity` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If true, the geocoder proximity will automatically update based on the map view. (optional, default `true`)
+    -   `options.collapsed` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If true, the geocoder control will collapse until hovered or in focus. (optional, default `false`)
     -   `options.bbox` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)?** a bounding box argument: this is
         a bounding box given as an array in the format [minX, minY, maxX, maxY].
         Search results will be limited to the bounding box.
@@ -46,6 +49,8 @@ A geocoder component using Mapbox Geocoding API
     -   `options.reverseGeocode` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** Enable reverse geocoding. Defaults to false. Expects coordinates to be lat, lon.
     -   `options.marker` **([Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** If `true`, a [Marker](https://docs.mapbox.com/mapbox-gl-js/api/#marker) will be added to the map at the location of the user-selected result using a default set of Marker options.  If the value is an object, the marker will be constructed using these options. If `false`, no marker will be added to the map. (optional, default `true`)
     -   `options.mapboxgl` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** A [mapbox-gl](https://github.com/mapbox/mapbox-gl-js) instance to use when creating [Markers](https://docs.mapbox.com/mapbox-gl-js/api/#marker). Required if `options.marker` is true.
+    -   `options.render` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** A function that specifies how the results should be rendered in the dropdown menu
+    -   `options.getItemValue` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** A function that specifies how the selected result should be rendered in the search bar
 
 **Examples**
 
@@ -91,6 +96,22 @@ Returns **[MapboxGeocoder](#mapboxgeocoder)** this
 Get proximity
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The geocoder proximity
+
+### setRenderFunction
+
+Set the render function used in the results dropdown
+
+**Parameters**
+
+-   `fn` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** The function to use as a render function
+
+Returns **[MapboxGeocoder](#mapboxgeocoder)** this
+
+### getRenderFunction
+
+Get the function used to render the results dropdown
+
+Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** the render function
 
 ### getLanguage
 
