@@ -207,5 +207,17 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
+  tt.test('createIcon', function(t) {
+    t.plan(1);
+    setup({ });
+    var icon = geocoder.createIcon('search', '<path/>');
+    t.equal(
+      icon.outerHTML,
+      '<svg class="geocoder-icon geocoder-icon-search" viewBox="0 0 18 18" xml:space="preserve" width="18" height="18"><path></path></svg>',
+      'creates an svg given the class name and path'
+    );
+    t.end();
+  });
+
   tt.end();
 });
