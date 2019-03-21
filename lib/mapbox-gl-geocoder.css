@@ -24,9 +24,10 @@
   border: 0;
   background-color: transparent;
   margin: 0;
+  height: 36px;
   color: #404040; /* fallback */
   color: rgba(0, 0, 0, 0.75);
-  padding: 6px 30px 6px 36px;
+  padding: 6px 30px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -45,10 +46,9 @@
 }
 
 .mapboxgl-ctrl-geocoder .geocoder-pin-right > * {
-  background-color: #fff;
   z-index: 2;
   position: absolute;
-  right: 5px;
+  right: 8px;
   top: 7px;
   display: none;
 }
@@ -124,8 +124,8 @@
 
 .geocoder-icon-search {
   position: absolute;
-  top: 10px;
-  left: 9px;
+  top: 8px;
+  left: 5px;
   width: 20px;
   height: 20px;
 }
