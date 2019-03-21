@@ -133,11 +133,11 @@ test('geocoder', function(tt) {
       once(function(e) {
         t.equal(e.features.length, 1, 'One result returned');
         t.ok(
-          e.features[0].place_name.indexOf('Tanzania') > -1, 
+          e.features[0].place_name.indexOf('Tanzania') > -1,
           'returns expected result'
         );
         t.ok(
-          e.features[0].place_name.indexOf('Singida') > -1, 
+          e.features[0].place_name.indexOf('Singida') > -1,
           'returns expected result'
         );
         t.equal(e.config.limit, 1, 'sets limit to 1 for reverse geocodes');
