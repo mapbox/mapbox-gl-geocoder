@@ -578,6 +578,18 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test('geocode#onRemove', function(t){
+    setup({marker: true});
+
+    var removeMarkerMethod = sinon.spy(geocoder, "_removeMarker");
+
+    geocoder.onRemove();
+
+    t.ok(removeMarkerMethod.calledOnce, 'markers are removed when the plugin is removed');
+    t.equals(geocoder._map, null, "the map context is removed from the geocoder when the plugin is removed");
+
+    t.end();
+  })
 
   tt.end();
 });
