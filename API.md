@@ -2,93 +2,121 @@
 
 ### Table of Contents
 
--   [MapboxGeocoder](#mapboxgeocoder)
-    -   [query](#query)
-    -   [setInput](#setinput)
-    -   [setProximity](#setproximity)
-    -   [getProximity](#getproximity)
-    -   [getLanguage](#getlanguage)
-    -   [on](#on)
-    -   [off](#off)
+-   [MapboxGeocoder][1]
+    -   [Parameters][2]
+    -   [Examples][3]
+    -   [query][4]
+        -   [Parameters][5]
+    -   [setInput][6]
+        -   [Parameters][7]
+    -   [setProximity][8]
+        -   [Parameters][9]
+    -   [getProximity][10]
+    -   [setRenderFunction][11]
+        -   [Parameters][12]
+    -   [getRenderFunction][13]
+    -   [getLanguage][14]
+    -   [on][15]
+        -   [Parameters][16]
+    -   [off][17]
+        -   [Parameters][18]
 
 ## MapboxGeocoder
 
 A geocoder component using Mapbox Geocoding API
 
-**Parameters**
+### Parameters
 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-    -   `options.accessToken` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Required.
-    -   `options.origin` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Use to set a custom API origin. Defaults to <https://api.mapbox.com>.
-    -   `options.zoom` **[Number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** On geocoded result what zoom level should the map animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`. (optional, default `16`)
-    -   `options.flyTo` **([Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))?** If false, animating the map to a selected result is disabled. If true, animating the map will use the default animation parameters. If an object, the object will be passed to the flyTo map method to specify a custom animation.
-    -   `options.placeholder` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Override the default placeholder attribute value. (optional, default `"Search"`)
-    -   `options.proximity` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** a proximity argument: this is
+-   `options` **[Object][19]** 
+    -   `options.accessToken` **[String][20]** Required.
+    -   `options.origin` **[String][20]** Use to set a custom API origin. Defaults to [https://api.mapbox.com][21].
+    -   `options.zoom` **[Number][22]** On geocoded result what zoom level should the map animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`. (optional, default `16`)
+    -   `options.flyTo` **([Boolean][23] \| [Object][19])?** If false, animating the map to a selected result is disabled. If true, animating the map will use the default animation parameters. If an object, the object will be passed to the flyTo map method to specify a custom animation.
+    -   `options.placeholder` **[String][20]** Override the default placeholder attribute value. (optional, default `"Search"`)
+    -   `options.proximity` **[Object][19]?** a proximity argument: this is
         a geographical point given as an object with latitude and longitude
         properties. Search results closer to this point will be given
         higher priority.
-    -   `options.trackProximity` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If true, the geocoder proximity will automatically update based on the map view. (optional, default `true`)
-    -   `options.bbox` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)?** a bounding box argument: this is
+    -   `options.trackProximity` **[Boolean][23]** If true, the geocoder proximity will automatically update based on the map view. (optional, default `true`)
+    -   `options.bbox` **[Array][24]?** a bounding box argument: this is
         a bounding box given as an array in the format [minX, minY, maxX, maxY].
         Search results will be limited to the bounding box.
-    -   `options.countries` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** a comma separated list of country codes to
+    -   `options.countries` **[string][20]?** a comma separated list of country codes to
         limit results to specified country or countries.
-    -   `options.types` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** a comma seperated list of types that filter
-        results to match those specified. See <https://docs.mapbox.com/api/search/#data-types>
+    -   `options.types` **[string][20]?** a comma seperated list of types that filter
+        results to match those specified. See [https://docs.mapbox.com/api/search/#data-types][25]
         for available types.
         If reverseGeocode is enabled, you should specify one type. If you configure more than one type, the first type will be used.
-    -   `options.minLength` **[Number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Minimum number of characters to enter before results are shown. (optional, default `2`)
-    -   `options.limit` **[Number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Maximum number of results to show. (optional, default `5`)
-    -   `options.language` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas.
-    -   `options.filter` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** A function which accepts a Feature in the [Carmen GeoJSON](https://github.com/mapbox/carmen/blob/master/carmen-geojson.md) format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
-    -   `options.localGeocoder` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** A function accepting the query string which performs local geocoding to supplement results from the Mapbox Geocoding API. Expected to return an Array of GeoJSON Features in the [Carmen GeoJSON](https://github.com/mapbox/carmen/blob/master/carmen-geojson.md) format.
+    -   `options.minLength` **[Number][22]** Minimum number of characters to enter before results are shown. (optional, default `2`)
+    -   `options.limit` **[Number][22]** Maximum number of results to show. (optional, default `5`)
+    -   `options.language` **[string][20]?** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas.
+    -   `options.filter` **[Function][26]?** A function which accepts a Feature in the [Carmen GeoJSON][27] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
+    -   `options.localGeocoder` **[Function][26]?** A function accepting the query string which performs local geocoding to supplement results from the Mapbox Geocoding API. Expected to return an Array of GeoJSON Features in the [Carmen GeoJSON][27] format.
     -   `options.reverseMode` **(`"distance"` \| `"score"`)** Set the factors that are used to sort nearby results. (optional, default `'distance'`)
-    -   `options.reverseGeocode` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** Enable reverse geocoding. Defaults to false. Expects coordinates to be lat, lon.
+    -   `options.reverseGeocode` **[boolean][23]?** Enable reverse geocoding. Defaults to false. Expects coordinates to be lat, lon.
+    -   `options.render` **[Function][26]?** A function that specifies how the results should be rendered in the dropdown menu
+    -   `options.getItemValue` **[Function][26]?** A function that specifies how the selected result should be rendered in the search bar
 
-**Examples**
+### Examples
 
 ```javascript
 var geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken });
 map.addControl(geocoder);
 ```
 
-Returns **[MapboxGeocoder](#mapboxgeocoder)** `this`
+Returns **[MapboxGeocoder][28]** `this`
 
 ### query
 
 Set & query the input
 
-**Parameters**
+#### Parameters
 
--   `searchInput` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** location name or other search input
+-   `searchInput` **[string][20]** location name or other search input
 
-Returns **[MapboxGeocoder](#mapboxgeocoder)** this
+Returns **[MapboxGeocoder][28]** this
 
 ### setInput
 
 Set input
 
-**Parameters**
+#### Parameters
 
--   `searchInput` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** location name or other search input
+-   `searchInput` **[string][20]** location name or other search input
 
-Returns **[MapboxGeocoder](#mapboxgeocoder)** this
+Returns **[MapboxGeocoder][28]** this
 
 ### setProximity
 
 Set proximity
 
-**Parameters**
+#### Parameters
 
--   `proximity` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The new options.proximity value. This is a geographical point given as an object with latitude and longitude properties.
+-   `proximity` **[Object][19]** The new options.proximity value. This is a geographical point given as an object with latitude and longitude properties.
 
-Returns **[MapboxGeocoder](#mapboxgeocoder)** this
+Returns **[MapboxGeocoder][28]** this
 
 ### getProximity
 
 Get proximity
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The geocoder proximity
+Returns **[Object][19]** The geocoder proximity
+
+### setRenderFunction
+
+Set the render function used in the results dropdown
+
+#### Parameters
+
+-   `fn` **[Function][26]** The function to use as a render function
+
+Returns **[MapboxGeocoder][28]** this
+
+### getRenderFunction
+
+Get the function used to render the results dropdown
+
+Returns **[Function][26]** the render function
 
 ### getLanguage
 
@@ -96,30 +124,86 @@ Get the language to use in UI elements and when making search requests
 
 Look first at the explicitly set options otherwise use the browser's language settings
 
-Returns **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The language used by the geocoder
+Returns **[String][20]** The language used by the geocoder
 
 ### on
 
 Subscribe to events that happen within the plugin.
 
-**Parameters**
+#### Parameters
 
--   `type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** name of event. Available events and the data passed into their respective event objects are:-   **clear** `Emitted when the input is cleared`
+-   `type` **[String][20]** name of event. Available events and the data passed into their respective event objects are:-   **clear** `Emitted when the input is cleared`
     -   **loading** `{ query } Emitted when the geocoder is looking up a query`
     -   **results** `{ results } Fired when the geocoder returns a response`
     -   **result** `{ result } Fired when input is set`
     -   **error** `{ error } Error as string`
--   `fn` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** function that's called when the event is emitted.
+-   `fn` **[Function][26]** function that's called when the event is emitted.
 
-Returns **[MapboxGeocoder](#mapboxgeocoder)** this;
+Returns **[MapboxGeocoder][28]** this;
 
 ### off
 
 Remove an event
 
-**Parameters**
+#### Parameters
 
--   `type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Event name.
--   `fn` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Function that should unsubscribe to the event emitted.
+-   `type` **[String][20]** Event name.
+-   `fn` **[Function][26]** Function that should unsubscribe to the event emitted.
 
-Returns **[MapboxGeocoder](#mapboxgeocoder)** this
+Returns **[MapboxGeocoder][28]** this
+
+[1]: #mapboxgeocoder
+
+[2]: #parameters
+
+[3]: #examples
+
+[4]: #query
+
+[5]: #parameters-1
+
+[6]: #setinput
+
+[7]: #parameters-2
+
+[8]: #setproximity
+
+[9]: #parameters-3
+
+[10]: #getproximity
+
+[11]: #setrenderfunction
+
+[12]: #parameters-4
+
+[13]: #getrenderfunction
+
+[14]: #getlanguage
+
+[15]: #on
+
+[16]: #parameters-5
+
+[17]: #off
+
+[18]: #parameters-6
+
+[19]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[20]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[21]: https://api.mapbox.com
+
+[22]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[23]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[24]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[25]: https://docs.mapbox.com/api/search/#data-types
+
+[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[27]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+
+[28]: #mapboxgeocoder
