@@ -85,9 +85,6 @@
   cursor: default;
   display: block;
   padding: 6px 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   color: #404040;
 }
 
@@ -101,6 +98,13 @@
 
 .geocoder-suggestion-title {
   font-weight: bold;
+}
+
+.geocoder-suggestion-title,
+.geocoder-suggestion-address {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 /* Icons */
