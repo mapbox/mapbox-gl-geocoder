@@ -445,6 +445,88 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test('options.render', function(t){
+    t.plan(3);
+    setup({
+      render: function(feature){
+        return 'feature id is ' + feature.id
+      }
+    });
+
+    var fixture = {
+      id: 'abc123',
+      place_name: 'San Francisco, California'
+    }
+
+    t.ok(geocoder._typeahead.render, 'sets the render function on the typeahead');
+    t.equals(typeof(geocoder._typeahead.render), 'function', 'the render function on the typeahead is a function');
+    t.equals(geocoder._typeahead.render(fixture), 'feature id is abc123', 'render function is applied properly on the typeahead');
+  })
+
+  tt.test('setRenderFunction with no input', function(t){
+    t.plan(2);
+    setup({});
+    var result = geocoder.setRenderFunction();
+    t.equals(typeof(geocoder._typeahead.render), 'function', 'render function is set even when no input is passed');
+    t.ok(result instanceof MapboxGeocoder, 'setRenderFunction always returns a MapboxGeocoder instance');
+  });
+
+  tt.test('setRenderFunction with function input', function(t){
+    t.plan(2);
+    setup({});
+    var result = geocoder.setRenderFunction(function(item){return item.place_name});
+    t.equals(typeof(geocoder._typeahead.render), 'function', 'render function is set');
+    t.ok(result instanceof MapboxGeocoder, 'setRenderFunction always returns a MapboxGeocoder instance');
+  });
+
+  tt.test('getRenderFunction default', function(t){
+    t.plan(2);
+    setup({});
+    var result = geocoder.getRenderFunction();
+    t.ok(result, 'value is always returned');
+    t.equals(typeof(result), 'function', 'function is always returned');
+  })
+
+  tt.test('getRenderFunction', function(t){
+    t.plan(2);
+    setup({render: function(item){return item.place_name}});
+    var result = geocoder.getRenderFunction();
+    t.ok(result, 'value is returned when a custom function is set');
+    t.equals(typeof(result), 'function', 'function is returned  when a custom function is set');
+  })
+
+  tt.test('options.getItemValue', function(t){
+    setup({
+      getItemValue: function(feature){
+        return 'feature id is ' + feature.id
+      }
+    });
+
+    var fixture = {
+      id: 'abc123',
+      place_name: 'San Francisco, California'
+    }
+
+    t.ok(geocoder._typeahead.getItemValue, 'sets the get item function on the typeahead');
+    t.equals(typeof(geocoder._typeahead.getItemValue), 'function', 'the getItemValue on the typeahead is a function');
+    t.equals(geocoder._typeahead.getItemValue(fixture), 'feature id is abc123', 'getItemValue function is applied properly on the typeahead');
+    t.end();
+  });
+
+  tt.test('options.getItemValue default', function(t){
+    setup({});
+
+    var fixture = {
+      id: 'abc123',
+      place_name: 'San Francisco, California'
+    }
+
+    t.ok(geocoder._typeahead.getItemValue, 'the get item function on the typeahead is set by default');
+    t.equals(typeof(geocoder._typeahead.getItemValue), 'function', 'the getItemValue on the typeahead is a function by default');
+    t.equals(geocoder._typeahead.getItemValue(fixture), 'San Francisco, California', 'the getItemValue uses the place_name by default');
+    t.end()
+  });
+
   tt.test('options.flyTo [false]', function(t){
     t.plan(1)
     setup({
