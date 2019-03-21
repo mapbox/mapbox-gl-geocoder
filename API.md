@@ -56,6 +56,7 @@ A geocoder component using Mapbox Geocoding API
     -   `options.reverseGeocode` **[boolean][23]?** Enable reverse geocoding. Defaults to false. Expects coordinates to be lat, lon.
     -   `options.render` **[Function][26]?** A function that specifies how the results should be rendered in the dropdown menu
     -   `options.getItemValue` **[Function][26]?** A function that specifies how the selected result should be rendered in the search bar
+    -   `options.feedback` **[boolean][23]** Enable submit search feedback link (optional, default `true`)
 
 ### Examples
 
