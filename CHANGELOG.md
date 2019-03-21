@@ -8,6 +8,7 @@
 - Remove hardcoded IDs in bounding box exception list
 - Fix duplicate event bug
 - Fix trapped focus [#220](https://github.com/mapbox/mapbox-gl-geocoder/issues/220)
+- Add `get` and `set` methods for constructor options [#226](https://github.com/mapbox/mapbox-gl-geocoder/pull/226)
 
 ## v3.1.6
 -  Resolve npm publish failure
