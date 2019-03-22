@@ -279,7 +279,7 @@ Returns **[MapboxGeocoder][57]** this
 
 ### getLimit
 
-Get the limit value used by the plugin
+Get the limit value for the number of results to display used by the plugin
 
 Returns **[Number][51]** The limit value for the number of results to display used by the plugin
 
