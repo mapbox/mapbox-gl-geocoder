@@ -35,11 +35,11 @@ var map = new mapboxgl.Map({
 var coordinatesGeocoder = function(query) {
   var matches = query.match(/^[ ]*(-?\d+\.?\d*)[, ]+(-?\d+\.?\d*)[ ]*$/);
   if (!matches) {
-    return null;
+    return [];
   }
-  function coordinateFeature(lng, lat) {
-    var lng = Number(lng);
-    var lat = Number(lat);
+  function coordinateFeature(_lng, _lat) {
+    var lng = Number(_lng);
+    var lat = Number(_lat);
     return {
       center: [lng, lat],
       geometry: {
@@ -75,7 +75,8 @@ var geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
   trackProximity: true,
   localGeocoder: function(query) {
-    return coordinatesGeocoder(query);
+    // return Promise.reject("404 error");
+    return Promise.resolve(coordinatesGeocoder(query));
   }
 });
 
