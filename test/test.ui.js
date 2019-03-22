@@ -4,6 +4,7 @@ var once = require('lodash.once');
 var MapboxGeocoder = require('../lib/index');
 var mapboxgl = require('mapbox-gl');
 var test = require('tape');
+var sinon = require('sinon');
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
 
@@ -122,6 +123,101 @@ test('Geocoder#inputControl', function(tt) {
     );
     t.end();
   })
+
+  tt.test('_clear is not called on keydown (tab), no focus trap', function(t){
+    t.plan(3);
+    setup({});
+
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    var focusSpy = sinon.spy(inputEl, 'focus');
+    inputEl.focus();
+    t.equal(focusSpy.called, true, 'input is focused');
+    var keySpy = sinon.spy(geocoder,'_onKeyDown');
+    var clearSpy = sinon.spy(geocoder, '_clear');
+    geocoder._onKeyDown(new KeyboardEvent('keydown',{ code: 9, keyCode: 9 }));
+    t.equal(keySpy.called, true, '_onKeyDown called');
+    t.equal(clearSpy.called, false, '_clear should not be called');
+
+    t.end();
+  });
+
+  tt.test('_clear is called on keydown (not tab)', function(t){
+    t.plan(3);
+    setup({});
+
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    var focusSpy = sinon.spy(inputEl, 'focus');
+    inputEl.focus();
+    t.equal(focusSpy.called, true, 'input is focused');
+    var keySpy = sinon.spy(geocoder,'_onKeyDown');
+    var clearSpy = sinon.spy(geocoder, '_clear');
+    geocoder._onKeyDown(new KeyboardEvent('keydown',{ code: 1, keyCode: 1 }));
+    t.equal(keySpy.called, true, '_onKeyDown called');
+    t.equal(clearSpy.called, true, '_clear should be called');
+
+    t.end();
+  });
+
+  tt.test('options.collapsed=true', function(t) {
+    t.plan(1);
+    setup({
+      collapsed: true
+    });
+    var wrapper = container.querySelector('.mapboxgl-ctrl-geocoder');
+    t.equal(wrapper.classList.contains('geocoder-collapsed'), true, 'mapboxgl-ctrl-geocoder has `geocoder-collapsed` class');
+    t.end();
+  });
+
+  tt.test('options.collapsed=true, focus', function(t) {
+    t.plan(1);
+    setup({
+      collapsed: true
+    });
+    var wrapper = container.querySelector('.mapboxgl-ctrl-geocoder');
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    // focus input, remove geocoder-collapsed
+    var focusEvent = document.createEvent('Event');
+    focusEvent.initEvent("focus", true, true);
+    inputEl.dispatchEvent(focusEvent);
+    t.equal(wrapper.classList.contains('geocoder-collapsed'), false, 'mapboxgl-ctrl-geocoder does not have `geocoder-collapsed` class when inputEl in focus');
+    t.end();
+  });
+
+  tt.test('options.collapsed=true, hover', function(t) {
+    t.plan(1);
+    setup({
+      collapsed: true
+    });
+    var wrapper = container.querySelector('.mapboxgl-ctrl-geocoder');
+    // hover input, remove geocoder-collapsed
+    var hoverEvent = document.createEvent('Event');
+    hoverEvent.initEvent("mouseenter", true, true);
+    wrapper.dispatchEvent(hoverEvent);
+    t.equal(wrapper.classList.contains('geocoder-collapsed'), false, 'mapboxgl-ctrl-geocoder does not have `geocoder-collapsed` class when wrapper hovered');
+    t.end();
+  });
+
+  tt.test('options.collapsed=false', function(t) {
+    t.plan(1);
+    setup({
+      collapsed: false
+    });
+    var wrapper = container.querySelector('.mapboxgl-ctrl-geocoder');
+    t.equal(wrapper.classList.contains('geocoder-collapsed'), false, 'mapboxgl-ctrl-geocoder does not have `geocoder-collapsed` class');
+    t.end();
+  });
+
+  tt.test('createIcon', function(t) {
+    t.plan(1);
+    setup({ });
+    var icon = geocoder.createIcon('search', '<path/>');
+    t.equal(
+      icon.outerHTML,
+      '<svg class="geocoder-icon geocoder-icon-search" viewBox="0 0 18 18" xml:space="preserve" width="18" height="18"><path></path></svg>',
+      'creates an svg given the class name and path'
+    );
+    t.end();
+  });
 
   tt.end();
 });
