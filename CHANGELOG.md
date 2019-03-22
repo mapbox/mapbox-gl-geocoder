@@ -1,3 +1,54 @@
+## v3.1.6
+-  Resolve npm publish failure
+
+## v3.1.5
+
+- Reduce bundle size by removing unnecessary dependencies needed for event logging [#188](https://github.com/mapbox/mapbox-gl-geocoder/issues/188)
+- Fix IE11 bug originating from event logging [#194](https://github.com/mapbox/mapbox-gl-geocoder/issues/194)
+
+## v3.1.4
+
+- Emit a `clear` event when the user backspaces into an empty search bar or selects all existing text and deletes it.
+
+
+## v3.1.3
+
+- Fix bug where events were logging -1 as resultIndex
+
+## v3.1.2
+
+- Enable interaction event logging
+
+### v3.1.1
+
+- [bug] Ensures proximity is passed to client [#180](https://github.com/mapbox/mapbox-gl-geocoder/pull/180)
+
+### v3.1.0
+
+- Makes `reverseGeocode` an option (defaults to false) [#177](https://github.com/mapbox/mapbox-gl-geocoder/pull/177)
+- Fixes string parsing for multiple values passed to `countries`, `types`, and `languages` [#177](https://github.com/mapbox/mapbox-gl-geocoder/pull/177)
+- More generous coordinate parsing for reverse geocodes [#177](https://github.com/mapbox/mapbox-gl-geocoder/pull/177)
+
+### v3.0.1
+
+- Increment version to publish public package
+
+### v3.0.0
+
+- Uses mapbox-sdk-js to handle the client [#175](https://github.com/mapbox/mapbox-gl-geocoder/pull/175)
+- Adds support for reverse geocoding [#175](https://github.com/mapbox/mapbox-gl-geocoder/pull/175)
+- Supports custom origin [#175](https://github.com/mapbox/mapbox-gl-geocoder/pull/175)
+- Adds `reverseMode` as an option for sorting results [#175](https://github.com/mapbox/mapbox-gl-geocoder/pull/175)
+
+Breaking changes:
+
+- `country` is now `countries` for options to pass into geocoder
+
+### v2.3.0
+
+- Add trackProximity option [#151](https://github.com/mapbox/mapbox-gl-geocoder/pull/151)
+- Always fit to bbox if exists in Geocoding API response [#148](https://github.com/mapbox/mapbox-gl-geocoder/pull/148)
+
 ### v2.2.0
 
 - Add filter option [#133](https://github.com/mapbox/mapbox-gl-geocoder/pull/133)
@@ -13,7 +64,7 @@
 
 ### v2.1.1
 
-- Adds option for language parameter [#126](https://github.com/mapbox/mapbox-gl-geocoder/pull/126). 
+- Adds option for language parameter [#126](https://github.com/mapbox/mapbox-gl-geocoder/pull/126).
 
 ### v2.1.0
 
