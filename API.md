@@ -178,7 +178,7 @@ Set the zoom level
 
 #### Parameters
 
--   `zoom` **[Number][51]** On geocoded result what zoom level should the map animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`.
+-   `zoom` **[Number][51]** The zoom level that the map should animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`.
 
 Returns **[MapboxGeocoder][57]** this
 
@@ -190,7 +190,7 @@ Returns **[MapboxGeocoder][57]** this
 
 ### setFlyTo
 
-Sets the flyTo options
+Set the flyTo options
 
 #### Parameters
 
@@ -214,13 +214,13 @@ Returns **[MapboxGeocoder][57]** this
 
 ### getBbox
 
-Gets the bounding box used by the plugin
+Get the bounding box used by the plugin
 
 Returns **[Array][53]&lt;[Number][51]>** the bounding box, if any
 
 ### setBbox
 
-Sets the bounding box to limit search results to
+Set the bounding box to limit search results to
 
 #### Parameters
 
@@ -252,24 +252,24 @@ Returns **[String][49]** a comma separated list of types to limit to
 
 ### setTypes
 
-Set the countries to limit search results to
+Set the types to limit search results to
 
 #### Parameters
 
 -   `types`  
--   `countries` **[String][49]** a comma separated list of countries to limit to
+-   `countries` **[String][49]** a comma separated list of types to limit to
 
 Returns **[MapboxGeocoder][57]** this
 
 ### getMinLength
 
-Get the minimum length used in the plugin
+Get the minimum number of characters typed to trigger results used in the plugin
 
-Returns **[Number][51]** 
+Returns **[Number][51]** The minimum length in characters before a search is triggered
 
 ### setMinLength
 
-Set the minimum length value used by the plugin
+Set the minimum number of characters typed to trigger results used by the plugin
 
 #### Parameters
 
@@ -281,11 +281,11 @@ Returns **[MapboxGeocoder][57]** this
 
 Get the limit value used by the plugin
 
-Returns **[Number][51]** the limit value
+Returns **[Number][51]** The limit value for the number of results to display used by the plugin
 
 ### setLimit
 
-Set the limit value used by the plugin
+Set the limit value for the number of results to display used by the plugin
 
 #### Parameters
 
@@ -301,11 +301,11 @@ Returns **[Function][55]** the filter function
 
 ### setFilter
 
-Set the filter function used by the plugin
+Set the filter function used by the plugin.
 
 #### Parameters
 
--   `filter` **[Function][55]** the function to use as the filter
+-   `filter` **[Function][55]** A function which accepts a Feature in the [Carmen GeoJSON][56] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
 
 Returns **[MapboxGeocoder][57]** this
 
