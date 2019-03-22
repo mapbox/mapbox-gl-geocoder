@@ -8,6 +8,7 @@
 - Remove hardcoded IDs in bounding box exception list
 - Fix duplicate event bug
 - Fix trapped focus [#220](https://github.com/mapbox/mapbox-gl-geocoder/issues/220)
+- Add `get` and `set` methods for constructor options [#226](https://github.com/mapbox/mapbox-gl-geocoder/pull/226)
 - Add `collapsed` option to collapse the geocoder controller into a button until hovered or focused [#222](https://github.com/mapbox/mapbox-gl-geocoder/issues/222)
 
 ## v3.1.6
