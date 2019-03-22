@@ -581,11 +581,53 @@ test('geocoder', function(tt) {
         t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
         var calledWithArgs = mapFlyMethod.args[0][0];
         t.deepEqual(calledWithArgs.center, [ -122.47846, 37.819378 ], 'the selected result overrides the constructor center option');
-        t.deepEqual(calledWithArgs.zoom, 16, 'the selected result overrides the constructor zoom optiopn');
+        t.deepEqual(calledWithArgs.zoom, 4, 'the selected result overrides the constructor zoom option');
         t.deepEqual(calledWithArgs.speed, 5, 'speed argument is passed to the flyTo method');
       })
     );
-  })
+  });
+
+
+  tt.test('options.flyTo object on feature with bounding box', function(t){
+    t.plan(2 )
+    setup({
+      flyTo: {
+        speed: 5
+      }
+    });
+
+    var mapFlyMethod =  sinon.spy(map, "fitBounds");
+    geocoder.query('Brazil');
+    geocoder.on(
+      'result',
+      once(function() {
+        t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
+        var calledWithArgs = mapFlyMethod.args[0][1];
+        t.deepEqual(calledWithArgs.speed, 5, 'speed argument is passed to the flyTo method');
+      })
+    );
+  });
+
+
+  tt.test('options.flyTo object on bounding box excepted feature', function(t){
+    t.plan(2)
+    setup({
+      flyTo: {
+        speed: 5
+      }
+    });
+
+    var mapFlyMethod =  sinon.spy(map, "fitBounds");
+    geocoder.query('Canada');
+    geocoder.on(
+      'result',
+      once(function() {
+        t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
+        var calledWithArgs = mapFlyMethod.args[0][1];
+        t.deepEqual(calledWithArgs.speed, 5, 'speed argument is passed to the flyTo method');
+      })
+    );
+  });
 
   tt.test('placeholder localization', function(t){
     var ensureLanguages = ['de', 'en', 'fr', 'it', 'nl', 'ca', 'cs', 'fr', 'he', 'hu', 'is', 'ja', 'ka', 'ko', 'lv', 'ka', 'ko', 'lv', 'nb', 'pl', 'pt', 'sk', 'sl', 'sr', 'th', 'zh'];

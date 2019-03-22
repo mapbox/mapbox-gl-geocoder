@@ -31,7 +31,7 @@ A geocoder component using Mapbox Geocoding API
     -   `options.accessToken` **[String][20]** Required.
     -   `options.origin` **[String][20]** Use to set a custom API origin. Defaults to [https://api.mapbox.com][21].
     -   `options.zoom` **[Number][22]** On geocoded result what zoom level should the map animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`. (optional, default `16`)
-    -   `options.flyTo` **([Boolean][23] \| [Object][19])?** If false, animating the map to a selected result is disabled. If true, animating the map will use the default animation parameters. If an object, the object will be passed to the flyTo map method to specify a custom animation.
+    -   `options.flyTo` **([Boolean][23] \| [Object][19])?** If false, animating the map to a selected result is disabled. If true, animating the map will use the default animation parameters. If an object, the object will be passed to the map method to specify a custom animation when a result is selected.
     -   `options.placeholder` **[String][20]** Override the default placeholder attribute value. (optional, default `"Search"`)
     -   `options.proximity` **[Object][19]?** a proximity argument: this is
         a geographical point given as an object with latitude and longitude
