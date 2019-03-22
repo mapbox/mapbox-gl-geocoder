@@ -28,12 +28,13 @@ test('Geocoder#inputControl', function(tt) {
 
   tt.test('input', function(t) {
     setup({
-      types: 'place'
+      types: 'place',
+      mapboxgl: mapboxgl
     });
     var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
     var clearEl = container.querySelector('.mapboxgl-ctrl-geocoder button');
 
-    t.plan(7);
+    t.plan(9);
 
     geocoder.on(
       'loading',
@@ -47,6 +48,7 @@ test('Geocoder#inputControl', function(tt) {
       'result',
       once(function() {
         t.ok(inputEl.value, 'value populates in input');
+        t.ok(geocoder.mapMarker, 'a marker is created to show the selection')
         clearEl.dispatchEvent(clickEvent);
       })
     );
@@ -56,6 +58,7 @@ test('Geocoder#inputControl', function(tt) {
       once(function() {
         t.pass('input was cleared');
         t.equals(geocoder.fresh, false, 'the geocoder is fresh again')
+        t.equals(geocoder.mapMarker, null, 'the marker was reset on clear')
 
         geocoder.setInput('Paris');
         t.equals(inputEl.value, 'Paris', 'value populates in input');
@@ -122,7 +125,7 @@ test('Geocoder#inputControl', function(tt) {
       'placeholder is localized based on language'
     );
     t.end();
-  })
+  });
 
   tt.test('_clear is not called on keydown (tab), no focus trap', function(t){
     t.plan(3);

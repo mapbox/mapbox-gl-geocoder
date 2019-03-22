@@ -7,6 +7,7 @@ var once = require('lodash.once');
 var mapboxEvents = require('./../lib/events');
 var sinon = require('sinon');
 var localization = require('./../lib/localization');
+var exceptions = require('./../lib/exceptions');
 
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
@@ -34,18 +35,18 @@ test('geocoder', function(tt) {
   });
 
   tt.test('set/get input', function(t) {
+    t.plan(4)
     setup({ proximity: { longitude: -79.45, latitude: 43.65 } });
     geocoder.query('Queen Street');
+    var mapMoveSpy = sinon.spy(map, "flyTo");
     geocoder.on(
       'result',
       once(function(e) {
         t.ok(e.result, 'feature is in the event object');
-        map.once('moveend', function() {
-          var center = map.getCenter();
-          t.notEquals(center.lng, 0, 'center.lng changed');
-          t.notEquals(center.lat, 0, 'center.lat changed');
-          t.end();
-        });
+        var mapMoveArgs = mapMoveSpy.args[0][0];
+        t.ok(mapMoveSpy.calledOnce, 'the map#flyTo method was called when a result was selected');
+        t.notEquals(mapMoveArgs.center[0], 0, 'center.lng changed')
+        t.notEquals(mapMoveArgs.center[1], 0, 'center.lat changed')
       })
     );
   });
@@ -232,12 +233,12 @@ test('geocoder', function(tt) {
     t.plan(1);
     setup({ zoom: 12 });
     geocoder.query('1714 14th St NW');
+    var mapMoveSpy = sinon.spy(map, "flyTo");
     geocoder.on(
       'result',
       once(function() {
-        map.once('zoomend', function() {
-          t.equals(parseInt(map.getZoom()), 12, 'Custom zoom is supported');
-        });
+        var mapMoveArgs = mapMoveSpy.args[0][0];
+        t.equals(mapMoveArgs.zoom, 12, 'custom zoom is supported');
       })
     );
   });
@@ -286,47 +287,45 @@ test('geocoder', function(tt) {
   });
 
   tt.test('country bbox', function(t) {
-    t.plan(1);
+    t.plan(2);
     setup({});
     geocoder.query('Spain');
+    var fitBoundsSpy = sinon.spy(map, "fitBounds");
     geocoder.on(
       'result',
       once(function(e) {
-        map.once('moveend', function() {
-          var mapBBox = Array.prototype.concat.apply(
-            [],
-            map.getBounds().toArray()
-          );
-
-          t.ok(
-            mapBBox.some(function(coord, i) {
-              return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
-            })
-          );
-        });
+        t.ok(fitBoundsSpy.calledOnce, "map#fitBounds was called when a country-level feature was returned")
+        var fitBoundsArgs = fitBoundsSpy.args[0][0];
+        // flatten
+        var mapBBox = [fitBoundsArgs[0][0], fitBoundsArgs[0][1], fitBoundsArgs[1][0], fitBoundsArgs[1][1]];
+        t.ok(
+          mapBBox.some(function(coord, i) {
+            return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
+          })
+        );
       })
     );
   });
 
   tt.test('country bbox exception', function(t) {
-    t.plan(1);
+    t.plan(2);
     setup({});
     geocoder.query('Canada');
+    var fitBoundsSpy = sinon.spy(map, "fitBounds");
     geocoder.on(
       'result',
-      once(function(e) {
-        map.once('moveend', function() {
-          var mapBBox = Array.prototype.concat.apply(
-            [],
-            map.getBounds().toArray()
-          );
-
-          t.ok(
-            mapBBox.every(function(coord, i) {
-              return coord.toPrecision(4) != e.result.bbox[i].toPrecision(4);
-            })
-          );
-        });
+      once(function() {
+        t.ok(fitBoundsSpy.calledOnce, 'the map#fitBounds method was called when an excepted feature was returned');
+        var fitBoundsArgs = fitBoundsSpy.args[0][0];
+        // flatten
+        var mapBBox = [fitBoundsArgs[0][0], fitBoundsArgs[0][1], fitBoundsArgs[1][0], fitBoundsArgs[1][1]];
+        var expectedBBox = exceptions['ca'].bbox;
+        var expectedBBoxFlat = [expectedBBox[0][0], expectedBBox[0][1], expectedBBox[1][0], expectedBBox[1][1]]
+        t.ok(
+          mapBBox.some(function(coord, i) {
+            return coord.toPrecision(4) === expectedBBoxFlat[i].toPrecision(4);
+          })
+        );
       })
     );
   });
@@ -637,6 +636,84 @@ test('geocoder', function(tt) {
     t.end();
   });
 
+  tt.test('options.marker [true]', function(t) {
+    t.plan(2);
+
+    setup({
+      marker: true,
+      mapboxgl: mapboxgl
+    });
+    var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
+
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function() {  
+        t.ok(markerConstructorSpy.calledOnce, "a new marker is added to the map");
+        var calledWithOptions = markerConstructorSpy.args[0][0];
+        t.equals(calledWithOptions.color, '#4668F2', 'a default color is set');
+        markerConstructorSpy.restore();
+      })
+    );
+  });
+
+  tt.test('options.marker  [constructor properties]', function(t) {
+    t.plan(4);
+
+    setup({
+      marker: {
+        color: "purple",
+        draggable: true,
+        anchor: 'top'
+      },
+      mapboxgl: mapboxgl
+    });
+    var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
+
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function() {  
+        t.ok(markerConstructorSpy.calledOnce, "a new marker is added to the map");
+        var calledWithOptions = markerConstructorSpy.args[0][0];
+        t.equals(calledWithOptions.color, 'purple', "sets the correct color property");
+        t.equals(calledWithOptions.draggable, true, "sets the correct draggable property");
+        t.equals(calledWithOptions.anchor, 'top', "default anchor is overriden by custom properties");
+        markerConstructorSpy.restore();
+      })
+    );
+  });
+
+  tt.test('options.marker [false]', function(t) {
+    t.plan(1);
+
+    setup({
+      marker: false
+    });
+    var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
+
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function() {  
+        t.ok(markerConstructorSpy.notCalled, "a new marker is not added to the map");
+        markerConstructorSpy.restore();
+      })
+    );
+  });
+
+  tt.test('geocode#onRemove', function(t){
+    setup({marker: true});
+
+    var removeMarkerMethod = sinon.spy(geocoder, "_removeMarker");
+
+    geocoder.onRemove();
+
+    t.ok(removeMarkerMethod.calledOnce, 'markers are removed when the plugin is removed');
+    t.equals(geocoder._map, null, "the map context is removed from the geocoder when the plugin is removed");
+
+    t.end();
+  })
   tt.test('geocoder#setLanguage', function(t){
     setup({language: 'de-DE'});
     t.equals(geocoder.options.language,  'de-DE', 'the correct language is set on initialization');

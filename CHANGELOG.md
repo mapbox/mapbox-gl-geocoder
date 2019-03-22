@@ -1,9 +1,11 @@
 ## Master
+- Support for the Mapbox GL JS 0.47.0 API. This is compatible with 0.47.0 and later, and may not be compatible with earlier versions.
 - Pass `flyTo` options to the map on result selection on both map#flyTo and map#fitBounds operations [#214](https://github.com/mapbox/mapbox-gl-geocoder/pull/214)  and [#227](https://github.com/mapbox/mapbox-gl-geocoder/pull/227)
 - Obtain language from user's browser settings [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
 - Localize placeholder based on language set in constructor options [#150](https://github.com/mapbox/mapbox-gl-geocoder/issues/150)
 - `trackProximity` turned on by default [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
 - Bump suggestions to v1.3.4
+- Adds the `marker` constructor option that allows adding the selected result to the map as a [marker](https://docs.mapbox.com/mapbox-gl-js/api/#marker). Adding the marker to the map is now the default behavior. [#219](https://github.com/mapbox/mapbox-gl-geocoder/pull/219). 
 - Upgrade dev dependencies
 - Remove hardcoded IDs in bounding box exception list
 - Fix duplicate event bug
