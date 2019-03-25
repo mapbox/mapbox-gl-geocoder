@@ -84,6 +84,7 @@ A geocoder component using Mapbox Geocoding API
     -   `options.localGeocoder` **[Function][55]?** A function accepting the query string which performs local geocoding to supplement results from the Mapbox Geocoding API. Expected to return an Array of GeoJSON Features in the [Carmen GeoJSON][56] format.
     -   `options.reverseMode` **(`"distance"` \| `"score"`)** Set the factors that are used to sort nearby results. (optional, default `'distance'`)
     -   `options.reverseGeocode` **[boolean][52]?** Enable reverse geocoding. Defaults to false. Expects coordinates to be lat, lon.
+    -   `options.enableEventLogging` **[Boolean][52]** Allow Mapbox to collect anonymous usage statistics from the plugin (optional, default `true`)
     -   `options.marker` **([Boolean][52] \| [Object][48])** If `true`, a [Marker][57] will be added to the map at the location of the user-selected result using a default set of Marker options.  If the value is an object, the marker will be constructed using these options. If `false`, no marker will be added to the map. (optional, default `true`)
     -   `options.mapboxgl` **[Object][48]?** A [mapbox-gl][58] instance to use when creating [Markers][57]. Required if `options.marker` is true.
     -   `options.render` **[Function][55]?** A function that specifies how the results should be rendered in the dropdown menu

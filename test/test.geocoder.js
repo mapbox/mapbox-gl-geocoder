@@ -31,6 +31,7 @@ test('geocoder', function(tt) {
     t.equals(geocoder.inputString, '', 'geocoder is initialized with an input string for keeping track of state');
     t.ok(geocoder.eventManager instanceof mapboxEvents, 'the geocoder has a mapbox event manager');
     t.true(geocoder.options.trackProximity, 'sets trackProximity to true by default');
+    t.true(geocoder.options.enableEventLogging, 'anonymous usage statistics are collected by default');
     t.end();
   });
 
