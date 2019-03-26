@@ -7,6 +7,7 @@ var once = require('lodash.once');
 var mapboxEvents = require('./../lib/events');
 var sinon = require('sinon');
 var localization = require('./../lib/localization');
+var exceptions = require('./../lib/exceptions');
 
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
@@ -30,22 +31,23 @@ test('geocoder', function(tt) {
     t.equals(geocoder.inputString, '', 'geocoder is initialized with an input string for keeping track of state');
     t.ok(geocoder.eventManager instanceof mapboxEvents, 'the geocoder has a mapbox event manager');
     t.true(geocoder.options.trackProximity, 'sets trackProximity to true by default');
+    t.true(geocoder.options.enableEventLogging, 'anonymous usage statistics are collected by default');
     t.end();
   });
 
   tt.test('set/get input', function(t) {
+    t.plan(4)
     setup({ proximity: { longitude: -79.45, latitude: 43.65 } });
     geocoder.query('Queen Street');
+    var mapMoveSpy = sinon.spy(map, "flyTo");
     geocoder.on(
       'result',
       once(function(e) {
         t.ok(e.result, 'feature is in the event object');
-        map.once('moveend', function() {
-          var center = map.getCenter();
-          t.notEquals(center.lng, 0, 'center.lng changed');
-          t.notEquals(center.lat, 0, 'center.lat changed');
-          t.end();
-        });
+        var mapMoveArgs = mapMoveSpy.args[0][0];
+        t.ok(mapMoveSpy.calledOnce, 'the map#flyTo method was called when a result was selected');
+        t.notEquals(mapMoveArgs.center[0], 0, 'center.lng changed')
+        t.notEquals(mapMoveArgs.center[1], 0, 'center.lat changed')
       })
     );
   });
@@ -232,12 +234,12 @@ test('geocoder', function(tt) {
     t.plan(1);
     setup({ zoom: 12 });
     geocoder.query('1714 14th St NW');
+    var mapMoveSpy = sinon.spy(map, "flyTo");
     geocoder.on(
       'result',
       once(function() {
-        map.once('zoomend', function() {
-          t.equals(parseInt(map.getZoom()), 12, 'Custom zoom is supported');
-        });
+        var mapMoveArgs = mapMoveSpy.args[0][0];
+        t.equals(mapMoveArgs.zoom, 12, 'custom zoom is supported');
       })
     );
   });
@@ -286,47 +288,45 @@ test('geocoder', function(tt) {
   });
 
   tt.test('country bbox', function(t) {
-    t.plan(1);
+    t.plan(2);
     setup({});
     geocoder.query('Spain');
+    var fitBoundsSpy = sinon.spy(map, "fitBounds");
     geocoder.on(
       'result',
       once(function(e) {
-        map.once('moveend', function() {
-          var mapBBox = Array.prototype.concat.apply(
-            [],
-            map.getBounds().toArray()
-          );
-
-          t.ok(
-            mapBBox.some(function(coord, i) {
-              return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
-            })
-          );
-        });
+        t.ok(fitBoundsSpy.calledOnce, "map#fitBounds was called when a country-level feature was returned")
+        var fitBoundsArgs = fitBoundsSpy.args[0][0];
+        // flatten
+        var mapBBox = [fitBoundsArgs[0][0], fitBoundsArgs[0][1], fitBoundsArgs[1][0], fitBoundsArgs[1][1]];
+        t.ok(
+          mapBBox.some(function(coord, i) {
+            return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
+          })
+        );
       })
     );
   });
 
   tt.test('country bbox exception', function(t) {
-    t.plan(1);
+    t.plan(2);
     setup({});
     geocoder.query('Canada');
+    var fitBoundsSpy = sinon.spy(map, "fitBounds");
     geocoder.on(
       'result',
-      once(function(e) {
-        map.once('moveend', function() {
-          var mapBBox = Array.prototype.concat.apply(
-            [],
-            map.getBounds().toArray()
-          );
-
-          t.ok(
-            mapBBox.every(function(coord, i) {
-              return coord.toPrecision(4) != e.result.bbox[i].toPrecision(4);
-            })
-          );
-        });
+      once(function() {
+        t.ok(fitBoundsSpy.calledOnce, 'the map#fitBounds method was called when an excepted feature was returned');
+        var fitBoundsArgs = fitBoundsSpy.args[0][0];
+        // flatten
+        var mapBBox = [fitBoundsArgs[0][0], fitBoundsArgs[0][1], fitBoundsArgs[1][0], fitBoundsArgs[1][1]];
+        var expectedBBox = exceptions['ca'].bbox;
+        var expectedBBoxFlat = [expectedBBox[0][0], expectedBBox[0][1], expectedBBox[1][0], expectedBBox[1][1]]
+        t.ok(
+          mapBBox.some(function(coord, i) {
+            return coord.toPrecision(4) === expectedBBoxFlat[i].toPrecision(4);
+          })
+        );
       })
     );
   });
@@ -581,17 +581,273 @@ test('geocoder', function(tt) {
         t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
         var calledWithArgs = mapFlyMethod.args[0][0];
         t.deepEqual(calledWithArgs.center, [ -122.47846, 37.819378 ], 'the selected result overrides the constructor center option');
-        t.deepEqual(calledWithArgs.zoom, 16, 'the selected result overrides the constructor zoom optiopn');
+        t.deepEqual(calledWithArgs.zoom, 4, 'the selected result overrides the constructor zoom option');
         t.deepEqual(calledWithArgs.speed, 5, 'speed argument is passed to the flyTo method');
       })
     );
-  })
+  });
+
+
+  tt.test('options.flyTo object on feature with bounding box', function(t){
+    t.plan(2 )
+    setup({
+      flyTo: {
+        speed: 5
+      }
+    });
+
+    var mapFlyMethod =  sinon.spy(map, "fitBounds");
+    geocoder.query('Brazil');
+    geocoder.on(
+      'result',
+      once(function() {
+        t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
+        var calledWithArgs = mapFlyMethod.args[0][1];
+        t.deepEqual(calledWithArgs.speed, 5, 'speed argument is passed to the flyTo method');
+      })
+    );
+  });
+
+
+  tt.test('options.flyTo object on bounding box excepted feature', function(t){
+    t.plan(2)
+    setup({
+      flyTo: {
+        speed: 5
+      }
+    });
+
+    var mapFlyMethod =  sinon.spy(map, "fitBounds");
+    geocoder.query('Canada');
+    geocoder.on(
+      'result',
+      once(function() {
+        t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
+        var calledWithArgs = mapFlyMethod.args[0][1];
+        t.deepEqual(calledWithArgs.speed, 5, 'speed argument is passed to the flyTo method');
+      })
+    );
+  });
 
   tt.test('placeholder localization', function(t){
     var ensureLanguages = ['de', 'en', 'fr', 'it', 'nl', 'ca', 'cs', 'fr', 'he', 'hu', 'is', 'ja', 'ka', 'ko', 'lv', 'ka', 'ko', 'lv', 'nb', 'pl', 'pt', 'sk', 'sl', 'sr', 'th', 'zh'];
     ensureLanguages.forEach(function(languageTag){
       t.equals(typeof(localization.placeholder[languageTag]), 'string', 'localized placeholder value is present for language=' + languageTag);
     });
+    t.end();
+  });
+
+  tt.test('options.marker [true]', function(t) {
+    t.plan(2);
+
+    setup({
+      marker: true,
+      mapboxgl: mapboxgl
+    });
+    var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
+
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function() {  
+        t.ok(markerConstructorSpy.calledOnce, "a new marker is added to the map");
+        var calledWithOptions = markerConstructorSpy.args[0][0];
+        t.equals(calledWithOptions.color, '#4668F2', 'a default color is set');
+        markerConstructorSpy.restore();
+      })
+    );
+  });
+
+  tt.test('options.marker  [constructor properties]', function(t) {
+    t.plan(4);
+
+    setup({
+      marker: {
+        color: "purple",
+        draggable: true,
+        anchor: 'top'
+      },
+      mapboxgl: mapboxgl
+    });
+    var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
+
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function() {  
+        t.ok(markerConstructorSpy.calledOnce, "a new marker is added to the map");
+        var calledWithOptions = markerConstructorSpy.args[0][0];
+        t.equals(calledWithOptions.color, 'purple', "sets the correct color property");
+        t.equals(calledWithOptions.draggable, true, "sets the correct draggable property");
+        t.equals(calledWithOptions.anchor, 'top', "default anchor is overriden by custom properties");
+        markerConstructorSpy.restore();
+      })
+    );
+  });
+
+  tt.test('options.marker [false]', function(t) {
+    t.plan(1);
+
+    setup({
+      marker: false
+    });
+    var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
+
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function() {  
+        t.ok(markerConstructorSpy.notCalled, "a new marker is not added to the map");
+        markerConstructorSpy.restore();
+      })
+    );
+  });
+
+  tt.test('geocode#onRemove', function(t){
+    setup({marker: true});
+
+    var removeMarkerMethod = sinon.spy(geocoder, "_removeMarker");
+
+    geocoder.onRemove();
+
+    t.ok(removeMarkerMethod.calledOnce, 'markers are removed when the plugin is removed');
+    t.equals(geocoder._map, null, "the map context is removed from the geocoder when the plugin is removed");
+
+    t.end();
+  })
+  tt.test('geocoder#setLanguage', function(t){
+    setup({language: 'de-DE'});
+    t.equals(geocoder.options.language,  'de-DE', 'the correct language is set on initialization');
+    geocoder.setLanguage('en-US');
+    t.equals(geocoder.options.language, 'en-US', 'the language is changed in the geocoder options');
+    t.end();
+  });
+
+  tt.test('geocoder#getLanguage', function(t){
+    setup({language: 'de-DE'});
+    t.equals(geocoder.getLanguage(), 'de-DE', 'getLanguage returns the right language');
+    t.end();
+  });
+
+  tt.test('geocoder#getZoom', function(t){
+    setup({zoom: 12});
+    t.equals(geocoder.getZoom(), 12, 'getZoom returns the right zoom' );
+    t.end();
+  });
+
+  tt.test('geocoder#setZoom', function(t){
+    setup({zoom: 14});
+    t.equals(geocoder.options.zoom, 14, 'the correct zoom is set on initialization');
+    geocoder.setZoom(17);
+    t.equals(geocoder.options.zoom, 17, 'the zoom is changed in the geocoder options');
+    t.end();
+  });
+
+  tt.test('geocoder#getFlyTo', function(t){
+    setup({flyTo: false});
+    t.equals(geocoder.getFlyTo(), false, 'getFlyTo returns the right value');
+    t.end();
+  });
+
+  tt.test('geocoder#setFlyTo', function(t){
+    setup({flyTo: false});
+    t.equals(geocoder.options.flyTo, false, 'the correct flyTo option is set on initialization');
+    geocoder.setFlyTo({speed: 25});
+    t.deepEqual(geocoder.options.flyTo, {speed: 25}, 'the flyTo option is changed in the geocoder options');
+    t.end();
+  });
+
+  tt.test('geocoder#getPlaceholder', function(t){
+    setup({placeholder: 'Test'});
+    t.equals(geocoder.getPlaceholder(), 'Test', 'getPlaceholder returns the right value');
+    t.end();
+  });
+
+  tt.test('geocoder#setPlaceholder', function(t){
+    setup({placeholder: 'Test'});
+    t.equals(geocoder._inputEl.placeholder, 'Test', 'the right placeholder is set on initialization');
+    geocoder.setPlaceholder('Search');
+    t.equals(geocoder._inputEl.placeholder, 'Search', 'the placeholder was changed in the  UI element');
+    t.end();
+  });
+
+  tt.test('geocoder#getBbox', function(t){
+    setup({bbox: [-1,-1,1,1]});
+    t.deepEqual(geocoder.getBbox(), [-1, -1, 1, 1], 'getBbox returns the right bounding box');
+    t.end();
+  });
+
+  tt.test('geocoder#setBbox', function(t){
+    setup({bbox: [-1,-1,1,1]});
+    t.deepEqual(geocoder.options.bbox, [-1, -1, 1, 1], 'getBbox returns the right bounding box');
+    geocoder.setBbox([-2, -2, 2, 2])
+    t.deepEqual(geocoder.options.bbox, [-2, -2, 2, 2], 'the bounding box option is changed in the geocoder options');
+    t.end()
+  });
+
+  tt.test('geocoder#getCountries', function(t){
+    setup({countries: 'ca,us'})
+    t.equals(geocoder.getCountries(), 'ca,us', 'getCountries returns the right country list');
+    t.end();
+  });
+
+  tt.test('geocoder#setCountries', function(t){
+    setup({countries:'ca'});
+    t.equals(geocoder.options.countries, 'ca', 'the right countries are set on initialization');
+    geocoder.setCountries("ca,us");
+    t.equals(geocoder.options.countries, 'ca,us', 'the countries option is changed in the geocoder options');
+    t.end();
+  });
+
+  tt.test('geocoder#getTypes', function(t){
+    setup({types: 'poi'});
+    t.equals(geocoder.getTypes(), 'poi', 'getTypes returns the right types list');
+    t.end();
+  });
+
+  tt.test('geocoder#setTypes', function(t){
+    setup({types: 'poi'});
+    t.equals(geocoder.options.types, 'poi', 'the  right types are set on initializations');
+    geocoder.setTypes("place,poi");
+    t.equals(geocoder.options.types, 'place,poi', 'the types list is changed in the geocoder options');
+    t.end();
+  });
+
+  tt.test('geocoder#getLimit', function(t){
+    setup({limit:4});
+    t.equals(geocoder.getLimit(), 4, 'getLimit returns the right limit value');
+    t.end();
+  });
+
+  tt.test('geocoder#setLimit', function(t){
+    setup({limit: 1});
+    t.equals(geocoder.options.limit, 1, 'the correct limit is set on initialization');
+    t.equals(geocoder._typeahead.options.limit, 1, 'the correct limit is set on the typeahead');
+    geocoder.setLimit(4);
+    t.equals(geocoder.options.limit, 4, 'the limit is updated in the geocoder options');
+    t.equals(geocoder._typeahead.options.limit, 4, 'the limit is updated in the typeahead options');
+    t.end();
+  });
+
+  tt.test('geocoder#getFilter', function(t){
+    setup({filter: function(){ return false}});
+    var filter = geocoder.getFilter();
+    t.equals(typeof(filter), 'function', 'the filter is a function');
+    t.deepEqual(['a', 'b', 'c'].filter(filter), [], 'the correct filter is applied');
+    t.end();
+  });
+
+  tt.test('geocoder#setFilter', function(t){
+    setup({filter: function(){return true}});
+    var initialFilter = geocoder.getFilter();
+    var filtered = ['a', 'b', 'c'].filter(initialFilter);
+    t.equals(typeof(initialFilter), 'function', 'the initial filter is a function');
+    t.deepEqual(filtered, ['a', 'b', 'c'], 'the initial filter is correctly applied');
+    geocoder.setFilter(function(){return false});
+    var nextFilter = geocoder.options.filter;
+    var nextFiltered = ['a', 'b', 'c'].filter(nextFilter);
+    t.equals(typeof(nextFilter), 'function', 'the next filter is a function');
+    t.deepEqual(nextFiltered, [], 'the changed filter is correctly applied');
     t.end();
   });
 
