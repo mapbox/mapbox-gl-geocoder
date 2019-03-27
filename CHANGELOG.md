@@ -13,6 +13,7 @@
 - Adds the `marker` constructor option that allows adding the selected result to the map as a [marker](https://docs.mapbox.com/mapbox-gl-js/api/#marker). Adding the marker to the map is now the default behavior. [#219](https://github.com/mapbox/mapbox-gl-geocoder/pull/219). 
 - Add `get` and `set` methods for constructor options [#226](https://github.com/mapbox/mapbox-gl-geocoder/pull/226)
 - Add `collapsed` option to collapse the geocoder controller into a button until hovered or focused [#222](https://github.com/mapbox/mapbox-gl-geocoder/issues/222)
+- Expose `clear` as public method [#115](https://github.com/mapbox/mapbox-gl-geocoder/issues/115)
 
 ### Bug Fixes 🐛
 - Upgrade dev dependencies [#216](https://github.com/mapbox/mapbox-gl-geocoder/pull/216)
