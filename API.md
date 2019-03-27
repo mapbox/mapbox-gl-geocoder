@@ -103,11 +103,11 @@ Returns **[MapboxGeocoder][61]** `this`
 
 ### clear
 
-Invoked on geocoder clear button is clicked
+Clear the input
 
 #### Parameters
 
--   `ev` **[Event][62]** the event that triggered the clear
+-   `ev` **[Event][62]?** the event that triggered the clear, if available
 
 ### query
 
