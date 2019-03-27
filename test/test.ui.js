@@ -127,7 +127,7 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
-  tt.test('_clear is not called on keydown (tab), no focus trap', function(t){
+  tt.test('clear is not called on keydown (tab), no focus trap', function(t){
     t.plan(3);
     setup({});
 
@@ -136,15 +136,15 @@ test('Geocoder#inputControl', function(tt) {
     inputEl.focus();
     t.equal(focusSpy.called, true, 'input is focused');
     var keySpy = sinon.spy(geocoder,'_onKeyDown');
-    var clearSpy = sinon.spy(geocoder, '_clear');
+    var clearSpy = sinon.spy(geocoder, 'clear');
     geocoder._onKeyDown(new KeyboardEvent('keydown',{ code: 9, keyCode: 9 }));
     t.equal(keySpy.called, true, '_onKeyDown called');
-    t.equal(clearSpy.called, false, '_clear should not be called');
+    t.equal(clearSpy.called, false, 'clear should not be called');
 
     t.end();
   });
 
-  tt.test('_clear is called on keydown (not tab)', function(t){
+  tt.test('clear is called on keydown (not tab)', function(t){
     t.plan(3);
     setup({});
 
@@ -153,10 +153,10 @@ test('Geocoder#inputControl', function(tt) {
     inputEl.focus();
     t.equal(focusSpy.called, true, 'input is focused');
     var keySpy = sinon.spy(geocoder,'_onKeyDown');
-    var clearSpy = sinon.spy(geocoder, '_clear');
+    var clearSpy = sinon.spy(geocoder, 'clear');
     geocoder._onKeyDown(new KeyboardEvent('keydown',{ code: 1, keyCode: 1 }));
     t.equal(keySpy.called, true, '_onKeyDown called');
-    t.equal(clearSpy.called, true, '_clear should be called');
+    t.equal(clearSpy.called, true, 'clear should be called');
 
     t.end();
   });
@@ -219,6 +219,19 @@ test('Geocoder#inputControl', function(tt) {
       '<svg class="geocoder-icon geocoder-icon-search" viewBox="0 0 18 18" xml:space="preserve" width="18" height="18"><path></path></svg>',
       'creates an svg given the class name and path'
     );
+    t.end();
+  });
+
+  tt.test('clear method can be overwritten', function(t) {
+    t.plan(1);
+    setup({ });
+    geocoder.clear = function(ev){
+      console.log(ev);
+    }
+    var consoleSpy = sinon.spy(console, "log");
+
+    geocoder.clear();
+    t.ok(consoleSpy.calledOnce, 'the custom clear method was called');
     t.end();
   });
 
