@@ -1,4 +1,4 @@
-## Master
+## v4.0.0-beta.0
 
 ### Breaking Changes ⚠️
 - Support for the Mapbox GL JS 0.47.0 API. This is compatible with 0.47.0 and later, and may not be compatible with earlier versions [#219](https://github.com/mapbox/mapbox-gl-geocoder/pull/219).
