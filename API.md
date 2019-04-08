@@ -89,8 +89,8 @@ A geocoder component using Mapbox Geocoding API
     -   `options.reverseGeocode` **[boolean][56]?** Enable reverse geocoding. Defaults to false. Expects coordinates to be lat, lon.
     -   `options.enableEventLogging` **[Boolean][56]** Allow Mapbox to collect anonymous usage statistics from the plugin (optional, default `true`)
     -   `options.marker` **([Boolean][56] \| [Object][50])** If `true`, a [Marker][54] will be added to the map at the location of the user-selected result using a default set of Marker options.  If the value is an object, the marker will be constructed using these options. If `false`, no marker will be added to the map. Requires that `options.mapboxgl` also be set. (optional, default `true`)
-    -   `options.render` **[Function][59]?** A function that specifies how the results should be rendered in the dropdown menu. This function should accepts a single [Carmen GeoJSON][60] object  as input and return a string. Any html in the returned string will be rendered.
-    -   `options.getItemValue` **[Function][59]?** A function that specifies how the selected result should be rendered in the search bar. This function should accepts a single [Carmen GeoJSON][60] object  as input and return a string. HTML tags in the output string will not be rendered.
+    -   `options.render` **[Function][59]?** A function that specifies how the results should be rendered in the dropdown menu. Accepts a single [Carmen GeoJSON][60] object  as input and return a string. Any html in the returned string will be rendered.
+    -   `options.getItemValue` **[Function][59]?** A function that specifies how the selected result should be rendered in the search bar. This function should accept a single [Carmen GeoJSON][60] object  as input and return a string. HTML tags in the output string will not be rendered.
 
 ### Examples
 
@@ -151,7 +151,7 @@ Set the render function used in the results dropdown
 
 #### Parameters
 
--   `fn` **[Function][59]** The function to use as a render function. This function should accept a single [Carmen GeoJSON][60] object as input and return a string.
+-   `fn` **[Function][59]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][60] object as input and returns a string.
 
 Returns **[MapboxGeocoder][61]** this
 
