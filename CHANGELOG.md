@@ -1,6 +1,14 @@
 ## Master
+
+### Features / Improvements 🚀
 - Add `clearAndBlurOnEsc` option to geocoder
 - Adds `clearOnBlur` option to clear geocoder input on blur.
+
+### Bug Fixes 🐛
+* Fix CSS issue where close button was not being centered [#241](https://github.com/mapbox/mapbox-gl-geocoder/issues/241)
+* Namespace all CSS to prevent collisions  [#248](https://github.com/mapbox/mapbox-gl-geocoder/issues/248)
+* Fix CSS issue with width on input when `collapsed` enabled [#238](https://github.com/mapbox/mapbox-gl-geocoder/issues/238)
+
 
 ## v4.0.0
 
