@@ -38,8 +38,8 @@ var coordinatesGeocoder = function(query) {
     return null;
   }
   function coordinateFeature(lng, lat) {
-    var lng = Number(lng);
-    var lat = Number(lat);
+    lng = Number(lng);
+    lat = Number(lat);
     return {
       center: [lng, lat],
       geometry: {
@@ -76,7 +76,8 @@ var geocoder = new MapboxGeocoder({
   trackProximity: true,
   localGeocoder: function(query) {
     return coordinatesGeocoder(query);
-  }
+  },
+  mapboxgl: mapboxgl
 });
 
 window.geocoder = geocoder;

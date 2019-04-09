@@ -1,3 +1,28 @@
+## Master
+
+### Breaking Changes ⚠️
+- Support for the Mapbox GL JS 0.47.0 API. This is compatible with 0.47.0 and later, and may not be compatible with earlier versions [#219](https://github.com/mapbox/mapbox-gl-geocoder/pull/219).
+- Obtain language from user's browser settings [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
+- Localize placeholder based on language set in constructor options [#150](https://github.com/mapbox/mapbox-gl-geocoder/issues/150)
+- `trackProximity` turned on by default [#195](https://github.com/mapbox/mapbox-gl-geocoder/issues/195)
+
+### Features / Improvements 🚀
+- Mapbox events upgraded to v0.2.0 for better handling [#212](https://github.com/mapbox/mapbox-gl-geocoder/pull/212)
+- Pass `flyTo` options to the map on result selection on both map#flyTo and map#fitBounds operations [#214](https://github.com/mapbox/mapbox-gl-geocoder/pull/214)  and [#227](https://github.com/mapbox/mapbox-gl-geocoder/pull/227)
+- Bump `suggestions` dependency to v1.4.x
+- Adds the `marker` constructor option that allows adding the selected result to the map as a [marker](https://docs.mapbox.com/mapbox-gl-js/api/#marker). Adding the marker to the map is now the default behavior. [#219](https://github.com/mapbox/mapbox-gl-geocoder/pull/219). 
+- Add `get` and `set` methods for constructor options [#226](https://github.com/mapbox/mapbox-gl-geocoder/pull/226)
+- Add `collapsed` option to collapse the geocoder controller into a button until hovered or focused [#222](https://github.com/mapbox/mapbox-gl-geocoder/issues/222)
+- Expose `clear` as public method [#115](https://github.com/mapbox/mapbox-gl-geocoder/issues/115)
+
+### Bug Fixes 🐛
+- Upgrade dev dependencies [#216](https://github.com/mapbox/mapbox-gl-geocoder/pull/216)
+- Remove hardcoded IDs in bounding box exception list [#217](https://github.com/mapbox/mapbox-gl-geocoder/pull/217)
+- Fix double map `moveend` event [#229](https://github.com/mapbox/mapbox-gl-geocoder/pull/229)
+- Fix duplicate `result` event bug [#218](https://github.com/mapbox/mapbox-gl-geocoder/pull/218)
+- Fix trapped focus bug [#220](https://github.com/mapbox/mapbox-gl-geocoder/issues/220)
+
+
 ## v3.1.6
 -  Resolve npm publish failure
 
