@@ -29,7 +29,6 @@ See [API.md](https://github.com/mapbox/mapbox-gl-geocoder/blob/master/API.md) fo
  - [Limit geocoder results to a named region](https://www.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-limit-region/)
  - [Supplement geocoding search results from another data source](https://www.mapbox.com/mapbox-gl-js/example/forward-geocode-custom-data/)
  - [Accept coordinates as input to a geocoder](https://www.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-accept-coordinates/)
- - [Bias geocoder results around the map view](https://www.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-proximity-bias/)
 
 ### Contributing
 
