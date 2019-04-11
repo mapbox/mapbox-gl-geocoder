@@ -71,6 +71,7 @@ A geocoder component using Mapbox Geocoding API
         higher priority.
     -   `options.trackProximity` **[Boolean][56]** If true, the geocoder proximity will automatically update based on the map view. (optional, default `true`)
     -   `options.collapsed` **[Boolean][56]** If true, the geocoder control will collapse until hovered or in focus. (optional, default `false`)
+    -   `options.clearAndBlurOnEsc` **[Boolean][56]** If true, the geocoder control will clear it's contents and blur when user presses the escape key. (optional, default `false`)
     -   `options.bbox` **[Array][57]?** a bounding box argument: this is
         a bounding box given as an array in the format [minX, minY, maxX, maxY].
         Search results will be limited to the bounding box.

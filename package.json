@@ -8,7 +8,7 @@
   "scripts": {
     "start": "budo debug/index.js --live -- -t brfs ",
     "prepublish": "NODE_ENV=production && mkdir -p dist && browserify --standalone MapboxGeocoder lib/index.js | uglifyjs -c -m > dist/mapbox-gl-geocoder.min.js && cp lib/mapbox-gl-geocoder.css dist/",
-    "test": "browserify -t envify test/index.js test/events.test.js | smokestack -b firefox | tap-status",
+    "test": "browserify -t envify test/index.js test/events.test.js | smokestack -b firefox | tap-status | tap-color",
     "docs": "documentation build lib/index.js --format=md > API.md",
     "pretest": "npm run lint",
     "lint": "eslint lib test",
@@ -50,6 +50,7 @@
     "mapbox-gl": "^0.47.0",
     "sinon": "^7.2.7",
     "smokestack": "^3.3.1",
+    "tap-color": "^1.1.0",
     "tap-status": "^1.0.1",
     "tape": "^4.10.1",
     "uglify-js": "^2.6.4"
