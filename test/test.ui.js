@@ -161,6 +161,48 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
+  tt.test('options.clearAndBlurOnEsc=true clears and blurs on escape', function(t) {
+    t.plan(4);
+    setup({
+      clearAndBlurOnEsc: true
+    });
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    var focusSpy = sinon.spy(inputEl, 'focus');
+    var blurSpy = sinon.spy(inputEl, 'blur');
+
+    inputEl.focus();
+    t.equal(focusSpy.called, true, 'input is focused');
+
+    geocoder.setInput('testval');
+    t.equal(inputEl.value, 'testval');
+
+    geocoder._onKeyDown(new KeyboardEvent('keydown',{ code: 1, keyCode: 27 }));
+
+    t.equal(inputEl.value, '', 'value is cleared');
+    t.equal(blurSpy.called, true, 'input is blurred');
+
+    t.end();
+  });
+
+  tt.test('options.clearAndBlurOnEsc=false does not clear and blur on escape', function(t) {
+    t.plan(2);
+    setup({
+      clearAndBlurOnEsc: false
+    });
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    var focusSpy = sinon.spy(inputEl, 'focus');
+    var blurSpy = sinon.spy(inputEl, 'blur');
+
+    inputEl.focus();
+    t.equal(focusSpy.called, true, 'input is focused');
+
+    geocoder._onKeyDown(new KeyboardEvent('keydown',{ code: 1, keyCode: 27 }));
+
+    t.equal(blurSpy.called, false, 'input is still focused');
+
+    t.end();
+  });
+
   tt.test('options.collapsed=true', function(t) {
     t.plan(1);
     setup({

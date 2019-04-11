@@ -1,3 +1,6 @@
+## Master
+- Add `clearAndBlurOnEsc` option to geocoder
+
 ## v4.0.0
 
 ### Breaking Changes ⚠️
@@ -10,7 +13,7 @@
 - Mapbox events upgraded to v0.2.0 for better handling [#212](https://github.com/mapbox/mapbox-gl-geocoder/pull/212)
 - Pass `flyTo` options to the map on result selection on both map#flyTo and map#fitBounds operations [#214](https://github.com/mapbox/mapbox-gl-geocoder/pull/214)  and [#227](https://github.com/mapbox/mapbox-gl-geocoder/pull/227)
 - Bump `suggestions` dependency to v1.4.x
-- Adds the `marker` constructor option that allows adding the selected result to the map as a [marker](https://docs.mapbox.com/mapbox-gl-js/api/#marker). Adding the marker to the map is now the default behavior. [#219](https://github.com/mapbox/mapbox-gl-geocoder/pull/219). 
+- Adds the `marker` constructor option that allows adding the selected result to the map as a [marker](https://docs.mapbox.com/mapbox-gl-js/api/#marker). Adding the marker to the map is now the default behavior. [#219](https://github.com/mapbox/mapbox-gl-geocoder/pull/219).
 - Add `get` and `set` methods for constructor options [#226](https://github.com/mapbox/mapbox-gl-geocoder/pull/226)
 - Add `collapsed` option to collapse the geocoder controller into a button until hovered or focused [#222](https://github.com/mapbox/mapbox-gl-geocoder/issues/222)
 - Expose `clear` as public method [#115](https://github.com/mapbox/mapbox-gl-geocoder/issues/115)
