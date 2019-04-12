@@ -228,6 +228,46 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
+
+  // This test is imperfect, because I cannot get smokestack to call the blur
+  // listener no matter what I do. As a workaround, I'm:
+  // 1. Testing that the option was set correctly.
+  // 2. directly calling _clearOnBlur and asserting that it behaves as expected.
+  tt.test('options.clearOnBlur=true', function(t) {
+    t.plan(5);
+    setup({
+      clearOnBlur: true
+    });
+    t.equal(geocoder.options.clearOnBlur, true);
+
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    var focusSpy = sinon.spy(inputEl, 'focus');
+
+    geocoder.setInput('testval');
+    t.equal(inputEl.value, 'testval');
+
+    inputEl.focus();
+
+    // directly call _clearOnBlur();
+    geocoder._clearOnBlur();
+
+    t.equal(inputEl.value, 'testval', 'not yet cleared');
+
+    window.setTimeout(function() {
+      t.equal(focusSpy.calledOnce, true), 'called once, focus should not get re-set on input';
+      t.equal(inputEl.value, '', 'cleared after timeout');
+      t.end();
+    }, 0);
+
+  });
+
+  tt.test('options.clearOnBlur=false by default', function(t) {
+    t.plan(1);
+    setup();
+    t.equal(geocoder.options.clearOnBlur, false);
+    t.end();
+  });
+
   tt.test('options.collapsed=true, hover', function(t) {
     t.plan(1);
     setup({

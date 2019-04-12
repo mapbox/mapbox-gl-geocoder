@@ -1,5 +1,6 @@
 ## Master
 - Add `clearAndBlurOnEsc` option to geocoder
+- Adds `clearOnBlur` option to clear geocoder input on blur.
 
 ## v4.0.0
 
