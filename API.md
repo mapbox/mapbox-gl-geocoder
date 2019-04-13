@@ -58,7 +58,7 @@ A geocoder component using Mapbox Geocoding API
 
 ### Parameters
 
--   `options` **[Object][50]**
+-   `options` **[Object][50]** 
     -   `options.accessToken` **[String][51]** Required.
     -   `options.origin` **[String][51]** Use to set a custom API origin. Defaults to [https://api.mapbox.com][52].
     -   `options.mapboxgl` **[Object][50]?** A [mapbox-gl][53] instance to use when creating [Markers][54]. Required if `options.marker` is true.
@@ -306,7 +306,7 @@ Set the limit value for the number of results to display used by the plugin
 
 -   `limit` **[Number][55]** the number of search results to return
 
-Returns **[MapboxGeocoder][61]**
+Returns **[MapboxGeocoder][61]** 
 
 ### getFilter
 
