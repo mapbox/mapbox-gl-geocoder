@@ -1,3 +1,9 @@
+## Master
+
+### Bug fixes 🐛
+
+- Fix issue with blur event handlers that prevented search input from collapsing on blur if both `clearOnBlur` and `collapsed` options are set to true.
+
 ## v4.1.0
 
 ### Features / Improvements 🚀
