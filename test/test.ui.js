@@ -248,16 +248,27 @@ test('Geocoder#inputControl', function(tt) {
 
     inputEl.focus();
 
-    // directly call _clearOnBlur();
-    geocoder._clearOnBlur();
+    // Call _clearOnBlur(), without a relatedTarget;
+    geocoder._clearOnBlur({
+      relatedTarget: null,
+      preventDefault: function() {
+        return null;
+      }
+    });
 
     t.equal(inputEl.value, 'testval', 'not yet cleared');
 
-    window.setTimeout(function() {
-      t.equal(focusSpy.calledOnce, true), 'called once, focus should not get re-set on input';
-      t.equal(inputEl.value, '', 'cleared after timeout');
-      t.end();
-    }, 0);
+    // Directly call _clearOnBlur(), with a relatedTarget;
+    geocoder._clearOnBlur({
+      relatedTarget: document.body,
+      preventDefault: function() {
+        return null;
+      }
+    });
+
+    t.equal(focusSpy.calledOnce, true), 'called once, focus should not get re-set on input';
+    t.equal(inputEl.value, '', 'cleared');
+    t.end();
 
   });
 
