@@ -1,8 +1,8 @@
-## Master
+## v4.1.0
 
 ### Bug fixes 🐛
 
-- Fix issue with blur event handlers that prevented search input from collapsing on blur if both `clearOnBlur` and `collapsed` options are set to true.
+- Fix issue with blur event handlers that prevented search input from collapsing on blur if both `clearOnBlur` and `collapsed` options are set to true [#257](https://github.com/mapbox/mapbox-gl-geocoder/issues/257).
 
 ## v4.1.0
 
