@@ -331,7 +331,8 @@ Subscribe to events that happen within the plugin.
 
 #### Parameters
 
--   `type` **[String][52]** name of event. Available events and the data passed into their respective event objects are:-   **clear** `Emitted when the input is cleared`
+-   `type` **[String][52]** name of event. Available events and the data passed into their respective event objects are:
+    -   **clear** `Emitted when the input is cleared`
     -   **loading** `{ query } Emitted when the geocoder is looking up a query`
     -   **results** `{ results } Fired when the geocoder returns a response`
     -   **result** `{ result } Fired when input is set`
