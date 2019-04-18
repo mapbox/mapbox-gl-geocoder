@@ -1,3 +1,10 @@
+## Master
+
+### Bug fixes 🐛
+
+- Fix issue where selection events are logged with the incorrect `queryString` value. [#262](https://github.com/mapbox/mapbox-gl-geocoder/pull/262)
+
+
 ## v4.1.0
 
 ### Bug fixes 🐛
