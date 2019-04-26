@@ -7,6 +7,9 @@ A geocoder control for [mapbox-gl-js](https://github.com/mapbox/mapbox-gl-js) us
 
 https://www.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder/
 
+**If you are supporting older browsers, you will need a Promise polyfill.**
+[es6-promise](https://github.com/stefanpenner/es6-promise) is a good one, if you're uncertain.
+
 ### Usage with a module bundler
 
 This module exports a single class called MapboxGeocoder as its default export,
