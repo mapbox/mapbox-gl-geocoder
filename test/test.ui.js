@@ -327,6 +327,5 @@ test('Geocoder#inputControl', function(tt) {
     t.ok(consoleSpy.calledOnce, 'the custom clear method was called');
     t.end();
   });
-
   tt.end();
 });

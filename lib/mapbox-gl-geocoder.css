@@ -232,4 +232,11 @@
     margin-right: -5px;
   }
 
+  .mapbox-gl-geocoder--error{
+    color: darkgray;
+    padding: 8px;
+    font-size: 16px;
+    text-align: center
+  }
+
 }

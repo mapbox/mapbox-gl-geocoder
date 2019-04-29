@@ -851,5 +851,108 @@ test('geocoder', function(tt) {
     t.end();
   });
 
+  tt.test('geocoder#_renderMessage', function(t){
+    setup({});
+    var typeaheadRenderErrorSpy = sinon.spy(geocoder._typeahead, 'renderError');
+
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function() {  
+        t.notEqual(geocoder._typeahead.data.length, 0, 'the suggestions menu has some options in it after a query');
+        geocoder._renderMessage("<h1>This is a test</h1>");
+        t.equals(geocoder._typeahead.data.length, 0, 'the data was cleared from the suggestions');
+        t.equals(geocoder._typeahead.selected, null, 'the selected option was cleared from the suggestions');
+        t.ok(typeaheadRenderErrorSpy.calledOnce, 'the renderError method was called exactly once');
+        var calledWithArgs = typeaheadRenderErrorSpy.args[0][0];
+        t.equals(calledWithArgs, "<h1>This is a test</h1>", 'the error rendering function was called with the correct message');
+        t.end();
+      })
+    );
+  });
+
+  tt.test('geocoder#_renderError', function(t){
+    setup({});
+    var renderMessageSpy = sinon.spy(geocoder, '_renderMessage');
+
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function() {  
+        geocoder._renderError();
+        t.ok(renderMessageSpy.calledOnce, 'the error render method calls the renderMessage method exactly once');
+        var calledWithArgs = renderMessageSpy.args[0][0];
+        t.ok(calledWithArgs.indexOf('mapbox-gl-geocoder--error') > -1, 'the error message specifies the correct class');
+        t.end();
+      })
+    );
+  });
+
+  tt.test('geocoder#_renderNoResults', function(t){
+    setup({});
+    var renderMessageSpy = sinon.spy(geocoder, '_renderMessage');
+
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function() {  
+        geocoder._renderNoResults();
+        t.ok(renderMessageSpy.calledOnce, 'the no results render method calls the renderMessage method exactly once');
+        var calledWithArgs = renderMessageSpy.args[0][0];
+        t.ok(calledWithArgs.indexOf('mapbox-gl-geocoder--error') > -1, 'the info message specifies the correct class');
+        t.ok(calledWithArgs.indexOf('mapbox-gl-geocoder--no-results') > -1, 'the info message specifies the correct class');
+        t.end();
+      })
+    );
+  });
+
+  tt.test('error is shown after an error occurred', function(t){
+    setup({});
+    var renderMessageSpy = sinon.spy(geocoder, '_renderMessage');
+    geocoder.query('12,'); //this will cause a 422 error
+    geocoder.on(
+      'error',
+      once(function() {  
+        t.ok(renderMessageSpy.calledOnce, 'an error was rendered');
+        var calledWithArgs = renderMessageSpy.args[0][0];
+        t.ok(calledWithArgs.indexOf('mapbox-gl-geocoder--error') > -1, 'the info message specifies the correct class');
+        t.ok(calledWithArgs.indexOf('There was an error reaching the server') > -1, 'the info message specifies the correct message');
+        t.end();
+      })
+    );
+  });
+
+  tt.test('error is shown after an error occurred [with local geocoder]', function(t){
+    setup({
+      localGeocoder: function(){
+        return [
+          {type:'Feature', geometry: {type: 'Point', coordinates:[-122, 37]}, properties: {}, place_name: 'Golden Gate Bridge', text: 'Golden Gate Bridge', center: [-122, 37]}
+        ];
+      }
+    });
+    var renderErrorSpy = sinon.spy(geocoder, '_renderError');
+    geocoder.query('12,'); //this will cause a 422 error
+    geocoder.on(
+      'error',
+      once(function() {  
+        t.notOk(renderErrorSpy.called, 'the error message is not rendered when the local geocoder returns successfully')
+        t.end();
+      })
+    );
+  });
+
+  tt.test('message is shown if no results are returned', function(t){
+    setup({});
+    var renderMessageSpy = sinon.spy(geocoder, '_renderNoResults');
+    geocoder.query('abcdefghijkl'); //this will return no results
+    geocoder.on(
+      'results',
+      once(function() {  
+        t.ok(renderMessageSpy.called, 'a message was rendered');
+        t.end();
+      })
+    );
+  });
+
   tt.end();
 });
