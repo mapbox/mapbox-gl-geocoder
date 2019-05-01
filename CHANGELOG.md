@@ -1,3 +1,10 @@
+## Master
+
+### Features / Improvements 🚀
+
+- Render an error message when a search was unsuccessful (#231)
+- Render an error message when a search returned no results (#232)
+
 ## v4.1.2
 
 ### Bug fixes 🐛

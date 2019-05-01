@@ -61,7 +61,7 @@
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.5.0",
     "lodash.debounce": "^4.0.6",
-    "suggestions": "^1.4.0",
+    "suggestions": "^1.6.0",
     "subtag": "^0.5.0",
     "nanoid": "^2.0.1",
     "xtend": "^4.0.1"
