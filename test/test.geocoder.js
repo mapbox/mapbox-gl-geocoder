@@ -545,7 +545,7 @@ test('geocoder', function(tt) {
 
 
   tt.test('options.flyTo [true]', function(t){
-    t.plan(3)
+    t.plan(4)
     setup({
       flyTo: true
     });
@@ -557,14 +557,15 @@ test('geocoder', function(tt) {
       once(function() {
         t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
         var calledWithArgs = mapFlyMethod.args[0][0];
-        t.deepEqual(calledWithArgs.center, [ -122.47846, 37.819378 ], 'the map is directed to fly to the right place');
+        t.equals(+calledWithArgs.center[0].toFixed(4), +-122.4797165.toFixed(4), 'the map is directed to fly to the right longitude');
+        t.equals(+calledWithArgs.center[1].toFixed(4),  +37.81878675.toFixed(4), 'the map is directed to fly to the right latitude');
         t.deepEqual(calledWithArgs.zoom, 16, 'the map is directed to fly to the right zoom');
       })
     );
   });
 
   tt.test('options.flyTo [object]', function(t){
-    t.plan(4)
+    t.plan(5)
     setup({
       flyTo: {
         speed: 5,
@@ -580,8 +581,8 @@ test('geocoder', function(tt) {
       once(function() {
         t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
         var calledWithArgs = mapFlyMethod.args[0][0];
-        t.deepEqual(calledWithArgs.center, [ -122.47846, 37.819378 ], 'the selected result overrides the constructor center option');
-        t.deepEqual(calledWithArgs.zoom, 4, 'the selected result overrides the constructor zoom option');
+        t.equals(+calledWithArgs.center[0].toFixed(4), +-122.4797165.toFixed(4), 'the map is directed to fly to the right longitude');
+        t.equals(+calledWithArgs.center[1].toFixed(4),  +37.81878675.toFixed(4), 'the map is directed to fly to the right latitude');        t.deepEqual(calledWithArgs.zoom, 4, 'the selected result overrides the constructor zoom option');
         t.deepEqual(calledWithArgs.speed, 5, 'speed argument is passed to the flyTo method');
       })
     );
