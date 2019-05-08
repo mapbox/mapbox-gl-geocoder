@@ -1,4 +1,4 @@
-## Master
+## v4.3.0
 
 ### Features / Improvements 🚀
 
