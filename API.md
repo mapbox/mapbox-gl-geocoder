@@ -94,6 +94,7 @@ A geocoder component using Mapbox Geocoding API
     -   `options.marker` **([Boolean][57] \| [Object][51])** If `true`, a [Marker][55] will be added to the map at the location of the user-selected result using a default set of Marker options.  If the value is an object, the marker will be constructed using these options. If `false`, no marker will be added to the map. Requires that `options.mapboxgl` also be set. (optional, default `true`)
     -   `options.render` **[Function][60]?** A function that specifies how the results should be rendered in the dropdown menu. Accepts a single [Carmen GeoJSON][61] object  as input and return a string. Any html in the returned string will be rendered.
     -   `options.getItemValue` **[Function][60]?** A function that specifies how the selected result should be rendered in the search bar. This function should accept a single [Carmen GeoJSON][61] object  as input and return a string. HTML tags in the output string will not be rendered.
+    -   `options.mode` **[String][52]** A string specifying the geocoding endpoint to query. Options are `mapbox.places` and `mapbox.places-permanent`. The `mapbox.places-permanent` mode requires an enterprise license. (optional, default `'mapbox.places'`)
 
 ### Examples
 
