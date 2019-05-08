@@ -1,3 +1,9 @@
+## Master
+
+### Features / Improvements 🚀
+
+- Add an option to use the `mapbox.places-permanent` geocoding endpoint (requires an enterprise license). For more details on `mapbox.places-permanent` see https://docs.mapbox.com/api/search/#mapboxplaces-permanent. (#272)
+
 ## v4.2.0
 
 ### Features / Improvements 🚀
