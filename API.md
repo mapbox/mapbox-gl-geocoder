@@ -69,7 +69,7 @@ A geocoder component using Mapbox Geocoding API
     -   `options.origin` **[String][57]** Use to set a custom API origin. Defaults to [https://api.mapbox.com][58].
     -   `options.mapboxgl` **[Object][56]?** A [mapbox-gl][59] instance to use when creating [Markers][60]. Required if `options.marker` is true.
     -   `options.zoom` **[Number][61]** On geocoded result what zoom level should the map animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`. (optional, default `16`)
-    -   `options.flyTo` **([Boolean][62] \| [Object][56])?** If false, animating the map to a selected result is disabled. If true, animating the map will use the default animation parameters. If an object, the object will be passed to the map method to specify a custom animation when a result is selected.
+    -   `options.flyTo` **([Boolean][62] \| [Object][56])?** If false, animating the map to a selected result is disabled. If true, animating the map will use the default animation parameters. If an object, it should describe the destination and animation of the transition for flyTo. See [GL JS documentation][63] for details.
     -   `options.placeholder` **[String][57]** Override the default placeholder attribute value. (optional, default `"Search"`)
     -   `options.proximity` **[Object][56]?** a proximity argument: this is
         a geographical point given as an object with latitude and longitude
@@ -79,27 +79,27 @@ A geocoder component using Mapbox Geocoding API
     -   `options.collapsed` **[Boolean][62]** If true, the geocoder control will collapse until hovered or in focus. (optional, default `false`)
     -   `options.clearAndBlurOnEsc` **[Boolean][62]** If true, the geocoder control will clear it's contents and blur when user presses the escape key. (optional, default `false`)
     -   `options.clearOnBlur` **[Boolean][62]** If true, the geocoder control will clear its value when the input blurs. (optional, default `false`)
-    -   `options.bbox` **[Array][63]?** a bounding box argument: this is
+    -   `options.bbox` **[Array][64]?** a bounding box argument: this is
         a bounding box given as an array in the format [minX, minY, maxX, maxY].
         Search results will be limited to the bounding box.
     -   `options.countries` **[string][57]?** a comma separated list of country codes to
         limit results to specified country or countries.
     -   `options.types` **[string][57]?** a comma seperated list of types that filter
-        results to match those specified. See [https://docs.mapbox.com/api/search/#data-types][64]
+        results to match those specified. See [https://docs.mapbox.com/api/search/#data-types][65]
         for available types.
         If reverseGeocode is enabled, you should specify one type. If you configure more than one type, the first type will be used.
     -   `options.minLength` **[Number][61]** Minimum number of characters to enter before results are shown. (optional, default `2`)
     -   `options.limit` **[Number][61]** Maximum number of results to show. (optional, default `5`)
     -   `options.language` **[string][57]?** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas.
-    -   `options.filter` **[Function][65]?** A function which accepts a Feature in the [Carmen GeoJSON][66] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
-    -   `options.localGeocoder` **[Function][65]?** A function accepting the query string which performs local geocoding to supplement results from the Mapbox Geocoding API. Expected to return an Array of GeoJSON Features in the [Carmen GeoJSON][66] format.
+    -   `options.filter` **[Function][66]?** A function which accepts a Feature in the [Carmen GeoJSON][67] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
+    -   `options.localGeocoder` **[Function][66]?** A function accepting the query string which performs local geocoding to supplement results from the Mapbox Geocoding API. Expected to return an Array of GeoJSON Features in the [Carmen GeoJSON][67] format.
     -   `options.reverseMode` **(`"distance"` \| `"score"`)** Set the factors that are used to sort nearby results. (optional, default `'distance'`)
     -   `options.reverseGeocode` **[boolean][62]?** Enable reverse geocoding. Defaults to false. Expects coordinates to be lat, lon.
     -   `options.enableEventLogging` **[Boolean][62]** Allow Mapbox to collect anonymous usage statistics from the plugin (optional, default `true`)
     -   `options.marker` **([Boolean][62] \| [Object][56])** If `true`, a [Marker][60] will be added to the map at the location of the user-selected result using a default set of Marker options.  If the value is an object, the marker will be constructed using these options. If `false`, no marker will be added to the map. Requires that `options.mapboxgl` also be set. (optional, default `true`)
-    -   `options.render` **[Function][65]?** A function that specifies how the results should be rendered in the dropdown menu. Accepts a single [Carmen GeoJSON][66] object  as input and return a string. Any html in the returned string will be rendered.
-    -   `options.getItemValue` **[Function][65]?** A function that specifies how the selected result should be rendered in the search bar. This function should accept a single [Carmen GeoJSON][66] object  as input and return a string. HTML tags in the output string will not be rendered.
-    -   `options.mode` **[String][57]** A string specifying the geocoding [endpoint][67] to query. Options are `mapbox.places` and `mapbox.places-permanent`. The `mapbox.places-permanent` mode requires an enterprise license for permanent geocodes. (optional, default `'mapbox.places'`)
+    -   `options.render` **[Function][66]?** A function that specifies how the results should be rendered in the dropdown menu. Accepts a single [Carmen GeoJSON][67] object  as input and return a string. Any html in the returned string will be rendered.
+    -   `options.getItemValue` **[Function][66]?** A function that specifies how the selected result should be rendered in the search bar. This function should accept a single [Carmen GeoJSON][67] object  as input and return a string. HTML tags in the output string will not be rendered.
+    -   `options.mode` **[String][57]** A string specifying the geocoding [endpoint][68] to query. Options are `mapbox.places` and `mapbox.places-permanent`. The `mapbox.places-permanent` mode requires an enterprise license for permanent geocodes. (optional, default `'mapbox.places'`)
     -   `options.localGeocoderOnly` **[Boolean][62]?** If `true`, indicates that the localGeocoder results should be the only ones returned to the user. If `false`, indicates that the localGeocoder results should be combined with those from the Mapbox API.
 
 ### Examples
@@ -109,7 +109,7 @@ var geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken });
 map.addControl(geocoder);
 ```
 
-Returns **[MapboxGeocoder][68]** `this`
+Returns **[MapboxGeocoder][69]** `this`
 
 ### addTo
 
@@ -138,7 +138,7 @@ Clear and then focus the input.
 
 #### Parameters
 
--   `ev` **[Event][69]?** the event that triggered the clear, if available
+-   `ev` **[Event][70]?** the event that triggered the clear, if available
 
 ### query
 
@@ -148,7 +148,7 @@ Set & query the input
 
 -   `searchInput` **[string][57]** location name or other search input
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### setInput
 
@@ -158,7 +158,7 @@ Set input
 
 -   `searchInput` **[string][57]** location name or other search input
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### setProximity
 
@@ -168,7 +168,7 @@ Set proximity
 
 -   `proximity` **[Object][56]** The new options.proximity value. This is a geographical point given as an object with latitude and longitude properties.
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### getProximity
 
@@ -182,15 +182,15 @@ Set the render function used in the results dropdown
 
 #### Parameters
 
--   `fn` **[Function][65]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][66] object as input and returns a string.
+-   `fn` **[Function][66]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][67] object as input and returns a string.
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### getRenderFunction
 
 Get the function used to render the results dropdown
 
-Returns **[Function][65]** the render function
+Returns **[Function][66]** the render function
 
 ### setLanguage
 
@@ -202,7 +202,7 @@ Look first at the explicitly set options otherwise use the browser's language se
 
 -   `language` **[String][57]** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas.
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### getLanguage
 
@@ -224,13 +224,13 @@ Set the zoom level
 
 -   `zoom` **[Number][61]** The zoom level that the map should animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`.
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### getFlyTo
 
 Get the parameters used to fly to the selected response, if any
 
-Returns **[MapboxGeocoder][68]** this
+Returns **([Boolean][62] \| [Object][56])** The flyTo option. If an object, it should describe the destination and animation of the transition for flyTo. See [GL JS documentation][63] for details.
 
 ### setFlyTo
 
@@ -238,7 +238,7 @@ Set the flyTo options
 
 #### Parameters
 
--   `flyTo` **([Object][56] \| [Boolean][62])** If false, animating the map to a selected result is disabled. If true, animating the map will use the default animation parameters. If an object, the object will be passed to the flyTo map method to specify a custom animation.
+-   `flyTo` **([Object][56] \| [Boolean][62])** If false, animating the map to a selected result is disabled. If true, animating the map will use the default animation parameters. If an object, it should describe the destination and animation of the transition for flyTo. See [GL JS documentation][63] for details.
 
 ### getPlaceholder
 
@@ -254,13 +254,13 @@ Set the value of the input element's placeholder
 
 -   `placeholder` **[String][57]** the text to use as the input element's placeholder
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### getBbox
 
 Get the bounding box used by the plugin
 
-Returns **[Array][63]&lt;[Number][61]>** the bounding box, if any
+Returns **[Array][64]&lt;[Number][61]>** the bounding box, if any
 
 ### setBbox
 
@@ -268,9 +268,9 @@ Set the bounding box to limit search results to
 
 #### Parameters
 
--   `bbox` **[Array][63]&lt;[Number][61]>** a bounding box given as an array in the format [minX, minY, maxX, maxY].
+-   `bbox` **[Array][64]&lt;[Number][61]>** a bounding box given as an array in the format [minX, minY, maxX, maxY].
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### getCountries
 
@@ -286,7 +286,7 @@ Set the countries to limit search results to
 
 -   `countries` **[String][57]** a comma separated list of countries to limit to
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### getTypes
 
@@ -303,7 +303,7 @@ Set the types to limit search results to
 -   `types`  
 -   `countries` **[String][57]** a comma separated list of types to limit to
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### getMinLength
 
@@ -319,7 +319,7 @@ Set the minimum number of characters typed to trigger results used by the plugin
 
 -   `minLength` **[Number][61]** the minimum length in characters
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### getLimit
 
@@ -335,13 +335,13 @@ Set the limit value for the number of results to display used by the plugin
 
 -   `limit` **[Number][61]** the number of search results to return
 
-Returns **[MapboxGeocoder][68]** 
+Returns **[MapboxGeocoder][69]** 
 
 ### getFilter
 
 Get the filter function used by the plugin
 
-Returns **[Function][65]** the filter function
+Returns **[Function][66]** the filter function
 
 ### setFilter
 
@@ -349,9 +349,9 @@ Set the filter function used by the plugin.
 
 #### Parameters
 
--   `filter` **[Function][65]** A function which accepts a Feature in the [Carmen GeoJSON][66] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
+-   `filter` **[Function][66]** A function which accepts a Feature in the [Carmen GeoJSON][67] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### setOrigin
 
@@ -359,15 +359,15 @@ Set the geocoding endpoint used by the plugin.
 
 #### Parameters
 
--   `origin` **[Function][65]** A function which accepts an HTTPS URL to specify the endpoint to query results from.
+-   `origin` **[Function][66]** A function which accepts an HTTPS URL to specify the endpoint to query results from.
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ### getOrigin
 
 Get the geocoding endpoint the plugin is currently set to
 
-Returns **[Function][65]** the endpoint URL
+Returns **[Function][66]** the endpoint URL
 
 ### on
 
@@ -380,9 +380,9 @@ Subscribe to events that happen within the plugin.
     -   **results** `{ results } Fired when the geocoder returns a response`
     -   **result** `{ result } Fired when input is set`
     -   **error** `{ error } Error as string`
--   `fn` **[Function][65]** function that's called when the event is emitted.
+-   `fn` **[Function][66]** function that's called when the event is emitted.
 
-Returns **[MapboxGeocoder][68]** this;
+Returns **[MapboxGeocoder][69]** this;
 
 ### off
 
@@ -391,9 +391,9 @@ Remove an event
 #### Parameters
 
 -   `type` **[String][57]** Event name.
--   `fn` **[Function][65]** Function that should unsubscribe to the event emitted.
+-   `fn` **[Function][66]** Function that should unsubscribe to the event emitted.
 
-Returns **[MapboxGeocoder][68]** this
+Returns **[MapboxGeocoder][69]** this
 
 ## relatedTarget
 
@@ -529,16 +529,18 @@ the list. See issue #258 for details on why we can't do that yet.
 
 [62]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[63]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[63]: https://docs.mapbox.com/mapbox-gl-js/api/#map#flyto
 
-[64]: https://docs.mapbox.com/api/search/#data-types
+[64]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[65]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[65]: https://docs.mapbox.com/api/search/#data-types
 
-[66]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+[66]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[67]: https://docs.mapbox.com/api/search/#endpoints
+[67]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
 
-[68]: #mapboxgeocoder
+[68]: https://docs.mapbox.com/api/search/#endpoints
 
-[69]: https://developer.mozilla.org/docs/Web/API/Event
+[69]: #mapboxgeocoder
+
+[70]: https://developer.mozilla.org/docs/Web/API/Event
