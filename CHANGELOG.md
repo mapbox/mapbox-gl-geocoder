@@ -1,3 +1,11 @@
+## Master
+
+### Features / Improvements 🚀
+
+- Adds a `localGeocoderOnly` mode that allows queries against a `localGeocoder` without making calls to the Mapbox search API. [#275](https://github.com/mapbox/mapbox-gl-geocoder/issues/275).
+
+
+
 ## v4.3.0
 
 ### Features / Improvements 🚀
