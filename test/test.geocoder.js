@@ -955,5 +955,67 @@ test('geocoder', function(tt) {
     );
   });
 
+
+  tt.test('no mapbox api call is made if localGeocoderOnly is set', function(t){
+    setup({
+      localGeocoderOnly: true,
+      localGeocoder: function(q){
+        return [{
+          place_name: q,
+          geometry: {
+            type: "Point",
+            coordinates: [0, 0]
+          },
+          properties: {},
+          id: 'abc.123'
+        }]
+      }
+    });
+    t.notOk(geocoder.geocoderService, 'geocoding service is not initialized during localGeocoderOnly mode')
+    geocoder.query('Golden Gate Bridge');
+    geocoder.on(
+      'results',
+      once(function(e) {  
+        t.ok(
+          e.features[0].place_name == "Golden Gate Bridge",
+          'returns the result of the local geocoder'
+        );
+        t.ok(
+          e.features[0].id == "abc.123",
+          'returns the result of the local geocoder'
+        )
+        t.equals(e.features.length, 1, "returns the correct number of results")
+        t.end();
+      })
+    );
+  });
+
+  tt.test('does not throw if no access token is set and localGeocoderOnly mode is active', function(t){
+    var opts =  {
+      localGeocoderOnly: true,
+      localGeocoder: function(d){
+        return [{place_name: d, geometry: {type: "Point", coordinates: [0, 0]}, properties: {}, id: 'abc.123'}]
+      }
+    }
+    // no access token here
+    container = document.createElement('div');
+    map = new mapboxgl.Map({ container: container });
+    geocoder = new MapboxGeocoder(opts);
+    t.doesNotThrow(function(){map.addControl(geocoder);}, 'does not throw an error when no access token is set')
+    t.end();
+  });
+
+
+  tt.test('throws an error if localGeocoderOnly mode is active but no localGeocoder is supplied', function(t){
+    var opts =  {
+      localGeocoderOnly: true
+    }
+    // no access token here
+    container = document.createElement('div');
+    map = new mapboxgl.Map({ container: container });
+    geocoder = new MapboxGeocoder(opts);
+    t.throws(function(){map.addControl(geocoder);}, "throws an error if no local geocoder is set")
+    t.end();
+  });
   tt.end();
 });
