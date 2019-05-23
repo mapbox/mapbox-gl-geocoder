@@ -20,6 +20,7 @@ test('Geocoder#inputControl', function(tt) {
   function setup(opts) {
     opts = opts || {};
     opts.accessToken = mapboxgl.accessToken;
+    opts.enableEventLogging = false;
     container = document.createElement('div');
     map = new mapboxgl.Map({ container: container });
     geocoder = new MapboxGeocoder(opts);
