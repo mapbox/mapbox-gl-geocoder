@@ -95,6 +95,7 @@ A geocoder component using Mapbox Geocoding API
     -   `options.render` **[Function][60]?** A function that specifies how the results should be rendered in the dropdown menu. Accepts a single [Carmen GeoJSON][61] object  as input and return a string. Any html in the returned string will be rendered.
     -   `options.getItemValue` **[Function][60]?** A function that specifies how the selected result should be rendered in the search bar. This function should accept a single [Carmen GeoJSON][61] object  as input and return a string. HTML tags in the output string will not be rendered.
     -   `options.mode` **[String][52]** A string specifying the geocoding [endpoint][62] to query. Options are `mapbox.places` and `mapbox.places-permanent`. The `mapbox.places-permanent` mode requires an enterprise license for permanent geocodes. (optional, default `'mapbox.places'`)
+    -   `options.localGeocoderOnly` **[Boolean][57]?** If `true`, indicates that the localGeocoder results should be the only ones returned to the user. If `false`, indicates that the localGeocoder results should be combined with those from the Mapbox API.
 
 ### Examples
 
