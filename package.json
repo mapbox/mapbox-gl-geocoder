@@ -56,7 +56,7 @@
     "uglify-js": "^2.6.4"
   },
   "peerDependencies": {
-    "mapbox-gl": "^0.47.0"
+    "mapbox-gl": "^0.47.0 <2.0.0"
   },
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.5.0",
