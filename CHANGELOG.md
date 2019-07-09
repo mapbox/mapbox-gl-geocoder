@@ -1,3 +1,10 @@
+
+## v4.4.1
+
+### Bug fixes 🐛
+
+- Specify version range of `mapbox-gl` in `peerDependencies`. [#285](https://github.com/mapbox/mapbox-gl-geocoder/pull/285).
+
 ## v4.4.0
 
 ### Features / Improvements 🚀
