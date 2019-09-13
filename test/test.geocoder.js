@@ -99,6 +99,20 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test("swapped endpoint", function(t) {
+    t.plan(1);
+    setup({ origin: 'localhost:2999' });
+    geocoder.setOrigin("https://api.mapbox.com");
+    geocoder.query("pizza");
+    geocoder.on("results", function(e) {
+      t.equals(
+        e.request.origin,
+        "https://api.mapbox.com",
+        "endpoint correctly reset"
+      );
+    });
+  });
+
   tt.test('options.bbox', function(t) {
     t.plan(2);
     setup({

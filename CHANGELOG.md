@@ -1,3 +1,9 @@
+## v4.4.2
+
+### Features / Improvements 🚀
+
+- Added `getOrigin` and `setOrigin` for alternative geocoding endpoints.
+- Added `request` and `headers` to response object for endpoint swap testing.
 
 ## v4.4.1
 
