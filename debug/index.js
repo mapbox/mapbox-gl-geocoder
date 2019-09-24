@@ -25,16 +25,6 @@ mapDiv.style.right = 0;
 mapDiv.style.left = 0;
 mapDiv.style.bottom = 0;
 
-var notMapDiv = document.body.appendChild(document.createElement('div'));
-notMapDiv.style.position = 'absolute';
-notMapDiv.style.top = 0;
-notMapDiv.style.right = 0;
-notMapDiv.style.left = 0;
-notMapDiv.style.bottom = 0;
-notMapDiv.style.backgroundColor = 'red';
-
-notMapDiv.classList.add("notAMap");
-
 var map = new mapboxgl.Map({
   container: mapDiv,
   style: 'mapbox://styles/mapbox/streets-v9',
@@ -90,7 +80,7 @@ var geocoder = new MapboxGeocoder({
   mapboxgl: mapboxgl
 });
 
-geocoder.addTo('.notAMap')
+map.addControl(geocoder)
 
 window.geocoder = geocoder;
 
@@ -108,7 +98,6 @@ map
   .getContainer()
   .querySelector('.mapboxgl-ctrl-bottom-left')
   .appendChild(button);
-// map.addControl(geocoder);
 
 map.on('load', function() {
   button.addEventListener('click', function() {
