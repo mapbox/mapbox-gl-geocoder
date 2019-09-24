@@ -330,3 +330,134 @@ test('Geocoder#inputControl', function(tt) {
   });
   tt.end();
 });
+
+test('Geocoder--no map', function(tt) {
+  var container, geocoder;
+
+  var changeEvent = document.createEvent('HTMLEvents');
+  changeEvent.initEvent('change', true, false);
+
+  var clickEvent = document.createEvent('HTMLEvents');
+  clickEvent.initEvent('click', true, false);
+
+  function setup(opts) {
+    opts = opts || {};
+    opts.accessToken = mapboxgl.accessToken;
+    opts.enableEventLogging = false;
+    container = document.createElement('div');
+    container.className = "notAMap"
+    document.body.appendChild(container)
+    geocoder = new MapboxGeocoder(opts);
+    geocoder.addTo(".notAMap")
+  }
+
+  tt.test('result was added to container', (t)=>{
+    setup();
+    const geocoderRef = document.getElementsByClassName("mapboxgl-ctrl-geocoder");
+    t.ok(Object.keys(geocoderRef).length, "A geocoder exists in the document");
+    const containerChildRef = container.getElementsByClassName("mapboxgl-ctrl-geocoder");
+    t.ok(Object.keys(containerChildRef).length, "A geocoder exists as a child to the specified element");
+    t.end(); 
+  });
+
+
+  tt.test('input works without a map', function(t) {
+    setup({
+      types: 'place'
+    });
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    var clearEl = container.querySelector('.mapboxgl-ctrl-geocoder button');
+
+    t.plan(7);
+
+    geocoder.on(
+      'loading',
+      once(function(e) {
+        t.pass('load event was emitted');
+        t.equals(e.query, '-79,43', 'loading event passes query parameter');
+      })
+    );
+
+    geocoder.on(
+      'result',
+      once(function() {
+        t.ok(inputEl.value, 'value populates in input');
+        clearEl.dispatchEvent(clickEvent);
+      })
+    );
+
+    geocoder.on(
+      'clear',
+      once(function() {
+        t.pass('input was cleared');
+        t.equals(geocoder.fresh, false, 'the geocoder is fresh again')
+
+        geocoder.setInput('Paris');
+        t.equals(inputEl.value, 'Paris', 'value populates in input');
+
+        geocoder.setInput('90,45');
+        t.equals(
+          inputEl.value,
+          '90,45',
+          'valid LngLat value populates in input'
+        );
+        t.end();
+      })
+    );
+
+    geocoder.query('-79,43');
+  });
+});
+
+test('Geocoder#addTo', function(tt) {
+  var container, geocoder;
+
+  tt.test('add to an existing map', (t)=>{
+    const opts = {}
+    opts.accessToken = mapboxgl.accessToken;
+    opts.enableEventLogging = false;
+    container = document.createElement('div');
+    var map = new mapboxgl.Map({ container: container });
+    geocoder = new MapboxGeocoder(opts);
+    geocoder.addTo(map);
+    t.ok(Object.keys(container.getElementsByClassName("mapboxgl-ctrl-geocoder--input")).length, 'geocoder exists when added to the map')
+    t.end(); 
+  });
+
+  tt.test('add to an existing html class', (t)=>{
+    const opts = {}
+    opts.accessToken = mapboxgl.accessToken;
+    opts.enableEventLogging = false;
+    container = document.createElement('div');
+    container.className = "notAMap"
+    document.body.appendChild(container)
+    geocoder = new MapboxGeocoder(opts);
+    geocoder.addTo(".notAMap")
+    t.ok(Object.keys(container.getElementsByClassName("mapboxgl-ctrl-geocoder--input")).length, 'geocoder exists when added to an html element')
+    t.end(); 
+  });
+
+  tt.test('throws if added to an unknown element', (t)=>{
+    const opts = {}
+    opts.accessToken = mapboxgl.accessToken;
+    opts.enableEventLogging = false;
+    container = document.createElement('div');
+    container.className = "notAMap"
+    document.body.appendChild(container)
+    geocoder = new MapboxGeocoder(opts);
+    t.throws(()=>{geocoder.addTo(container)}, 'addTo throws if added to an unknown element');
+    t.end(); 
+  });
+
+  tt.test('throws if the element cannot be found', (t)=>{
+    const opts = {}
+    opts.accessToken = mapboxgl.accessToken;
+    opts.enableEventLogging = false;
+    container = document.createElement('div');
+    container.className = "notAMap"
+    geocoder = new MapboxGeocoder(opts);
+    t.throws(()=>{geocoder.addTo(container)}, 'addTo throws if the element is not found on the DOM');
+    t.end(); 
+  });
+
+});
