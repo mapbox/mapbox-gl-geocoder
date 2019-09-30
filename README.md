@@ -20,7 +20,7 @@ var MapboxGeocoder = require('@mapbox/mapbox-gl-geocoder');
 ```
 
 ###  Using without a Map
-It is possible to use the plugin without it being placed as a control on a mapbox-gl map. Keep in mind that the Mapbox [Terms of Service](https://www.mapbox.com/legal/tos#[GAGA]) require that POI search results be shown on a Mapbox map. If you don't need a POIs, you can exclude them from your search results with the `options.types` parameter  when constructing a new Geocoder. 
+It is possible to use the plugin without it being placed as a control on a mapbox-gl map. Keep in mind that the Mapbox [Terms of Service](https://www.mapbox.com/legal/tos#[GAGA]) require that POI search results be shown on a Mapbox map. If you don't need POIs, you can exclude them from your search results with the `options.types` parameter  when constructing a new Geocoder. 
 
 ### Deeper dive
 
