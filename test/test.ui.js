@@ -357,6 +357,7 @@ test('Geocoder--no map', function(tt) {
     t.ok(Object.keys(geocoderRef).length, "A geocoder exists in the document");
     const containerChildRef = container.getElementsByClassName("mapboxgl-ctrl-geocoder");
     t.ok(Object.keys(containerChildRef).length, "A geocoder exists as a child to the specified element");
+    container.remove();
     t.end(); 
   });
 
@@ -401,6 +402,8 @@ test('Geocoder--no map', function(tt) {
           '90,45',
           'valid LngLat value populates in input'
         );
+        // teardown 
+        container.remove();
         t.end();
       })
     );
@@ -455,8 +458,24 @@ test('Geocoder#addTo', function(tt) {
     opts.enableEventLogging = false;
     container = document.createElement('div');
     container.className = "notAMap"
+    // we haven't added this container to the dom, we've only created it
     geocoder = new MapboxGeocoder(opts);
     t.throws(()=>{geocoder.addTo(container)}, 'addTo throws if the element is not found on the DOM');
+    t.end(); 
+  });
+
+  tt.test('throws if there are multiple matching elements', (t)=>{
+    const opts = {}
+    opts.accessToken = mapboxgl.accessToken;
+    opts.enableEventLogging = false;
+    const container1 = document.createElement('div');
+    container1.className = "notAMap"
+    const container2 = document.createElement('div');
+    container2.className = "notAMap"
+    document.body.appendChild(container1)
+    document.body.appendChild(container2)
+    geocoder = new MapboxGeocoder(opts);
+    t.throws(()=>{geocoder.addTo(".notAMap")}, 'addTo throws if there are too many matching elements');
     t.end(); 
   });
 
