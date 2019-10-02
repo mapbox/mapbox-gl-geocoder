@@ -1,0 +1,60 @@
+<head>
+    <title>Mapbox-gl-geocoder</title>
+    <script src="./../bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/1.4.0/mapbox-gl.js"></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel='stylesheet' href="./../lib/mapbox-gl-geocoder.css" />
+    <style>
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <h1>Hi</h1>
+</body>
+
+<script>
+
+    mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
+
+    var map = new mapboxgl.Map({
+        container: "map",
+        style: 'mapbox://styles/mapbox/streets-v9',
+        center: [-79.4512, 43.6568],
+        zoom: 13
+    });
+
+    var geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        trackProximity: true,
+        mapboxgl: mapboxgl
+    });
+
+    map.addControl(geocoder)
+
+
+    geocoder.on('results', function (e) {
+        console.log('results: ', e.features);
+    });
+
+    geocoder.on('result', function (e) {
+        console.log('result: ', e.result);
+    });
+
+    geocoder.on('clear', function (e) {
+        console.log('clear');
+    });
+
+    geocoder.on('loading', function (e) {
+        console.log('loading:', e.query);
+    });
+
+    geocoder.on('error', function (e) {
+        console.log('Error is', e.error);
+    });
+
+</script>
