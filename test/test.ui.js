@@ -328,5 +328,57 @@ test('Geocoder#inputControl', function(tt) {
     t.ok(consoleSpy.calledOnce, 'the custom clear method was called');
     t.end();
   });
+
+
+  tt.test('event deduplication', function(t) {
+    setup({
+      types: 'place',
+      mapboxgl: mapboxgl
+    });
+    var clearEl = container.querySelector('.mapboxgl-ctrl-geocoder button');
+
+    t.plan(4);
+
+    var checkVal = null;
+
+    geocoder.on(
+      'result',
+      function() {
+        t.equals(typeof geocoder.lastSelected, 'string', 'last selected is a string');
+        t.notEqual(geocoder.lastSelected, checkVal, 'last selected has been updated');
+        checkVal = geocoder.lastSelected
+        clearEl.dispatchEvent(clickEvent);
+      }
+    );
+    geocoder.query('test');
+    geocoder.query('usa');
+  });
+
+  tt.test('event deduplication even when IDs are shared', function(t) {
+    setup({
+      types: 'place',
+      mapboxgl: mapboxgl
+    });
+    var clearEl = container.querySelector('.mapboxgl-ctrl-geocoder button');
+
+    t.plan(2);
+
+
+
+    var lastID = "test.abc123"
+
+    geocoder.on(
+      'result',
+      function() {
+        t.pass("The test was executed even with duplicate ids")
+        var selected = JSON.parse(geocoder.lastSelected);
+        selected.id = lastID
+        clearEl.dispatchEvent(clickEvent);
+      }
+    );
+    geocoder.query('test');
+    geocoder.query('usa');
+  });
+
   tt.end();
 });
