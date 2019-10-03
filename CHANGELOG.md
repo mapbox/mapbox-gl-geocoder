@@ -1,3 +1,10 @@
+## Master
+
+### Bug fixes 🐛
+
+- Fix event deduplication [#298](https://github.com/mapbox/mapbox-gl-geocoder/pull/298).
+
+
 ## v4.4.2
 
 ### Features / Improvements 🚀
