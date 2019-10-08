@@ -363,8 +363,6 @@ test('Geocoder#inputControl', function(tt) {
 
     t.plan(2);
 
-
-
     var lastID = "test.abc123"
 
     geocoder.on(
@@ -378,6 +376,25 @@ test('Geocoder#inputControl', function(tt) {
     );
     geocoder.query('test');
     geocoder.query('usa');
+  });
+
+  tt.test('paste event', function(t) {
+    t.plan(1);
+    setup({ });
+    var pasteEvent = new ClipboardEvent('paste', {
+      dataType: 'text/plain', 
+      data: 'Golden Gate Bridge'
+    })
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    inputEl.dispatchEvent(pasteEvent)
+
+    geocoder.on(
+      'results',
+      once(function() {
+        t.pass("results are returned");
+        t.end();
+      })
+    );
   });
 
   tt.end();

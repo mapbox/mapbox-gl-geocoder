@@ -39,13 +39,7 @@ Follow this deploy process after all changes for the release are merged into mas
 
 ## Post-release checklist
 
-Update version number in GL JS examples:
+Update version number in GL JS examples at [https://github.com/mapbox/mapbox-gl-js-docs](https://github.com/mapbox/mapbox-gl-js-docs):
 
-* [ ] [mapbox-gl-geocoder](https://github.com/mapbox/mapbox-gl-js/blob/publisher-production/docs/pages/example/mapbox-gl-geocoder.html)
-* [ ] [point-from-geocoder-result](https://github.com/mapbox/mapbox-gl-js/blob/publisher-production/docs/pages/example/point-from-geocoder-result.html)
-* [ ] [mapbox-gl-geocoder-outside-the-map](https://github.com/mapbox/mapbox-gl-js/blob/publisher-production/docs/pages/example/mapbox-gl-geocoder-outside-the-map.html)
-* [ ] [mapbox-gl-geocoder-limit-region](https://github.com/mapbox/mapbox-gl-js/blob/publisher-production/docs/pages/example/mapbox-gl-geocoder-limit-region.html)
-* [ ] [mapbox-gl-geocoder-accept-coordinates](https://github.com/mapbox/mapbox-gl-js/blob/publisher-production/docs/pages/example/mapbox-gl-geocoder-accept-coordinates.html)
-* [ ] [mapbox-gl-geocoder-proximity-bias](https://github.com/mapbox/mapbox-gl-js/blob/publisher-production/docs/pages/example/mapbox-gl-geocoder-proximity-bias.html)
-* [ ] [forward-geocode-custom-data](https://github.com/mapbox/mapbox-gl-js/blob/publisher-production/docs/pages/example/forward-geocode-custom-data.html)
+    sed -i 's/mapbox-gl-geocoder\/v[^\/]*\//mapbox-gl-geocoder\/vX.X.X\//g' docs/pages/example/*.html
 ```
