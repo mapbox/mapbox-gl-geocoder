@@ -1031,5 +1031,14 @@ test('geocoder', function(tt) {
     t.throws(function(){map.addControl(geocoder);}, "throws an error if no local geocoder is set")
     t.end();
   });
+  
+  tt.test('geocoder.lastSelected is reset on input', function(t){
+    setup();
+    geocoder.lastSelected = "abc123";
+    geocoder._onKeyDown(new KeyboardEvent('KeyDown'));
+    t.equals(geocoder.lastSelected, null)
+    t.end();
+  });
+
   tt.end();
 });
