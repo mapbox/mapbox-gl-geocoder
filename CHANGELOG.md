@@ -4,6 +4,9 @@
 - Supports adding a geocoder to an arbitrary HTML element so it can be used without a map [#270](https://github.com/mapbox/mapbox-gl-geocoder/issues/270). 
 
 
+### Bug fixes 🐛
+- Add a paste event handler to ensure that paste events are recognized by the geocoder and trigger searches [#300](https://github.com/mapbox/mapbox-gl-geocoder/pull/300). 
+
 ## v4.4.2
 
 ### Features / Improvements 🚀

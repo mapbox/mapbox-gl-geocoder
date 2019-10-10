@@ -1031,5 +1031,49 @@ test('geocoder', function(tt) {
     t.throws(function(){map.addControl(geocoder);}, "throws an error if no local geocoder is set")
     t.end();
   });
+
+  tt.test('geocoder#onPaste', function(t){
+    setup();
+    var searchMock = sinon.spy(geocoder, "_geocode")
+    var event = new ClipboardEvent('paste', {
+      dataType: 'text/plain', 
+      data: 'Golden Gate Bridge'
+    })
+    geocoder._onPaste(event);
+    t.ok(searchMock.calledOnce, 'the search was triggered');
+    const queryArg = searchMock.args[0][0];
+    t.equals(queryArg, 'Golden Gate Bridge', 'the paste event triggered the correct geocode');
+    searchMock.restore();
+    t.end();
+  });
+
+  tt.test('geocoder#onPaste not triggered when text is too short', function(t){
+    setup({
+      minLength: 5
+    });
+    var searchMock = sinon.spy(geocoder, "_geocode")
+    var event = new ClipboardEvent('paste', {
+      dataType: 'text/plain', 
+      data: 'abc'
+    })
+    geocoder._onPaste(event);
+    t.notOk(searchMock.calledOnce, 'the search was not triggered');
+    searchMock.restore();
+    t.end();
+  });
+
+  tt.test('geocoder#onPaste not triggered when there is no text', function(t){
+    setup();
+    var searchMock = sinon.spy(geocoder, "_geocode")
+    var event = new ClipboardEvent('paste', {
+      dataType: 'text/plain', 
+      data: ''
+    })
+    geocoder._onPaste(event);
+    t.notOk(searchMock.calledOnce, 'the search was not triggered');
+    searchMock.restore();
+    t.end();
+  });
+
   tt.end();
 });
