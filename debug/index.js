@@ -80,6 +80,8 @@ var geocoder = new MapboxGeocoder({
   mapboxgl: mapboxgl
 });
 
+map.addControl(geocoder)
+
 window.geocoder = geocoder;
 
 var button = document.createElement('button');
@@ -96,7 +98,6 @@ map
   .getContainer()
   .querySelector('.mapboxgl-ctrl-bottom-left')
   .appendChild(button);
-map.addControl(geocoder);
 
 map.on('load', function() {
   button.addEventListener('click', function() {
@@ -116,6 +117,7 @@ geocoder.on('result', function(e) {
 });
 
 geocoder.on('clear', function(e) {
+  console.log(e)
   console.log('clear');
 });
 
