@@ -1,4 +1,4 @@
-## Master
+## v4.5.0
 ### Features / Improvements 🚀
 
 - Supports adding a geocoder to an arbitrary HTML element so it can be used without a map [#270](https://github.com/mapbox/mapbox-gl-geocoder/issues/270). 
