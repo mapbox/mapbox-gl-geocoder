@@ -1032,6 +1032,15 @@ test('geocoder', function(tt) {
     t.end();
   });
 
+  tt.test('geocoder.lastSelected is reset on input', function(t){
+    setup();
+    geocoder.lastSelected = "abc123";
+    geocoder._onKeyDown(new KeyboardEvent('KeyDown'));
+    t.equals(geocoder.lastSelected, null)
+    t.end();
+  });
+
+
   tt.test('geocoder#onPaste', function(t){
     setup();
     var searchMock = sinon.spy(geocoder, "_geocode")
