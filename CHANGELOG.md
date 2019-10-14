@@ -8,6 +8,7 @@
 
 - Fix event deduplication [#298](https://github.com/mapbox/mapbox-gl-geocoder/pull/298).
 - Add a paste event handler to ensure that paste events are recognized by the geocoder and trigger searches [#300](https://github.com/mapbox/mapbox-gl-geocoder/pull/300). 
+- Fix a bug where geocoding responses without a center would try to add a Marker [#301](https://github.com/mapbox/mapbox-gl-geocoder/pull/301)
 
 ## v4.4.2
 
