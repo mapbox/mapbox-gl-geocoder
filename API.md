@@ -113,13 +113,20 @@ Returns **[MapboxGeocoder][68]** `this`
 
 ### addTo
 
-Add the geocoder to a container. The container can be either a mapboxgl.Map or a reference to an HTML class or ID. 
+Add the geocoder to a container. The container can be either a `mapboxgl.Map` or a reference to an HTML `class` or `id`.
 
-If the container is a mapboxgl.Map, this function will behave identically to Map.addControl(geocoder)
-If the container is an html id or class, the geocoder will be appended to that element
+If the container is a `mapboxgl.Map`, this function will behave identically to ```Map.addControl(geocoder)``.
+If the container is an HTML```id`or`class\`, the geocoder will be appended to that element.
 
-This function will throw an error if the container is not one a map or a class/id reference
-It will also throw an error if the referenced html element cannot be found in the document.body
+This function will throw an error if the container is not either a map or a `class`/`id` reference.
+It will also throw an error if the referenced HTML element cannot be found in the `document.body`.
+
+For example, if the HTML body contains the element `<div id='geocoder-container'></div>`, the following script will append the geocoder to `#geocoder-container`:
+
+```javascript
+var geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken });
+geocoder.addTo('#geocoder-container');
+```
 
 #### Parameters
 
