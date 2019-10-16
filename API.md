@@ -125,7 +125,7 @@ For example, if the HTML body contains the element `<div id='geocoder-container'
 
 ```javascript
 var geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken });
-map.addTo('#geocoder-container');
+geocoder.addTo('#geocoder-container');
 ```
 
 #### Parameters
