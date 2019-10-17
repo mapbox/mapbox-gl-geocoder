@@ -1,3 +1,8 @@
+## master
+### Bug fixes 🐛
+
+- Fix a bug where geocoding responses without a center would try to add a Marker [#301](https://github.com/mapbox/mapbox-gl-geocoder/pull/301)
+
 ## v4.5.0
 ### Features / Improvements 🚀
 
