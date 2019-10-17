@@ -132,6 +132,8 @@ geocoder.addTo('#geocoder-container');
 
 -   `container` **([String][57] | mapboxgl.Map)** A reference to the container to which to add the geocoder
 
+Returns **[MapboxGeocoder][68]** this
+
 ### clear
 
 Clear and then focus the input.
