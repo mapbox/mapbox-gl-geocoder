@@ -1,4 +1,8 @@
 ## master
+### Features / Improvements 🚀
+
+- Support passing an HTMLElement as the parent for a Geocoder - builds on top of [#270] - 
+
 ### Bug fixes 🐛
 
 - Fix a bug where geocoding responses without a center would try to add a Marker [#301](https://github.com/mapbox/mapbox-gl-geocoder/pull/301)
