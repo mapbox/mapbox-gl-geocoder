@@ -1,7 +1,7 @@
 ## master
 ### Features / Improvements 🚀
 
-- Support passing an HTMLElement as the parent for a Geocoder - builds on top of [#270] - 
+- Support passing an HTMLElement as the parent for a Geocoder - builds on top of [#270] - [#311](https://github.com/mapbox/mapbox-gl-geocoder/pull/311)
 
 ### Bug fixes 🐛
 
