@@ -75,7 +75,7 @@ A geocoder component using Mapbox Geocoding API
         a geographical point given as an object with latitude and longitude
         properties. Search results closer to this point will be given
         higher priority.
-    -   `options.trackProximity` **[Boolean][62]** If true, the geocoder proximity will automatically update based on the map view for zoom levels 10 and above. To enable proximity bias for all zoom levels you need to set the `options.proximity` yourself. (optional, default `true`) (optional, default `true`)
+    -   `options.trackProximity` **[Boolean][62]** If true, the geocoder proximity will automatically update based on the map view for zoom levels 10 and above. To enable proximity bias for all zoom levels you need to set the `options.proximity` yourself. (optional, default `true`)
     -   `options.collapsed` **[Boolean][62]** If true, the geocoder control will collapse until hovered or in focus. (optional, default `false`)
     -   `options.clearAndBlurOnEsc` **[Boolean][62]** If true, the geocoder control will clear it's contents and blur when user presses the escape key. (optional, default `false`)
     -   `options.clearOnBlur` **[Boolean][62]** If true, the geocoder control will clear its value when the input blurs. (optional, default `false`)
