@@ -75,7 +75,7 @@ A geocoder component using Mapbox Geocoding API
         a geographical point given as an object with latitude and longitude
         properties. Search results closer to this point will be given
         higher priority.
-    -   `options.trackProximity` **[Boolean][62]** If true, the geocoder proximity will automatically update based on the map view. (optional, default `true`)
+    -   `options.trackProximity` **[Boolean][62]** If true, the geocoder proximity will automatically update based on the map view for zoom levels 10 and above. To enable proximity bias for all zoom levels you need to set the `options.proximity` yourself. (optional, default `true`) (optional, default `true`)
     -   `options.collapsed` **[Boolean][62]** If true, the geocoder control will collapse until hovered or in focus. (optional, default `false`)
     -   `options.clearAndBlurOnEsc` **[Boolean][62]** If true, the geocoder control will clear it's contents and blur when user presses the escape key. (optional, default `false`)
     -   `options.clearOnBlur` **[Boolean][62]** If true, the geocoder control will clear its value when the input blurs. (optional, default `false`)
@@ -87,7 +87,6 @@ A geocoder component using Mapbox Geocoding API
     -   `options.types` **[string][57]?** a comma seperated list of types that filter
         results to match those specified. See [https://docs.mapbox.com/api/search/#data-types][64]
         for available types.
-        If reverseGeocode is enabled, you should specify one type. If you configure more than one type, the first type will be used.
     -   `options.minLength` **[Number][61]** Minimum number of characters to enter before results are shown. (optional, default `2`)
     -   `options.limit` **[Number][61]** Maximum number of results to show. (optional, default `5`)
     -   `options.language` **[string][57]?** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas.
