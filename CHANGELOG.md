@@ -1,4 +1,8 @@
 ## master
+### Features / Improvements 🚀
+
+- `addTo` returns itself.
+
 ### Bug fixes 🐛
 
 - Fix a bug where geocoding responses without a center would try to add a Marker [#301](https://github.com/mapbox/mapbox-gl-geocoder/pull/301)
