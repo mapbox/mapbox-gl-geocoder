@@ -196,6 +196,20 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test('options.reverseGeocode: true with trackProximity: true', function(t) {
+    t.plan(0);
+    setup({
+      reverseGeocode: true,
+      trackProximity: true
+    });
+    map.jumpTo({
+      zoom: 16,
+      center: [10, 10]
+    });
+    geocoder.query('-6.1933875, 34.5177548');
+    t.end();
+  });
+
   tt.test('parses options correctly', function(t) {
     t.plan(4);
     setup({
