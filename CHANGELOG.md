@@ -1,5 +1,10 @@
 ## master
 
+## v4.5.2
+### Bug fixes 🐛
+
+- Fix a bug where the geocoder did not work when used on a map inititalized to a lat or lng of 0
+
 ## v4.5.1
 ### Bug fixes 🐛
 
