@@ -459,6 +459,26 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test('geocoding works correctly around a place with a 0 lat or lng', function(t) {
+    t.plan(1);
+
+    setup({});
+
+    map.setZoom(13);
+    map.setCenter([0, 51.5]);
+
+    geocoder.query('Berlin');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.ok(
+          e.features.some((feature) => feature.place_name.indexOf('Berlin') !== -1),
+          'geocoding works correctly around a location with a 0 lat or lng'
+        );
+      })
+    );
+  });
+
   tt.test('options.render', function(t){
     t.plan(3);
     setup({
