@@ -1,10 +1,13 @@
 ## master
+
+## 4.5.2
+
 ### Features / Improvements 🚀
 
 - Support passing an HTMLElement as the parent for a Geocoder - builds on top of [#270] - [#311](https://github.com/mapbox/mapbox-gl-geocoder/pull/311)
 
-## 4.5.2
 ### Bug fixes 🐛
+
 - Disable proximity when reverseGeocoding since it is not supported by the Mapbox Geocoding API [#327](https://github.com/mapbox/mapbox-gl-geocoder/pull/327)
 - Fixed the display of SVG icons in IE11 [#341](https://github.com/mapbox/mapbox-gl-geocoder/pull/341)
 - Removed escape character from CSS which caused issues importing into a SASS file [#343](https://github.com/mapbox/mapbox-gl-geocoder/pull/343)
@@ -14,19 +17,21 @@
 - Fix a bug where the geocoder did not work when used on a map inititalized to a lat or lng of 0
 
 ## v4.5.1
+
 ### Bug fixes 🐛
 
 - Fix a bug where geocoding responses without a center would try to add a Marker [#301](https://github.com/mapbox/mapbox-gl-geocoder/pull/301)
 - Fix a bug where result was not selected on subsequent `localGeocoder` searches [#315](https://github.com/mapbox/mapbox-gl-geocoder/pull/315)
 
 ### Features / Improvements 🚀
+
 - Added Persian translation for `placeholder` [#322](https://github.com/mapbox/mapbox-gl-geocoder/pull/322)
 
 ## v4.5.0
+
 ### Features / Improvements 🚀
 
 - Supports adding a geocoder to an arbitrary HTML element so it can be used without a map [#270](https://github.com/mapbox/mapbox-gl-geocoder/issues/270).
-
 
 ### Bug fixes 🐛
 
@@ -52,8 +57,6 @@
 
 - Adds a `localGeocoderOnly` mode that allows queries against a `localGeocoder` without making calls to the Mapbox search API. [#275](https://github.com/mapbox/mapbox-gl-geocoder/issues/275).
 
-
-
 ## v4.3.0
 
 ### Features / Improvements 🚀
@@ -73,7 +76,6 @@
 
 - Fix issue where selection events are logged with the incorrect `queryString` value. [#262](https://github.com/mapbox/mapbox-gl-geocoder/pull/262)
 
-
 ## v4.1.0
 
 ### Bug fixes 🐛
@@ -90,7 +92,6 @@
 * Fix CSS issue where close button was not being centered [#241](https://github.com/mapbox/mapbox-gl-geocoder/issues/241)
 * Namespace all CSS to prevent collisions  [#248](https://github.com/mapbox/mapbox-gl-geocoder/issues/248)
 * Fix CSS issue with width on input when `collapsed` enabled [#238](https://github.com/mapbox/mapbox-gl-geocoder/issues/238)
-
 
 ## v4.0.0
 
@@ -115,7 +116,6 @@
 - Fix double map `moveend` event [#229](https://github.com/mapbox/mapbox-gl-geocoder/pull/229)
 - Fix duplicate `result` event bug [#218](https://github.com/mapbox/mapbox-gl-geocoder/pull/218)
 - Fix trapped focus bug [#220](https://github.com/mapbox/mapbox-gl-geocoder/issues/220)
-
 
 ## v3.1.6
 -  Resolve npm publish failure
