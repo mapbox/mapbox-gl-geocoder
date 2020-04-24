@@ -1,5 +1,8 @@
 ## master
 
+### Bug fixes 🐛
+- disable proximity when reverseGeocoding since it is not supported by the Mapbox Geocoding API [#327](https://github.com/mapbox/mapbox-gl-geocoder/pull/327)
+
 ## v4.5.1
 ### Bug fixes 🐛
 
