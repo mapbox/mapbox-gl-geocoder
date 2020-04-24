@@ -505,7 +505,20 @@ test('Geocoder#addTo', function(tt) {
     container.className = "notAMap"
     document.body.appendChild(container)
     geocoder = new MapboxGeocoder(opts);
-    geocoder.addTo(".notAMap")
+    geocoder.addTo(".notAMap");
+    t.ok(Object.keys(container.getElementsByClassName("mapboxgl-ctrl-geocoder--input")).length, 'geocoder exists when added to an html element')
+    t.end(); 
+  });
+
+  tt.test('add to an existing HTMLElement', (t)=>{
+    const opts = {}
+    opts.accessToken = mapboxgl.accessToken;
+    opts.enableEventLogging = false;
+    container = document.createElement('div');
+    container.className = "notAMapEither"
+    document.body.appendChild(container)
+    geocoder = new MapboxGeocoder(opts);
+    geocoder.addTo(document.querySelectorAll(".notAMapEither"));
     t.ok(Object.keys(container.getElementsByClassName("mapboxgl-ctrl-geocoder--input")).length, 'geocoder exists when added to an html element')
     t.end(); 
   });
