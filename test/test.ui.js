@@ -320,6 +320,7 @@ test('Geocoder#inputControl', function(tt) {
     t.plan(1);
     setup({ });
     geocoder.clear = function(ev){
+      // eslint-disable-next-line no-console
       console.log(ev);
     }
     var consoleSpy = sinon.spy(console, "log");

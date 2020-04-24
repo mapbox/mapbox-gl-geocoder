@@ -4,8 +4,16 @@
 - Support passing an HTMLElement as the parent for a Geocoder - builds on top of [#270] - [#311](https://github.com/mapbox/mapbox-gl-geocoder/pull/311)
 
 ### Bug fixes 🐛
+- disable proximity when reverseGeocoding since it is not supported by the Mapbox Geocoding API [#327](https://github.com/mapbox/mapbox-gl-geocoder/pull/327)
+
+## v4.5.1
+### Bug fixes 🐛
 
 - Fix a bug where geocoding responses without a center would try to add a Marker [#301](https://github.com/mapbox/mapbox-gl-geocoder/pull/301)
+- Fix a bug where result was not selected on subsequent `localGeocoder` searches [#315](https://github.com/mapbox/mapbox-gl-geocoder/pull/315)
+
+### Features / Improvements 🚀
+- Added Persian translation for `placeholder`
 
 ## v4.5.0
 ### Features / Improvements 🚀
