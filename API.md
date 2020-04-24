@@ -115,7 +115,7 @@ Returns **[MapboxGeocoder][69]** `this`
 Add the geocoder to a container. The container can be either a `mapboxgl.Map` or a reference to an HTML `class` or `id`.
 
 If the container is a `mapboxgl.Map`, this function will behave identically to `Map.addControl(geocoder)`.
-If the container is an instance of HTMLElement, then the geocoder will be 
+If the container is an instance of HTMLElement, then the geocoder will be appended as a child of that HTMLElement.
 If the container is a CSS selector string, the geocoder will be appended to the element returned from the query.
 
 This function will throw an error if the container is none of the above.
