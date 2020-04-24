@@ -3,8 +3,11 @@
 
 - Support passing an HTMLElement as the parent for a Geocoder - builds on top of [#270] - [#311](https://github.com/mapbox/mapbox-gl-geocoder/pull/311)
 
+## 4.5.2
 ### Bug fixes 🐛
-- disable proximity when reverseGeocoding since it is not supported by the Mapbox Geocoding API [#327](https://github.com/mapbox/mapbox-gl-geocoder/pull/327)
+- Disable proximity when reverseGeocoding since it is not supported by the Mapbox Geocoding API [#327](https://github.com/mapbox/mapbox-gl-geocoder/pull/327)
+- Fixed the display of SVG icons in IE11 [#341](https://github.com/mapbox/mapbox-gl-geocoder/pull/341)
+- Removed escape character from CSS which caused issues importing into a SASS file [#343](https://github.com/mapbox/mapbox-gl-geocoder/pull/343)
 
 ### Bug fixes 🐛
 
@@ -17,18 +20,18 @@
 - Fix a bug where result was not selected on subsequent `localGeocoder` searches [#315](https://github.com/mapbox/mapbox-gl-geocoder/pull/315)
 
 ### Features / Improvements 🚀
-- Added Persian translation for `placeholder`
+- Added Persian translation for `placeholder` [#322](https://github.com/mapbox/mapbox-gl-geocoder/pull/322)
 
 ## v4.5.0
 ### Features / Improvements 🚀
 
-- Supports adding a geocoder to an arbitrary HTML element so it can be used without a map [#270](https://github.com/mapbox/mapbox-gl-geocoder/issues/270). 
+- Supports adding a geocoder to an arbitrary HTML element so it can be used without a map [#270](https://github.com/mapbox/mapbox-gl-geocoder/issues/270).
 
 
 ### Bug fixes 🐛
 
 - Fix event deduplication [#298](https://github.com/mapbox/mapbox-gl-geocoder/pull/298).
-- Add a paste event handler to ensure that paste events are recognized by the geocoder and trigger searches [#300](https://github.com/mapbox/mapbox-gl-geocoder/pull/300). 
+- Add a paste event handler to ensure that paste events are recognized by the geocoder and trigger searches [#300](https://github.com/mapbox/mapbox-gl-geocoder/pull/300).
 
 ## v4.4.2
 
