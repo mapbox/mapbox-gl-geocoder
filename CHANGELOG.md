@@ -11,6 +11,7 @@
 - Disable proximity when reverseGeocoding since it is not supported by the Mapbox Geocoding API [#327](https://github.com/mapbox/mapbox-gl-geocoder/pull/327)
 - Fixed the display of SVG icons in IE11 [#341](https://github.com/mapbox/mapbox-gl-geocoder/pull/341)
 - Removed escape character from CSS which caused issues importing into a SASS file [#343](https://github.com/mapbox/mapbox-gl-geocoder/pull/343)
+- Ensure `setInput` behaves the same manner as a `keyDown` event, returning suggestions based on the input. [#345](https://github.com/mapbox/mapbox-gl-geocoder/pull/345)
 
 ### Bug fixes 🐛
 
