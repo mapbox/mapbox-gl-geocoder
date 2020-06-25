@@ -17,13 +17,13 @@ npm install --save @mapbox/mapbox-gl-geocoder
 ```
 
 ```js
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
-import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 ...
-let geocoder = new MapboxGeocoder({
+const geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
     mapboxgl: mapboxgl
-})
+});
 
 ```
 
