@@ -12,11 +12,19 @@ https://www.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder/
 
 ### Usage with a module bundler
 
-This module exports a single class called MapboxGeocoder as its default export,
-so in browserify or webpack, you can require it like:
+```bash
+npm install --save @mapbox/mapbox-gl-geocoder
+```
 
 ```js
-var MapboxGeocoder = require('@mapbox/mapbox-gl-geocoder');
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+...
+const geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl
+});
+
 ```
 
 ###  Using without a Map
