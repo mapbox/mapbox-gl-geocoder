@@ -401,7 +401,7 @@ test('Geocoder#inputControl', function(tt) {
   tt.end();
 });
 
-test('Geocoder--no map', function(tt) {
+test('Geocoder#addTo(String) -- no map', function(tt) {
   var container, geocoder;
 
   var changeEvent = document.createEvent('HTMLEvents');
@@ -430,7 +430,6 @@ test('Geocoder--no map', function(tt) {
     container.remove();
     t.end(); 
   });
-
 
   tt.test('input works without a map', function(t) {
     setup({
@@ -482,7 +481,39 @@ test('Geocoder--no map', function(tt) {
   });
 });
 
-test('Geocoder#addTo', function(tt) {
+
+test('Geocoder#addTo(HTMLElement) -- no map', function(tt) {
+  var container, geocoder;
+
+  var changeEvent = document.createEvent('HTMLEvents');
+  changeEvent.initEvent('change', true, false);
+
+  var clickEvent = document.createEvent('HTMLEvents');
+  clickEvent.initEvent('click', true, false);
+
+  function setup(opts) {
+    opts = opts || {};
+    opts.accessToken = mapboxgl.accessToken;
+    opts.enableEventLogging = false;
+    container = document.createElement('div');
+    container.className = "notAMap"
+    document.body.appendChild(container)
+    geocoder = new MapboxGeocoder(opts);
+    geocoder.addTo(".notAMap")
+  }
+
+  tt.test('result was added to container', (t)=>{
+    setup();
+    const geocoderRef = document.getElementsByClassName("mapboxgl-ctrl-geocoder");
+    t.ok(Object.keys(geocoderRef).length, "A geocoder exists in the document");
+    const containerChildRef = container.getElementsByClassName("mapboxgl-ctrl-geocoder");
+    t.ok(Object.keys(containerChildRef).length, "A geocoder exists as a child to the specified element");
+    container.remove();
+    t.end(); 
+  });
+});
+
+test('Geocoder#addTo(mapboxgl.Map)', function(tt) {
   var container, geocoder;
 
   tt.test('add to an existing map', (t)=>{
