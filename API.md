@@ -112,11 +112,11 @@ Returns **[MapboxGeocoder][69]** `this`
 
 ### addTo
 
-Add the geocoder to a container. The container can be either a `mapboxgl.Map` or a reference to an HTML `class` or `id`.
+Add the geocoder to a container. The container can be either a `mapboxgl.Map`, an `HTMLElement` or a CSS selector string.
 
-If the container is a `mapboxgl.Map`, this function will behave identically to `Map.addControl(geocoder)`.
-If the container is an instance of HTMLElement, then the geocoder will be appended as a child of that HTMLElement.
-If the container is a CSS selector string, the geocoder will be appended to the element returned from the query.
+If the container is a [`mapboxgl.Map`][70], this function will behave identically to [`Map.addControl(geocoder)`][71].
+If the container is an instance of [`HTMLElement`][72], then the geocoder will be appended as a child of that [`HTMLElement`][72].
+If the container is a [CSS selector string][73], the geocoder will be appended to the element returned from the query.
 
 This function will throw an error if the container is none of the above.
 It will also throw an error if the referenced HTML element cannot be found in the `document.body`.
@@ -130,7 +130,7 @@ geocoder.addTo('#geocoder-container');
 
 #### Parameters
 
--   `container` **([String][57] | mapboxgl.Map)** A reference to the container to which to add the geocoder
+-   `container` **([String][57] \| [HTMLElement][74] | mapboxgl.Map)** A reference to the container to which to add the geocoder
 
 ### clear
 
@@ -138,7 +138,7 @@ Clear and then focus the input.
 
 #### Parameters
 
--   `ev` **[Event][70]?** the event that triggered the clear, if available
+-   `ev` **[Event][75]?** the event that triggered the clear, if available
 
 ### query
 
@@ -533,4 +533,14 @@ Returns **[MapboxGeocoder][69]** this
 
 [69]: #mapboxgeocoder
 
-[70]: https://developer.mozilla.org/docs/Web/API/Event
+[70]: https://docs.mapbox.com/mapbox-gl-js/api/map/
+
+[71]: https://docs.mapbox.com/mapbox-gl-js/api/map/#map#addcontrol
+
+[72]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
+
+[73]: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors
+
+[74]: https://developer.mozilla.org/docs/Web/HTML/Element
+
+[75]: https://developer.mozilla.org/docs/Web/API/Event
