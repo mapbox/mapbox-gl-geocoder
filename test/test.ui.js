@@ -58,19 +58,21 @@ test('Geocoder#inputControl', function(tt) {
       'clear',
       once(function() {
         t.pass('input was cleared');
-        t.equals(geocoder.fresh, false, 'the geocoder is fresh again')
-        t.equals(geocoder.mapMarker, null, 'the marker was reset on clear')
+        setTimeout(function () {
+          t.equals(geocoder.fresh, false, 'the geocoder is fresh again')
+          t.equals(geocoder.mapMarker, null, 'the marker was reset on clear')
 
-        geocoder.setInput('Paris');
-        t.equals(inputEl.value, 'Paris', 'value populates in input');
+          geocoder.setInput('Paris');
+          t.equals(inputEl.value, 'Paris', 'value populates in input');
 
-        geocoder.setInput('90,45');
-        t.equals(
-          inputEl.value,
-          '90,45',
-          'valid LngLat value populates in input'
-        );
-        t.end();
+          geocoder.setInput('90,45');
+          t.equals(
+            inputEl.value,
+            '90,45',
+            'valid LngLat value populates in input'
+          );
+          t.end();
+        });
       })
     );
 
@@ -460,20 +462,22 @@ test('Geocoder#addTo(String) -- no map', function(tt) {
       'clear',
       once(function() {
         t.pass('input was cleared');
-        t.equals(geocoder.fresh, false, 'the geocoder is fresh again')
+        setTimeout(function() {
+          t.equals(geocoder.fresh, false, 'the geocoder is fresh again')
 
-        geocoder.setInput('Paris');
-        t.equals(inputEl.value, 'Paris', 'value populates in input');
+          geocoder.setInput('Paris');
+          t.equals(inputEl.value, 'Paris', 'value populates in input');
 
-        geocoder.setInput('90,45');
-        t.equals(
-          inputEl.value,
-          '90,45',
-          'valid LngLat value populates in input'
-        );
-        // teardown 
-        container.remove();
-        t.end();
+          geocoder.setInput('90,45');
+          t.equals(
+            inputEl.value,
+            '90,45',
+            'valid LngLat value populates in input'
+          );
+          // teardown 
+          container.remove();
+          t.end();
+        });
       })
     );
 
