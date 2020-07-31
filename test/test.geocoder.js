@@ -315,6 +315,56 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test('options.externalGeocoder', function(t) {
+    t.plan(3);
+    setup({
+      flyTo: false,
+      limit: 6,
+      externalGeocoder: function() {
+        return Promise.resolve([
+          {
+            "id":"place.7673410831246050",
+            "type":"Feature", 
+            "place_name":"Promise: Washington, District of Columbia, United States of America",
+            "geometry":{"type":"Point","coordinates":[-77.0366,38.895]}
+          }
+        ])
+      }
+    });
+
+    geocoder.query('Washington, DC');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.equal(e.features.length, 7, 'External geocoder used');
+
+        geocoder.query('DC');
+        geocoder.on(
+          'results',
+          once(function(e) {
+            t.equal(
+              e.features.length,
+              7,
+              'External geocoder supplement remote response'
+            );
+
+            geocoder.query('District of Columbia');
+            geocoder.on(
+              'results',
+              once(function(e) {
+                t.equal(
+                  e.features[0].place_name,
+                  'Promise: Washington, District of Columbia, United States of America',
+                  'External geocoder results above remote response'
+                );
+              })
+            );
+          })
+        );
+      })
+    );
+  });
+
   tt.test('country bbox', function(t) {
     t.plan(2);
     setup({});

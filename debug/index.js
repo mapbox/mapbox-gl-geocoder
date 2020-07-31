@@ -74,13 +74,14 @@ var coordinatesGeocoder = function(query) {
 var geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
   trackProximity: true,
-  localGeocoder: function(query, features) {
+  localGeocoder: function(query) {
+    return coordinatesGeocoder(query);
+  },
+  externalGeocoder: function(query, features) {
     // peak at the query and features before calling the external api
     if(query.length > 5 && features[0].relevance != 1) {
       return fetch('/mock-api.json')
         .then(response => response.json())
-    } else {
-      return coordinatesGeocoder(query);
     }
   },
   mapboxgl: mapboxgl
