@@ -626,8 +626,8 @@ test('geocoder', function(tt) {
       once(function() {
         t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
         var calledWithArgs = mapFlyMethod.args[0][0];
-        t.equals(+calledWithArgs.center[0].toFixed(4), +-122.4797165.toFixed(4), 'the map is directed to fly to the right longitude');
-        t.equals(+calledWithArgs.center[1].toFixed(4),  +37.81878675.toFixed(4), 'the map is directed to fly to the right latitude');
+        t.equals(+calledWithArgs.center[0].toFixed(4), +-122.4809.toFixed(4), 'the map is directed to fly to the right longitude');
+        t.equals(+calledWithArgs.center[1].toFixed(4),  +37.8181.toFixed(4), 'the map is directed to fly to the right latitude');
         t.deepEqual(calledWithArgs.zoom, 16, 'the map is directed to fly to the right zoom');
       })
     );
@@ -650,8 +650,8 @@ test('geocoder', function(tt) {
       once(function() {
         t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
         var calledWithArgs = mapFlyMethod.args[0][0];
-        t.equals(+calledWithArgs.center[0].toFixed(4), +-122.4797165.toFixed(4), 'the map is directed to fly to the right longitude');
-        t.equals(+calledWithArgs.center[1].toFixed(4),  +37.81878675.toFixed(4), 'the map is directed to fly to the right latitude');        t.deepEqual(calledWithArgs.zoom, 4, 'the selected result overrides the constructor zoom option');
+        t.equals(+calledWithArgs.center[0].toFixed(4), +-122.4809.toFixed(4), 'the map is directed to fly to the right longitude');
+        t.equals(+calledWithArgs.center[1].toFixed(4),  +37.8181.toFixed(4), 'the map is directed to fly to the right latitude');        t.deepEqual(calledWithArgs.zoom, 4, 'the selected result overrides the constructor zoom option');
         t.deepEqual(calledWithArgs.speed, 5, 'speed argument is passed to the flyTo method');
       })
     );
@@ -929,14 +929,16 @@ test('geocoder', function(tt) {
     geocoder.on(
       'result',
       once(function() {  
-        t.notEqual(geocoder._typeahead.data.length, 0, 'the suggestions menu has some options in it after a query');
-        geocoder._renderMessage("<h1>This is a test</h1>");
-        t.equals(geocoder._typeahead.data.length, 0, 'the data was cleared from the suggestions');
-        t.equals(geocoder._typeahead.selected, null, 'the selected option was cleared from the suggestions');
-        t.ok(typeaheadRenderErrorSpy.calledOnce, 'the renderError method was called exactly once');
-        var calledWithArgs = typeaheadRenderErrorSpy.args[0][0];
-        t.equals(calledWithArgs, "<h1>This is a test</h1>", 'the error rendering function was called with the correct message');
-        t.end();
+        setTimeout(function() {
+          t.notEqual(geocoder._typeahead.data.length, 0, 'the suggestions menu has some options in it after a query');
+          geocoder._renderMessage("<h1>This is a test</h1>");
+          t.equals(geocoder._typeahead.data.length, 0, 'the data was cleared from the suggestions');
+          t.equals(geocoder._typeahead.selected, null, 'the selected option was cleared from the suggestions');
+          t.ok(typeaheadRenderErrorSpy.calledOnce, 'the renderError method was called exactly once');
+          var calledWithArgs = typeaheadRenderErrorSpy.args[0][0];
+          t.equals(calledWithArgs, "<h1>This is a test</h1>", 'the error rendering function was called with the correct message');
+          t.end();
+        });
       })
     );
   });
