@@ -1,5 +1,11 @@
 ## master
 
+## 4.6.1
+
+### Bug fixes 🐛
+
+- Fixed empty `dist/mapbox-gl-geocoder.min.js` published to npm as part of the `4.6.0` release.
+
 ## 4.6.0
 
 ### Features / Improvements 🚀
