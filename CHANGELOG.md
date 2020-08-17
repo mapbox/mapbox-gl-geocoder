@@ -1,5 +1,11 @@
 ## master
 
+## 4.7.0
+
+### Features / Improvements 🚀
+
+- Added option for a promise based externalGeocoder [#385](https://github.com/mapbox/mapbox-gl-geocoder/pull/385)
+
 ## 4.6.0
 
 ### Features / Improvements 🚀
