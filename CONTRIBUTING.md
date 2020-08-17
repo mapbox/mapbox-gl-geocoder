@@ -41,5 +41,5 @@ Follow this deploy process after all changes for the release are merged into mas
 
 Update version number in GL JS examples at [https://github.com/mapbox/mapbox-gl-js-docs](https://github.com/mapbox/mapbox-gl-js-docs):
 
-    sed -i 's/mapbox-gl-geocoder\/v[^\/]*\//mapbox-gl-geocoder\/vX.X.X\//g' docs/pages/example/*.html
+    sed -i '' 's/mapbox-gl-geocoder\/v[^\/]*\//mapbox-gl-geocoder\/vX.X.X\//g' docs/pages/example/*.html
 ```
