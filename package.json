@@ -1,12 +1,12 @@
 {
   "name": "@mapbox/mapbox-gl-geocoder",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "description": "A geocoder control for Mapbox GL JS",
   "main": "lib/index.js",
   "unpkg": "dist/mapbox-gl-geocoder.min.js",
   "style": "lib/mapbox-gl-geocoder.css",
   "scripts": {
-    "start": "budo debug/index.js --live -- -t brfs ",
+    "start": "budo debug/index.js --dir debug --live -- -t brfs ",
     "prepublish": "NODE_ENV=production && mkdir -p dist && browserify --standalone MapboxGeocoder lib/index.js | uglifyjs -c -m > dist/mapbox-gl-geocoder.min.js && cp lib/mapbox-gl-geocoder.css dist/",
     "test": "browserify -t envify test/index.js test/events.test.js | smokestack -b firefox | tap-status | tap-color",
     "docs": "documentation build lib/index.js --format=md > API.md",
