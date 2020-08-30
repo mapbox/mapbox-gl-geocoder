@@ -79,7 +79,7 @@ var geocoder = new MapboxGeocoder({
   },
   externalGeocoder: function(query, features) {
     // peak at the query and features before calling the external api
-    if(query.length > 5 && features[0].relevance != 1) {
+    if(query.length > 5 && (features.length ? features[0].relevance != 1 : true)) {
       return fetch('/mock-api.json')
         .then(response => response.json())
     }
