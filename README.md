@@ -5,7 +5,8 @@ A geocoder control for [mapbox-gl-js](https://github.com/mapbox/mapbox-gl-js) us
 
 ### Usage
 
-https://www.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder/
+* https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder/
+* https://docs.mapbox.com/mapbox-gl-js/example/?search=mapbox-gl-geocoder
 
 **If you are supporting older browsers, you will need to use a polyfill.** We recommend working with [@babel/polyfill](https://babeljs.io/docs/en/babel-polyfill).
 
