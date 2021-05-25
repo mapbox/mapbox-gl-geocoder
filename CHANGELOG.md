@@ -1,5 +1,17 @@
 ## master
 
+## 4.7.1
+
+### Features / Improvements 🚀
+
+- Added russian placeholder [#409](https://github.com/mapbox/mapbox-gl-geocoder/pull/409)
+
+### Bug fixes 🐛
+
+- Fixed an error in the demo when no results are found [#391](https://github.com/mapbox/mapbox-gl-geocoder/pull/391)
+- Fixed `setMinLength` to correctly apply the `minLength` property to the typeahead [#399](https://github.com/mapbox/mapbox-gl-geocoder/pull/399)
+- Updated the `mapbox-gl` peerDependency to work with GL JS 2 [#413](https://github.com/mapbox/mapbox-gl-geocoder/pull/413)
+
 ## 4.7.0
 
 ### Features / Improvements 🚀
