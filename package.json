@@ -63,7 +63,7 @@
     "lodash.debounce": "^4.0.6",
     "nanoid": "^2.0.1",
     "subtag": "^0.5.0",
-    "suggestions": "^1.6.0",
+    "suggestions": "^1.7.1",
     "xtend": "^4.0.1"
   },
   "lint-staged": {
