@@ -823,6 +823,68 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test('options.popup [true]', function(t) {
+    t.plan(1);
+
+    setup({
+      marker: true,
+      popup: true,
+      mapboxgl: mapboxgl
+    });
+    var popupConstructorSpy = sinon.spy(mapboxgl, "Popup");
+
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function() {  
+        t.ok(popupConstructorSpy.calledOnce, "a new popup is added to the map");
+        popupConstructorSpy.restore();
+      })
+    );
+  });
+
+  tt.test('options.popup  [constructor properties]', function(t) {
+    t.plan(2);
+
+    setup({
+      marker: true,
+      popup: {
+        closeOnMove: true,
+      },
+      mapboxgl: mapboxgl
+    });
+    var popupConstructorSpy = sinon.spy(mapboxgl, "Popup");
+
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function() {  
+        t.ok(popupConstructorSpy.calledOnce, "a new popup is added to the map");
+        var calledWithOptions = popupConstructorSpy.args[0][0];
+        t.equals(calledWithOptions.closeOnMove, true, "sets the close on move property");
+        popupConstructorSpy.restore();
+      })
+    );
+  });
+
+  tt.test('options.popup [false]', function(t) {
+    t.plan(1);
+
+    setup({
+      popup: false
+    });
+    var popupConstructorSpy = sinon.spy(mapboxgl, "Popup");
+
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function() {  
+        t.ok(popupConstructorSpy.notCalled, "a new popup is not added to the map");
+        popupConstructorSpy.restore();
+      })
+    );
+  });
+
   tt.test('geocode#onRemove', function(t){
     setup({marker: true});
 
