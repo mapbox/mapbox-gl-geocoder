@@ -4,24 +4,36 @@ var test = require('tape');
 var MapboxGeocoder = require('../');
 var mapboxgl = require('mapbox-gl');
 var once = require('lodash.once');
-var mapboxEvents = require('./../lib/events');
 var sinon = require('sinon');
 var localization = require('./../lib/localization');
 var exceptions = require('./../lib/exceptions');
 
 
-mapboxgl.accessToken = process.env.MapboxAccessToken;
-
 test('geocoder', function(tt) {
-  var container, map, geocoder;
+  var container, map, geocoder, geocoderApi;
+
+  var mockGeocoderApi = (features) => {
+    return {
+      forwardGeocode: async () => {
+        return new Promise(async (resolve) => {
+          resolve({ features });    
+        });
+      },
+      reverseGeocode: async () => {
+        return new Promise(async (resolve) => {
+          resolve({ features });    
+        });
+      }
+    }
+  }
 
   function setup(opts) {
     opts = opts || {};
-    opts.accessToken = mapboxgl.accessToken;
     opts.enableEventLogging = false;
     container = document.createElement('div');
     map = new mapboxgl.Map({ container: container });
-    geocoder = new MapboxGeocoder(opts);
+    geocoderApi = mockGeocoderApi(opts.features);
+    geocoder = new MapboxGeocoder(geocoderApi, opts);
     map.addControl(geocoder);
   }
 
@@ -30,14 +42,22 @@ test('geocoder', function(tt) {
     t.ok(geocoder, 'geocoder is initialized');
     t.ok(geocoder.fresh, 'geocoder is initialized with fresh status to enable turnstile event');
     t.equals(geocoder.inputString, '', 'geocoder is initialized with an input string for keeping track of state');
-    t.ok(geocoder.eventManager instanceof mapboxEvents, 'the geocoder has a mapbox event manager');
     t.true(geocoder.options.trackProximity, 'sets trackProximity to true by default');
     t.end();
   });
 
   tt.test('set/get input', function(t) {
     t.plan(4)
-    setup({ proximity: { longitude: -79.45, latitude: 43.65 } });
+    var features = [{
+      geometry: {type: "Point", coordinates: [0.41218404200003533, 51.18466021800003]},
+      place_name: "Queen Street, Maidstone, Kent, England, GBR",
+      properties: { foo: "bar", Country: "GBR", Label: "Queen Street, Maidstone, Kent, England, GBR", Municipality: "Maidstone", Region: "England", SubReion: "Kent" },
+      type: "Feature",
+      text: "Queen Street",
+      place_type: [ "place" ],
+      center: [0.41218404200003533, 51.18466021800003],
+    }]
+    setup({ proximity: { longitude: -79.45, latitude: 43.65 }, features });
     geocoder.query('Queen Street');
     var mapMoveSpy = sinon.spy(map, "flyTo");
     geocoder.on(
@@ -53,15 +73,35 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options', function(t) {
-    t.plan(8);
+    t.plan(6);
+    var features = [
+      {
+        geometry: {
+          type: "Point",
+          coordinates: [2.3414000000000215, 48.85717000000005],
+        },
+        place_name: "Paris, France",
+        properties: {
+          Country: "FRA",
+          Label: "Paris, Île-de-France, FRA",
+          Municipality: "Paris",
+          Region: "Île-de-France",
+          SubRegion: "Paris",
+        },
+        type: "Feature",
+        text: "Paris, Île-de-France, FRA",
+        place_type: ["place"],
+        center: [2.3414000000000215, 48.85717000000005],
+      },
+    ];
     setup({
       flyTo: false,
       country: 'fr',
-      types: 'region'
+      types: 'region',
+      features,
     });
 
     geocoder.query('Paris');
-    var startEventMethod = sinon.stub(geocoder.eventManager, "start")
 
     geocoder.on(
       'results',
@@ -69,8 +109,6 @@ test('geocoder', function(tt) {
         t.ok(e.features.length, 'Event for results emitted');
         t.equals(geocoder.inputString, 'Paris', 'input string keeps track of state');
         t.equals(geocoder.fresh, false, 'once a search has been completed, the geocoder is no longer fresh');
-        t.ok(startEventMethod.called, 'a search start event was issued');
-        t.ok(startEventMethod.calledOnce, 'a search start event was issued only once');
       })
     );
 
@@ -89,39 +127,35 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('custom endpoint', function(t) {
-    t.plan(1);
-    setup({ origin: 'localhost:2999' });
-    t.equals(
-      geocoder.options.origin,
-      'localhost:2999',
-      'options picks up custom endpoint'
-    );
-  });
-
-  tt.test("swapped endpoint", function(t) {
-    t.plan(1);
-    setup({ origin: 'localhost:2999' });
-    geocoder.setOrigin("https://api.mapbox.com");
-    geocoder.query("pizza");
-    geocoder.on("results", function(e) {
-      t.equals(
-        e.request.origin,
-        "https://api.mapbox.com",
-        "endpoint correctly reset"
-      );
-    });
-  });
-
   tt.test('options.bbox', function(t) {
-    t.plan(2);
+    t.plan(3);
+    var features = [
+      {
+        geometry: {
+          type: "Point",
+          coordinates: [-0.12769869299995662, 51.507408360000056],
+        },
+        place_name: "London, Greater London, England, GBR",
+        properties: {
+          Country: "GBR",
+          Label: "London, Greater London, England, GBR",
+          Municipality: "London",
+          Region: "England",
+          SubRegion: "Greater London",
+        },
+        type: "Feature",
+        text: "London, Greater London, England, GBR",
+        place_type: ["place"],
+        center: [-0.12769869299995662, 51.507408360000056],
+      },
+    ];
+    var bbox = [
+      -122.71901248631752, 37.62347223479118, -122.18070124967602,
+      37.87996631184369,
+    ];
     setup({
-      bbox: [
-        -122.71901248631752,
-        37.62347223479118,
-        -122.18070124967602,
-        37.87996631184369
-      ]
+      bbox,
+      features
     });
 
     geocoder.query('London');
@@ -129,10 +163,11 @@ test('geocoder', function(tt) {
       'results',
       once(function(e) {
         t.ok(e.features.length, 'Event for results emitted');
+        t.ok(e.config.bbox === bbox);
         t.equals(
           e.features[0].text,
-          'London Market',
-          'Result is returned within a bbox'
+          "London, Greater London, England, GBR",
+          "Result is returned within a bbox"
         );
       })
     );
@@ -140,8 +175,29 @@ test('geocoder', function(tt) {
 
   tt.test('options.reverseGeocode - true', function(t) {
     t.plan(4);
+    var features = [
+      {
+        geometry: {
+          type: "Point",
+          coordinates: [34.517755, -6.193388],
+        },
+        place_name: "Manyoni, Singida, Tanzania",
+        properties: {
+          Country: "TZA",
+          Label: "Manyoni, Singida, Tanzania",
+          Municipality: "Manyoni",
+          Region: "Singida",
+          SubRegion: "Manyoni",
+        },
+        type: "Feature",
+        text: "Manyoni, Singida, Tanzania",
+        place_type: ["place"],
+        center: [34.517755, -6.193388],
+      },
+    ];
     setup({
-      reverseGeocode: true
+      reverseGeocode: true,
+      features
     });
     geocoder.query('-6.1933875, 34.5177548');
     geocoder.on(
@@ -161,37 +217,15 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.reverseGeocode - interprets coordinates & options correctly', function(t) {
-    t.plan(3);
-    setup({
-      types: 'country',
-      reverseGeocode: true
-    });
-    geocoder.query('31.791, -7.0926');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        t.deepEquals(e.query, [ -7.0926, 31.791 ], 'parses query');
-        t.deepEquals(e.config.types.toString(), 'country', 'uses correct type passed to config' );
-        t.equal(e.features[0].place_name, 'Morocco', 'returns expected result');
-      })
-    );
-  });
-
   tt.test('options.reverseGeocode - false by default', function(t) {
     t.plan(2);
     setup();
     geocoder.query('-6.1933875, 34.5177548');
+    t.ok(!geocoder.options.reverseGeocode, "Reverse geocoding turned off by default");
     geocoder.on(
       'results',
       once(function(e) {
         t.equal(e.features.length, 0, 'No results returned');
-      })
-    );
-    geocoder.on(
-      'error',
-      once(function(e) {
-        t.equal(e.error.statusCode, 422, 'should error');
       })
     );
   });
