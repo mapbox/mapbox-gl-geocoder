@@ -1040,7 +1040,6 @@ test('geocoder', function(tt) {
   });
 
   tt.test('error is shown after an error occurred [with local geocoder]', function(t){
-    // debugger; // eslint-disable-line no-debugger
     setup({
       localGeocoder: function(){
         return [
