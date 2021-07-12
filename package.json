@@ -1,13 +1,13 @@
 {
-  "name": "@mapbox/mapbox-gl-geocoder",
-  "version": "4.7.1",
-  "description": "A geocoder control for Mapbox GL JS",
+  "name": "@maplibre/maplibre-gl-geocoder",
+  "version": "1.0.0",
+  "description": "A geocoder control for Maplibre GL JS",
   "main": "lib/index.js",
-  "unpkg": "dist/mapbox-gl-geocoder.min.js",
-  "style": "lib/mapbox-gl-geocoder.css",
+  "unpkg": "dist/maplibre-gl-geocoder.min.js",
+  "style": "lib/maplibre-gl-geocoder.css",
   "scripts": {
     "start": "budo debug/index.js --dir debug --live -- -t brfs ",
-    "prepublish": "NODE_ENV=production && mkdir -p dist && browserify --standalone MapboxGeocoder lib/index.js | uglifyjs -c -m > dist/mapbox-gl-geocoder.min.js && cp lib/mapbox-gl-geocoder.css dist/",
+    "prepublish": "NODE_ENV=production && mkdir -p dist && browserify --standalone MaplibreGeocoder lib/index.js | uglifyjs -c -m > dist/maplibre-gl-geocoder.min.js && cp lib/maplibre-gl-geocoder.css dist/",
     "test": "browserify -t envify test/index.js | smokestack -b firefox | tap-status | tap-color",
     "docs": "documentation build lib/index.js --format=md > API.md",
     "pretest": "npm run lint",
@@ -20,7 +20,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/mapbox/mapbox-gl-geocoder.git"
+    "url": "git+ssh://git@github.com/thaddmt/maplibre-gl-geocoder.git"
   },
   "engines": {
     "node": ">=6"
@@ -30,12 +30,12 @@
     "osm",
     "gl"
   ],
-  "author": "Mapbox",
+  "author": "Maplibre",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mapbox/mapbox-gl-geocoder/issues"
+    "url": "https://github.com/thaddmt/maplibre-gl-geocoder/issues"
   },
-  "homepage": "https://github.com/mapbox/mapbox-gl-geocoder#readme",
+  "homepage": "https://github.com/thaddmt/maplibre-gl-geocoder#readme",
   "devDependencies": {
     "brfs": "^2.0.2",
     "browserify": "^16.2.3",
@@ -59,7 +59,6 @@
     "mapbox-gl": ">= 0.47.0 < 3.0.0"
   },
   "dependencies": {
-    "@mapbox/mapbox-sdk": "^0.11.0",
     "lodash.debounce": "^4.0.6",
     "nanoid": "^2.0.1",
     "subtag": "^0.5.0",
