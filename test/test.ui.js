@@ -52,8 +52,8 @@ test("Geocoder#inputControl", function (tt) {
       mapboxgl: mapboxgl,
       features: [Features.GOLDEN_GATE_BRIDGE],
     });
-    var inputEl = container.querySelector(".mapboxgl-ctrl-geocoder input");
-    var clearEl = container.querySelector(".mapboxgl-ctrl-geocoder button");
+    var inputEl = container.querySelector(".maplibregl-ctrl-geocoder input");
+    var clearEl = container.querySelector(".maplibregl-ctrl-geocoder button");
 
     t.plan(9);
 
@@ -107,7 +107,7 @@ test("Geocoder#inputControl", function (tt) {
     t.plan(1);
     setup({ placeholder: "foo to the bar" });
     t.equal(
-      map.getContainer().querySelector(".mapboxgl-ctrl-geocoder input")
+      map.getContainer().querySelector(".maplibregl-ctrl-geocoder input")
         .placeholder,
       "foo to the bar",
       "placeholder is custom"
@@ -151,7 +151,7 @@ test("Geocoder#inputControl", function (tt) {
     t.plan(1);
     setup({ language: "de-DE" });
     t.equal(
-      map.getContainer().querySelector(".mapboxgl-ctrl-geocoder input")
+      map.getContainer().querySelector(".maplibregl-ctrl-geocoder input")
         .placeholder,
       "Suche",
       "placeholder is localized based on language"
@@ -165,7 +165,7 @@ test("Geocoder#inputControl", function (tt) {
       t.plan(1);
       setup({ language: "de-DE,lv" });
       t.equal(
-        map.getContainer().querySelector(".mapboxgl-ctrl-geocoder input")
+        map.getContainer().querySelector(".maplibregl-ctrl-geocoder input")
           .placeholder,
         "Suche",
         "placeholder is localized based on language"
@@ -178,7 +178,7 @@ test("Geocoder#inputControl", function (tt) {
     t.plan(3);
     setup({});
 
-    var inputEl = container.querySelector(".mapboxgl-ctrl-geocoder input");
+    var inputEl = container.querySelector(".maplibregl-ctrl-geocoder input");
     var focusSpy = sinon.spy(inputEl, "focus");
     inputEl.focus();
     t.equal(focusSpy.called, true, "input is focused");
@@ -195,7 +195,7 @@ test("Geocoder#inputControl", function (tt) {
     t.plan(3);
     setup({});
 
-    var inputEl = container.querySelector(".mapboxgl-ctrl-geocoder input");
+    var inputEl = container.querySelector(".maplibregl-ctrl-geocoder input");
     var focusSpy = sinon.spy(inputEl, "focus");
     inputEl.focus();
     t.equal(focusSpy.called, true, "input is focused");
@@ -215,7 +215,7 @@ test("Geocoder#inputControl", function (tt) {
       setup({
         clearAndBlurOnEsc: true,
       });
-      var inputEl = container.querySelector(".mapboxgl-ctrl-geocoder input");
+      var inputEl = container.querySelector(".maplibregl-ctrl-geocoder input");
       var focusSpy = sinon.spy(inputEl, "focus");
       var blurSpy = sinon.spy(inputEl, "blur");
 
@@ -243,7 +243,7 @@ test("Geocoder#inputControl", function (tt) {
       setup({
         clearAndBlurOnEsc: false,
       });
-      var inputEl = container.querySelector(".mapboxgl-ctrl-geocoder input");
+      var inputEl = container.querySelector(".maplibregl-ctrl-geocoder input");
       var focusSpy = sinon.spy(inputEl, "focus");
       var blurSpy = sinon.spy(inputEl, "blur");
 
@@ -265,11 +265,11 @@ test("Geocoder#inputControl", function (tt) {
     setup({
       collapsed: true,
     });
-    var wrapper = container.querySelector(".mapboxgl-ctrl-geocoder");
+    var wrapper = container.querySelector(".maplibregl-ctrl-geocoder");
     t.equal(
-      wrapper.classList.contains("mapboxgl-ctrl-geocoder--collapsed"),
+      wrapper.classList.contains("maplibregl-ctrl-geocoder--collapsed"),
       true,
-      "mapboxgl-ctrl-geocoder has `mapboxgl-ctrl-geocoder--collapsed` class"
+      "maplibregl-ctrl-geocoder has `maplibregl-ctrl-geocoder--collapsed` class"
     );
     t.end();
   });
@@ -279,16 +279,16 @@ test("Geocoder#inputControl", function (tt) {
     setup({
       collapsed: true,
     });
-    var wrapper = container.querySelector(".mapboxgl-ctrl-geocoder");
-    var inputEl = container.querySelector(".mapboxgl-ctrl-geocoder input");
-    // focus input, remove mapboxgl-ctrl-geocoder--collapsed
+    var wrapper = container.querySelector(".maplibregl-ctrl-geocoder");
+    var inputEl = container.querySelector(".maplibregl-ctrl-geocoder input");
+    // focus input, remove maplibregl-ctrl-geocoder--collapsed
     var focusEvent = document.createEvent("Event");
     focusEvent.initEvent("focus", true, true);
     inputEl.dispatchEvent(focusEvent);
     t.equal(
-      wrapper.classList.contains("mapboxgl-ctrl-geocoder--collapsed"),
+      wrapper.classList.contains("maplibregl-ctrl-geocoder--collapsed"),
       false,
-      "mapboxgl-ctrl-geocoder does not have `mapboxgl-ctrl-geocoder--collapsed` class when inputEl in focus"
+      "maplibregl-ctrl-geocoder does not have `maplibregl-ctrl-geocoder--collapsed` class when inputEl in focus"
     );
     t.end();
   });
@@ -304,7 +304,7 @@ test("Geocoder#inputControl", function (tt) {
     });
     t.equal(geocoder.options.clearOnBlur, true);
 
-    var inputEl = container.querySelector(".mapboxgl-ctrl-geocoder input");
+    var inputEl = container.querySelector(".maplibregl-ctrl-geocoder input");
     var focusSpy = sinon.spy(inputEl, "focus");
 
     geocoder.setInput("testval");
@@ -351,15 +351,15 @@ test("Geocoder#inputControl", function (tt) {
     setup({
       collapsed: true,
     });
-    var wrapper = container.querySelector(".mapboxgl-ctrl-geocoder");
-    // hover input, remove mapboxgl-ctrl-geocoder--collapsed
+    var wrapper = container.querySelector(".maplibregl-ctrl-geocoder");
+    // hover input, remove maplibregl-ctrl-geocoder--collapsed
     var hoverEvent = document.createEvent("Event");
     hoverEvent.initEvent("mouseenter", true, true);
     wrapper.dispatchEvent(hoverEvent);
     t.equal(
-      wrapper.classList.contains("mapboxgl-ctrl-geocoder--collapsed"),
+      wrapper.classList.contains("maplibregl-ctrl-geocoder--collapsed"),
       false,
-      "mapboxgl-ctrl-geocoder does not have `mapboxgl-ctrl-geocoder--collapsed` class when wrapper hovered"
+      "maplibregl-ctrl-geocoder does not have `maplibregl-ctrl-geocoder--collapsed` class when wrapper hovered"
     );
     t.end();
   });
@@ -369,11 +369,11 @@ test("Geocoder#inputControl", function (tt) {
     setup({
       collapsed: false,
     });
-    var wrapper = container.querySelector(".mapboxgl-ctrl-geocoder");
+    var wrapper = container.querySelector(".maplibregl-ctrl-geocoder");
     t.equal(
-      wrapper.classList.contains("mapboxgl-ctrl-geocoder--collapsed"),
+      wrapper.classList.contains("maplibregl-ctrl-geocoder--collapsed"),
       false,
-      "mapboxgl-ctrl-geocoder does not have `mapboxgl-ctrl-geocoder--collapsed` class"
+      "maplibregl-ctrl-geocoder does not have `maplibregl-ctrl-geocoder--collapsed` class"
     );
     t.end();
   });
@@ -384,7 +384,7 @@ test("Geocoder#inputControl", function (tt) {
     var icon = geocoder.createIcon("search", "<path/>");
     t.equal(
       icon.outerHTML,
-      '<svg class="mapboxgl-ctrl-geocoder--icon mapboxgl-ctrl-geocoder--icon-search" viewBox="0 0 18 18" xml:space="preserve" width="18" height="18"><path></path></svg>',
+      '<svg class="maplibregl-ctrl-geocoder--icon maplibregl-ctrl-geocoder--icon-search" viewBox="0 0 18 18" xml:space="preserve" width="18" height="18"><path></path></svg>',
       "creates an svg given the class name and path"
     );
     t.end();
@@ -410,7 +410,7 @@ test("Geocoder#inputControl", function (tt) {
       types: "place",
       mapboxgl: mapboxgl,
     });
-    var clearEl = container.querySelector(".mapboxgl-ctrl-geocoder button");
+    var clearEl = container.querySelector(".maplibregl-ctrl-geocoder button");
 
     t.plan(4);
 
@@ -443,7 +443,7 @@ test("Geocoder#inputControl", function (tt) {
       mapboxgl: mapboxgl,
       features: [Features.GOLDEN_GATE_BRIDGE],
     });
-    var clearEl = container.querySelector(".mapboxgl-ctrl-geocoder button");
+    var clearEl = container.querySelector(".maplibregl-ctrl-geocoder button");
 
     t.plan(2);
 
@@ -466,7 +466,7 @@ test("Geocoder#inputControl", function (tt) {
       dataType: "text/plain",
       data: "Golden Gate Bridge",
     });
-    var inputEl = container.querySelector(".mapboxgl-ctrl-geocoder input");
+    var inputEl = container.querySelector(".maplibregl-ctrl-geocoder input");
     inputEl.dispatchEvent(pasteEvent);
 
     geocoder.on(
@@ -505,11 +505,11 @@ test("Geocoder#addTo(String) -- no map", function (tt) {
   tt.test("result was added to container", (t) => {
     setup();
     const geocoderRef = document.getElementsByClassName(
-      "mapboxgl-ctrl-geocoder"
+      "maplibregl-ctrl-geocoder"
     );
     t.ok(Object.keys(geocoderRef).length, "A geocoder exists in the document");
     const containerChildRef = container.getElementsByClassName(
-      "mapboxgl-ctrl-geocoder"
+      "maplibregl-ctrl-geocoder"
     );
     t.ok(
       Object.keys(containerChildRef).length,
@@ -524,8 +524,8 @@ test("Geocoder#addTo(String) -- no map", function (tt) {
       types: "place",
       features: [Features.GOLDEN_GATE_BRIDGE],
     });
-    var inputEl = container.querySelector(".mapboxgl-ctrl-geocoder input");
-    var clearEl = container.querySelector(".mapboxgl-ctrl-geocoder button");
+    var inputEl = container.querySelector(".maplibregl-ctrl-geocoder input");
+    var clearEl = container.querySelector(".maplibregl-ctrl-geocoder button");
 
     t.plan(7);
 
@@ -599,11 +599,11 @@ test("Geocoder#addTo(HTMLElement) -- no map", function (tt) {
   tt.test("result was added to container", (t) => {
     setup();
     const geocoderRef = document.getElementsByClassName(
-      "mapboxgl-ctrl-geocoder"
+      "maplibregl-ctrl-geocoder"
     );
     t.ok(Object.keys(geocoderRef).length, "A geocoder exists in the document");
     const containerChildRef = container.getElementsByClassName(
-      "mapboxgl-ctrl-geocoder"
+      "maplibregl-ctrl-geocoder"
     );
     t.ok(
       Object.keys(containerChildRef).length,
@@ -614,7 +614,7 @@ test("Geocoder#addTo(HTMLElement) -- no map", function (tt) {
   });
 });
 
-test("Geocoder#addTo(mapboxgl.Map)", function (tt) {
+test("Geocoder#addTo(maplibregl.Map)", function (tt) {
   var container, geocoder;
 
   tt.test("add to an existing map", (t) => {
@@ -627,7 +627,7 @@ test("Geocoder#addTo(mapboxgl.Map)", function (tt) {
     geocoder.addTo(map);
     t.ok(
       Object.keys(
-        container.getElementsByClassName("mapboxgl-ctrl-geocoder--input")
+        container.getElementsByClassName("maplibregl-ctrl-geocoder--input")
       ).length,
       "geocoder exists when added to the map"
     );
@@ -645,7 +645,7 @@ test("Geocoder#addTo(mapboxgl.Map)", function (tt) {
     geocoder.addTo(".notAMap");
     t.ok(
       Object.keys(
-        container.getElementsByClassName("mapboxgl-ctrl-geocoder--input")
+        container.getElementsByClassName("maplibregl-ctrl-geocoder--input")
       ).length,
       "geocoder exists when added to an html element"
     );
@@ -662,7 +662,7 @@ test("Geocoder#addTo(mapboxgl.Map)", function (tt) {
     geocoder.addTo(container);
     t.ok(
       Object.keys(
-        container.getElementsByClassName("mapboxgl-ctrl-geocoder--input")
+        container.getElementsByClassName("maplibregl-ctrl-geocoder--input")
       ).length,
       "geocoder exists when added to an html element"
     );

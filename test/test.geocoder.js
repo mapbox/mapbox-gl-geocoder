@@ -1329,7 +1329,7 @@ test("geocoder", function (tt) {
         );
         var calledWithArgs = renderMessageSpy.args[0][0];
         t.ok(
-          calledWithArgs.indexOf("mapbox-gl-geocoder--error") > -1,
+          calledWithArgs.indexOf("maplibre-gl-geocoder--error") > -1,
           "the error message specifies the correct class"
         );
         t.end();
@@ -1352,11 +1352,11 @@ test("geocoder", function (tt) {
         );
         var calledWithArgs = renderMessageSpy.args[0][0];
         t.ok(
-          calledWithArgs.indexOf("mapbox-gl-geocoder--error") > -1,
+          calledWithArgs.indexOf("maplibre-gl-geocoder--error") > -1,
           "the info message specifies the correct class"
         );
         t.ok(
-          calledWithArgs.indexOf("mapbox-gl-geocoder--no-results") > -1,
+          calledWithArgs.indexOf("maplibre-gl-geocoder--no-results") > -1,
           "the info message specifies the correct class"
         );
         t.end();
@@ -1374,7 +1374,7 @@ test("geocoder", function (tt) {
         t.ok(renderMessageSpy.calledOnce, "an error was rendered");
         var calledWithArgs = renderMessageSpy.args[0][0];
         t.ok(
-          calledWithArgs.indexOf("mapbox-gl-geocoder--error") > -1,
+          calledWithArgs.indexOf("maplibre-gl-geocoder--error") > -1,
           "the info message specifies the correct class"
         );
         t.ok(
