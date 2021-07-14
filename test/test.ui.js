@@ -384,7 +384,7 @@ test("Geocoder#inputControl", function (tt) {
     var icon = geocoder.createIcon("search", "<path/>");
     t.equal(
       icon.outerHTML,
-      '<svg class="maplibregl-ctrl-geocoder--icon maplibregl-ctrl-geocoder--icon-search" viewBox="0 0 18 18" xml:space="preserve" width="18" height="18"><path></path></svg>',
+      '<svg class="mapboxgl-ctrl-geocoder--icon mapboxgl-ctrl-geocoder--icon-search maplibregl-ctrl-geocoder--icon maplibregl-ctrl-geocoder--icon-search" viewBox="0 0 18 18" xml:space="preserve" width="18" height="18"><path></path></svg>',
       "creates an svg given the class name and path"
     );
     t.end();
