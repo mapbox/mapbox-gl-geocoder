@@ -1,5 +1,7 @@
 ## master
 
+- Added popup and popup options to marker 
+
 ## 4.7.1
 
 ### Features / Improvements 🚀

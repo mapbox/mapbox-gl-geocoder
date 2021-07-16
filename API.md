@@ -90,34 +90,36 @@ A geocoder component that works with maplibre
     -   `options.limit` **[Number][58]** Maximum number of results to show. (optional, default `5`)
     -   `options.language` **[string][62]?** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas. Defaults to the browser's language settings.
     -   `options.filter` **[Function][65]?** A function which accepts a Feature in the [Carmen GeoJSON][66] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
-    -   `options.localGeocoder` **[Function][65]?** A function accepting the query string which performs local geocoding to supplement results from the Geocoding API. Expected to return an Array of GeoJSON Features in the [Carmen GeoJSON][66] format.
-    -   `options.externalGeocoder` **[Function][65]?** A function accepting the query string, current features list, and geocoder options which performs geocoding to supplement results from the Geocoding API. Expected to return a Promise which resolves to an Array of GeoJSON Features in the [Carmen GeoJSON][66] format.
+    -   `options.localGeocoder` **[Function][65]?** A function accepting the query string which performs local geocoding to supplement results from the Maplibre Geocoding API. Expected to return an Array of GeoJSON Features in the [Carmen GeoJSON][66] format.
+    -   `options.externalGeocoder` **[Function][65]?** A function accepting the query string, current features list, and geocoder options which performs geocoding to supplement results from the Maplibre Geocoding API. Expected to return a Promise which resolves to an Array of GeoJSON Features in the [Carmen GeoJSON][66] format.
     -   `options.reverseMode` **(distance | score)** Set the factors that are used to sort nearby results. (optional, default `distance`)
     -   `options.reverseGeocode` **[boolean][59]** If `true`, enable reverse geocoding mode. In reverse geocoding, search input is expected to be coordinates in the form `lat, lon`, with suggestions being the reverse geocodes. (optional, default `false`)
     -   `options.enableEventLogging` **[Boolean][59]** Allow Maplibre to collect anonymous usage statistics from the plugin. (optional, default `true`)
     -   `options.marker` **([Boolean][59] \| [Object][55])** If `true`, a [Marker][57] will be added to the map at the location of the user-selected result using a default set of Marker options.  If the value is an object, the marker will be constructed using these options. If `false`, no marker will be added to the map. Requires that `options.mapboxgl` also be set. (optional, default `true`)
+    -   `options.popup` **([Boolean][59] \| [Object][55])** If `true`, a [Popup][67] will be added to the map when clicking on a marker using a default set of popup options.  If the value is an object, the popup will be constructed using these options. If `false`, no popup will be added to the map. Requires that `options.mapboxgl` also be set. (optional, default `true`)
     -   `options.showResultMarkers` **([Boolean][59] \| [Object][55])** If `true`, [Markers][57] will be added to the map at the location the top results for the query.   If the value is an object, the marker will be constructed using these options. If `false`, no marker will be added to the map. Requires that `options.mapboxgl` also be set. (optional, default `true`)
     -   `options.render` **[Function][65]?** A function that specifies how the results should be rendered in the dropdown menu. This function should accepts a single [Carmen GeoJSON][66] object as input and return a string. Any HTML in the returned string will be rendered.
+    -   `options.popupRender` **[Function][65]?** A function that specifies how the results should be rendered in the popup menu. This function should accept a single [Carmen GeoJSON][66] object as input and return a string. Any HTML in the returned string will be rendered.
     -   `options.getItemValue` **[Function][65]?** A function that specifies how the selected result should be rendered in the search bar. This function should accept a single [Carmen GeoJSON][66] object as input and return a string. HTML tags in the output string will not be rendered. Defaults to `(item) => item.place_name`.
-    -   `options.mode` **[String][62]** A string specifying the geocoding [endpoint][67] to query. Options are `mapbox.places` and `mapbox.places-permanent`. The `mapbox.places-permanent` mode requires an enterprise license for permanent geocodes. (optional, default `mapbox.places`)
+    -   `options.mode` **[String][62]** A string specifying the geocoding [endpoint][68] to query. Options are `mapbox.places` and `mapbox.places-permanent`. The `mapbox.places-permanent` mode requires an enterprise license for permanent geocodes. (optional, default `mapbox.places`)
     -   `options.localGeocoderOnly` **[Boolean][59]** If `true`, indicates that the `localGeocoder` results should be the only ones returned to the user. If `false`, indicates that the `localGeocoder` results should be combined with those from the Maplibre API with the `localGeocoder` results ranked higher. (optional, default `false`)
 
 ### Examples
 
 ```javascript
-var geocoder = new MaplibreGeocoder({ accessToken: mapboxgl.accessToken });
+var geocoder = new MaplibreGeocoder(GeoApi, {});
 map.addControl(geocoder);
 ```
 
-Returns **[MaplibreGeocoder][68]** `this`
+Returns **[MaplibreGeocoder][69]** `this`
 
 ### addTo
 
 Add the geocoder to a container. The container can be either a `mapboxgl.Map`, an `HTMLElement` or a CSS selector string.
 
-If the container is a [`mapboxgl.Map`][69], this function will behave identically to [`Map.addControl(geocoder)`][70].
-If the container is an instance of [`HTMLElement`][71], then the geocoder will be appended as a child of that [`HTMLElement`][71].
-If the container is a [CSS selector string][72], the geocoder will be appended to the element returned from the query.
+If the container is a [`mapboxgl.Map`][70], this function will behave identically to [`Map.addControl(geocoder)`][71].
+If the container is an instance of [`HTMLElement`][72], then the geocoder will be appended as a child of that [`HTMLElement`][72].
+If the container is a [CSS selector string][73], the geocoder will be appended to the element returned from the query.
 
 This function will throw an error if the container is none of the above.
 It will also throw an error if the referenced HTML element cannot be found in the `document.body`.
@@ -125,13 +127,13 @@ It will also throw an error if the referenced HTML element cannot be found in th
 For example, if the HTML body contains the element `<div id='geocoder-container'></div>`, the following script will append the geocoder to `#geocoder-container`:
 
 ```javascript
-var geocoder = new MaplibreGeocoder({ accessToken: mapboxgl.accessToken });
+var geocoder = new MaplibreGeocoder(GeoAPI, {});
 geocoder.addTo('#geocoder-container');
 ```
 
 #### Parameters
 
--   `container` **([String][62] \| [HTMLElement][73] | mapboxgl.Map)** A reference to the container to which to add the geocoder
+-   `container` **([String][62] \| [HTMLElement][74] | mapboxgl.Map)** A reference to the container to which to add the geocoder
 
 ### clear
 
@@ -139,7 +141,7 @@ Clear and then focus the input.
 
 #### Parameters
 
--   `ev` **[Event][74]?** the event that triggered the clear, if available
+-   `ev` **[Event][75]?** the event that triggered the clear, if available
 
 ### query
 
@@ -149,7 +151,7 @@ Set & query the input
 
 -   `searchInput` **[string][62]** location name or other search input
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### setInput
 
@@ -159,7 +161,7 @@ Set input
 
 -   `searchInput` **[string][62]** location name or other search input
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### setProximity
 
@@ -169,7 +171,7 @@ Set proximity
 
 -   `proximity` **[Object][55]** The new `options.proximity` value. This is a geographical point given as an object with `latitude` and `longitude` properties.
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### getProximity
 
@@ -185,7 +187,7 @@ Set the render function used in the results dropdown
 
 -   `fn` **[Function][65]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][66] object as input and returns a string.
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### getRenderFunction
 
@@ -203,7 +205,7 @@ Look first at the explicitly set options otherwise use the browser's language se
 
 -   `language` **[String][62]** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas.
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### getLanguage
 
@@ -225,7 +227,7 @@ Set the zoom level
 
 -   `zoom` **[Number][58]** The zoom level that the map should animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`.
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### getFlyTo
 
@@ -255,7 +257,7 @@ Set the value of the input element's placeholder
 
 -   `placeholder` **[String][62]** the text to use as the input element's placeholder
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### getBbox
 
@@ -271,7 +273,7 @@ Set the bounding box to limit search results to
 
 -   `bbox` **[Array][63]&lt;[Number][58]>** a bounding box given as an array in the format [minX, minY, maxX, maxY].
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### getCountries
 
@@ -287,7 +289,7 @@ Set the countries to limit search results to
 
 -   `countries` **[String][62]** a comma separated list of countries to limit to
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### getTypes
 
@@ -304,7 +306,7 @@ Set the types to limit search results to
 -   `types`  
 -   `countries` **[String][62]** a comma separated list of types to limit to
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### getMinLength
 
@@ -320,7 +322,7 @@ Set the minimum number of characters typed to trigger results used by the plugin
 
 -   `minLength` **[Number][58]** the minimum length in characters
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### getLimit
 
@@ -336,7 +338,7 @@ Set the limit value for the number of results to display used by the plugin
 
 -   `limit` **[Number][58]** the number of search results to return
 
-Returns **[MaplibreGeocoder][68]** 
+Returns **[MaplibreGeocoder][69]** 
 
 ### getFilter
 
@@ -352,7 +354,7 @@ Set the filter function used by the plugin.
 
 -   `filter` **[Function][65]** A function which accepts a Feature in the [Carmen GeoJSON][66] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### setGeocoderApi
 
@@ -362,7 +364,7 @@ Set the geocoding api used by the plugin.
 
 -   `geocoderApi` **[object][55]** An API which contains reverseGeocoding and forwardGeocoding functions to be used by this plugin
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 ### getGeocoderApi
 
@@ -383,7 +385,7 @@ Subscribe to events that happen within the plugin.
     -   **error** `{ error } Error as string`
 -   `fn` **[Function][65]** function that's called when the event is emitted.
 
-Returns **[MaplibreGeocoder][68]** this;
+Returns **[MaplibreGeocoder][69]** this;
 
 ### off
 
@@ -394,7 +396,7 @@ Remove an event
 -   `type` **[String][62]** Event name.
 -   `fn` **[Function][65]** Function that should unsubscribe to the event emitted.
 
-Returns **[MaplibreGeocoder][68]** this
+Returns **[MaplibreGeocoder][69]** this
 
 [1]: #maplibregeocoder
 
@@ -528,18 +530,20 @@ Returns **[MaplibreGeocoder][68]** this
 
 [66]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
 
-[67]: https://docs.mapbox.com/api/search/#endpoints
+[67]: https://docs.mapbox.com/mapbox-gl-js/api/markers/#popup
 
-[68]: #maplibregeocoder
+[68]: https://docs.mapbox.com/api/search/#endpoints
 
-[69]: https://docs.mapbox.com/mapbox-gl-js/api/map/
+[69]: #maplibregeocoder
 
-[70]: https://docs.mapbox.com/mapbox-gl-js/api/map/#map#addcontrol
+[70]: https://docs.mapbox.com/mapbox-gl-js/api/map/
 
-[71]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
+[71]: https://docs.mapbox.com/mapbox-gl-js/api/map/#map#addcontrol
 
-[72]: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors
+[72]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
 
-[73]: https://developer.mozilla.org/docs/Web/HTML/Element
+[73]: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors
 
-[74]: https://developer.mozilla.org/docs/Web/API/Event
+[74]: https://developer.mozilla.org/docs/Web/HTML/Element
+
+[75]: https://developer.mozilla.org/docs/Web/API/Event
