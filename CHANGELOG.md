@@ -1,5 +1,9 @@
 ## master
 
+## 4.7.2
+
+### Bug fixes 🐛
+
 - Prevents interpretation of forward geocoding requests as reverse geocoding requests [#424](https://github.com/mapbox/mapbox-gl-geocoder/pull/424)
 
 ## 4.7.1
