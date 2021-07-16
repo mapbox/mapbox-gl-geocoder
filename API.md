@@ -86,7 +86,7 @@ A geocoder component using the [Mapbox Geocoding API][55]
     -   `options.types` **[string][57]?** a comma seperated list of types that filter
         results to match those specified. See [https://docs.mapbox.com/api/search/#data-types][65]
         for available types.
-        If reverseGeocode is enabled, you should specify one type. If you configure more than one type, the first type will be used.
+        If reverseGeocode is enabled and no type is specified, the type defaults to POIs. Otherwise, if you configure more than one type, the first type will be used.
     -   `options.minLength` **[Number][60]** Minimum number of characters to enter before results are shown. (optional, default `2`)
     -   `options.limit` **[Number][60]** Maximum number of results to show. (optional, default `5`)
     -   `options.language` **[string][57]?** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas. Defaults to the browser's language settings.

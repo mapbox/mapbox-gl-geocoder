@@ -179,19 +179,13 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options.reverseGeocode - false by default', function(t) {
-    t.plan(2);
+    t.plan(1);
     setup();
     geocoder.query('-6.1933875, 34.5177548');
     geocoder.on(
       'results',
       once(function(e) {
         t.equal(e.features.length, 0, 'No results returned');
-      })
-    );
-    geocoder.on(
-      'error',
-      once(function(e) {
-        t.equal(e.error.statusCode, 422, 'should error');
       })
     );
   });
@@ -273,10 +267,37 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options.localGeocoder', function(t) {
-    t.plan(3);
+    t.plan(2);
     setup({
       flyTo: false,
       limit: 6,
+      localGeocoder: function(q) {
+        return [q];
+      }
+    });
+
+    geocoder.query('London');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.equal(
+          e.features.length,
+          7,
+          'Local geocoder supplement remote response'
+        );
+        t.equal(
+          e.features[0],
+          'London',
+          'Local geocoder results above remote response'
+        );
+      })
+    );
+  });
+
+  tt.test('options.localGeocoder with reverseGeocode=true', function(t) {
+    setup({
+      flyTo: false,
+      reverseGeocode: true,
       localGeocoder: function(q) {
         return [q];
       }
@@ -286,31 +307,9 @@ test('geocoder', function(tt) {
     geocoder.on(
       'results',
       once(function(e) {
-        t.equal(e.features.length, 1, 'Local geocoder used');
-
-        geocoder.query('London');
-        geocoder.on(
-          'results',
-          once(function(e) {
-            t.equal(
-              e.features.length,
-              7,
-              'Local geocoder supplement remote response'
-            );
-
-            geocoder.query('London');
-            geocoder.on(
-              'results',
-              once(function(e) {
-                t.equal(
-                  e.features[0],
-                  'London',
-                  'Local geocoder results above remote response'
-                );
-              })
-            );
-          })
-        );
+        t.equal(e.features.length, 2, 'Local geocoder used');
+        t.equal(e.features[0], '-30,150', 'Local geocoder supplement remote response');
+        t.end();
       })
     );
   });
@@ -324,7 +323,7 @@ test('geocoder', function(tt) {
         return Promise.resolve([
           {
             "id":"place.7673410831246050",
-            "type":"Feature", 
+            "type":"Feature",
             "place_name":"Promise: Washington, District of Columbia, United States of America",
             "geometry":{"type":"Point","coordinates":[-77.0366,38.895]}
           }
@@ -769,7 +768,7 @@ test('geocoder', function(tt) {
     geocoder.query('high');
     geocoder.on(
       'result',
-      once(function() {  
+      once(function() {
         t.ok(markerConstructorSpy.calledOnce, "a new marker is added to the map");
         var calledWithOptions = markerConstructorSpy.args[0][0];
         t.equals(calledWithOptions.color, '#4668F2', 'a default color is set');
@@ -794,7 +793,7 @@ test('geocoder', function(tt) {
     geocoder.query('high');
     geocoder.on(
       'result',
-      once(function() {  
+      once(function() {
         t.ok(markerConstructorSpy.calledOnce, "a new marker is added to the map");
         var calledWithOptions = markerConstructorSpy.args[0][0];
         t.equals(calledWithOptions.color, 'purple', "sets the correct color property");
@@ -816,7 +815,7 @@ test('geocoder', function(tt) {
     geocoder.query('high');
     geocoder.on(
       'result',
-      once(function() {  
+      once(function() {
         t.ok(markerConstructorSpy.notCalled, "a new marker is not added to the map");
         markerConstructorSpy.restore();
       })
@@ -978,7 +977,7 @@ test('geocoder', function(tt) {
     geocoder.query('high');
     geocoder.on(
       'result',
-      once(function() {  
+      once(function() {
         setTimeout(function() {
           t.notEqual(geocoder._typeahead.data.length, 0, 'the suggestions menu has some options in it after a query');
           geocoder._renderMessage("<h1>This is a test</h1>");
@@ -1000,7 +999,7 @@ test('geocoder', function(tt) {
     geocoder.query('high');
     geocoder.on(
       'result',
-      once(function() {  
+      once(function() {
         geocoder._renderError();
         t.ok(renderMessageSpy.calledOnce, 'the error render method calls the renderMessage method exactly once');
         var calledWithArgs = renderMessageSpy.args[0][0];
@@ -1017,7 +1016,7 @@ test('geocoder', function(tt) {
     geocoder.query('high');
     geocoder.on(
       'result',
-      once(function() {  
+      once(function() {
         geocoder._renderNoResults();
         t.ok(renderMessageSpy.calledOnce, 'the no results render method calls the renderMessage method exactly once');
         var calledWithArgs = renderMessageSpy.args[0][0];
@@ -1030,15 +1029,11 @@ test('geocoder', function(tt) {
 
   tt.test('error is shown after an error occurred', function(t){
     setup({});
-    var renderMessageSpy = sinon.spy(geocoder, '_renderMessage');
-    geocoder.query('12,'); //this will cause a 422 error
+    geocoder.query('12,');
     geocoder.on(
-      'error',
-      once(function() {  
-        t.ok(renderMessageSpy.calledOnce, 'an error was rendered');
-        var calledWithArgs = renderMessageSpy.args[0][0];
-        t.ok(calledWithArgs.indexOf('mapbox-gl-geocoder--error') > -1, 'the info message specifies the correct class');
-        t.ok(calledWithArgs.indexOf('There was an error reaching the server') > -1, 'the info message specifies the correct message');
+      'results',
+      once(function(e) {
+        t.ok(e.features.length > 0, 'Some results are returned using and the input is not used for reverse geocoding');
         t.end();
       })
     );
@@ -1052,12 +1047,11 @@ test('geocoder', function(tt) {
         ];
       }
     });
-    var renderErrorSpy = sinon.spy(geocoder, '_renderError');
-    geocoder.query('12,'); //this will cause a 422 error
+    geocoder.query('12,');
     geocoder.on(
-      'error',
-      once(function() {  
-        t.notOk(renderErrorSpy.called, 'the error message is not rendered when the local geocoder returns successfully')
+      'results',
+      once(function(e) {
+        t.ok(e.features.length > 0, 'Some results are returned using and the input is not used for reverse geocoding');
         t.end();
       })
     );
@@ -1066,16 +1060,15 @@ test('geocoder', function(tt) {
   tt.test('message is shown if no results are returned', function(t){
     setup({});
     var renderMessageSpy = sinon.spy(geocoder, '_renderNoResults');
-    geocoder.query('abcdefghijkl'); //this will return no results
+    geocoder.query('abcdefghijkl!@#$%^&*()_+'); //this will return no results
     geocoder.on(
       'results',
-      once(function() {  
+      once(function() {
         t.ok(renderMessageSpy.called, 'a message was rendered');
         t.end();
       })
     );
   });
-
 
   tt.test('no mapbox api call is made if localGeocoderOnly is set', function(t){
     setup({
@@ -1096,7 +1089,7 @@ test('geocoder', function(tt) {
     geocoder.query('Golden Gate Bridge');
     geocoder.on(
       'results',
-      once(function(e) {  
+      once(function(e) {
         t.ok(
           e.features[0].place_name == "Golden Gate Bridge",
           'returns the result of the local geocoder'
@@ -1152,7 +1145,7 @@ test('geocoder', function(tt) {
     setup();
     var searchMock = sinon.spy(geocoder, "_geocode")
     var event = new ClipboardEvent('paste', {
-      dataType: 'text/plain', 
+      dataType: 'text/plain',
       data: 'Golden Gate Bridge'
     })
     geocoder._onPaste(event);
@@ -1169,7 +1162,7 @@ test('geocoder', function(tt) {
     });
     var searchMock = sinon.spy(geocoder, "_geocode")
     var event = new ClipboardEvent('paste', {
-      dataType: 'text/plain', 
+      dataType: 'text/plain',
       data: 'abc'
     })
     geocoder._onPaste(event);
@@ -1182,7 +1175,7 @@ test('geocoder', function(tt) {
     setup();
     var searchMock = sinon.spy(geocoder, "_geocode")
     var event = new ClipboardEvent('paste', {
-      dataType: 'text/plain', 
+      dataType: 'text/plain',
       data: ''
     })
     geocoder._onPaste(event);
