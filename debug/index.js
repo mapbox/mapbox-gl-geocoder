@@ -1,22 +1,19 @@
 'use strict';
-var mapboxgl = require('mapbox-gl');
+var maplibregl = require('maplibre-gl');
 var insertCss = require('insert-css');
 var fs = require('fs');
-
-mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
-
+const MaplibreGeocoder = require("../");
+const { PARIS, LONDON, QUEEN_STREET } = require("../test/mockFeatures");
 
 var meta = document.createElement('meta');
 meta.name = 'viewport';
 meta.content = 'initial-scale=1,maximum-scale=1,user-scalable=no';
 document.getElementsByTagName('head')[0].appendChild(meta);
 
-insertCss(fs.readFileSync('./lib/mapbox-gl-geocoder.css', 'utf8'));
+insertCss(fs.readFileSync('./lib/maplibre-gl-geocoder.css', 'utf8'));
 insertCss(
-  fs.readFileSync('./node_modules/mapbox-gl/dist/mapbox-gl.css', 'utf8')
+  fs.readFileSync('./node_modules/maplibre-gl/dist/maplibre-gl.css', 'utf8')
 );
-
-var MapboxGeocoder = require('../');
 
 var mapDiv = document.body.appendChild(document.createElement('div'));
 mapDiv.style.position = 'absolute';
@@ -25,11 +22,11 @@ mapDiv.style.right = 0;
 mapDiv.style.left = 0;
 mapDiv.style.bottom = 0;
 
-var map = new mapboxgl.Map({
+var map = new maplibregl.Map({
   container: mapDiv,
-  style: 'mapbox://styles/mapbox/streets-v9',
+  style: "https://demotiles.maplibre.org/style.json",
   center: [-79.4512, 43.6568],
-  zoom: 13
+  zoom: 13,
 });
 
 var coordinatesGeocoder = function(query) {
@@ -71,20 +68,30 @@ var coordinatesGeocoder = function(query) {
   return geocodes;
 };
 
-var geocoder = new MapboxGeocoder({
-  accessToken: mapboxgl.accessToken,
+// A mock geocoder API, feel free when testing to replace with actual geocoding API calls
+var GeocoderApi = {
+  forwardGeocode: async () => {
+    return new Promise(async (resolve) => {
+      resolve({ features: [LONDON, PARIS, QUEEN_STREET] });
+    });
+  },
+  reverseGeocode: async () => {
+    return new Promise(async (resolve) => {
+      resolve({ features: [LONDON] });
+    });
+  },
+};
+
+var geocoder = new MaplibreGeocoder(GeocoderApi, {
   trackProximity: true,
   localGeocoder: function(query) {
     return coordinatesGeocoder(query);
   },
-  externalGeocoder: function(query, features) {
-    // peak at the query and features before calling the external api
-    if(query.length > 5 && (features.length ? features[0].relevance != 1 : true)) {
-      return fetch('/mock-api.json')
-        .then(response => response.json())
-    }
+  externalGeocoder: function() {
+    return fetch('/mock-api.json')
+      .then(response => response.json())
   },
-  mapboxgl: mapboxgl
+  maplibregl: maplibregl
 });
 
 map.addControl(geocoder)

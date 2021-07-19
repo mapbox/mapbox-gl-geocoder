@@ -63,9 +63,9 @@ A geocoder component that works with maplibre
 
 ### Parameters
 
--   `geocoderApi` **[Object][55]** Any geocoder api that supports the functions reverseGeocode and forwardGeocode and returns a FeatureCollection of results
+-   `geocoderApi` **[Object][55]** Any geocoder api that supports the functions reverseGeocode and forwardGeocode and returns a response which includes a FeatureCollection of results
 -   `options` **[Object][55]** 
-    -   `options.mapboxgl` **[Object][55]?** A [mapbox-gl][56] instance to use when creating [Markers][57]. Required if `options.marker` is `true`.
+    -   `options.maplibregl` **[Object][55]?** A [maplibre-gl][56] instance to use when creating [Markers][57]. Required if `options.marker` is `true`.
     -   `options.zoom` **[Number][58]** On geocoded result what zoom level should the map animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`. (optional, default `16`)
     -   `options.flyTo` **([Boolean][59] \| [Object][55])** If `false`, animating the map to a selected result is disabled. If `true`, animating the map will use the default animation parameters. If an object, it will be passed as `options` to the map [`flyTo`][60] or [`fitBounds`][61] method providing control over the animation of the transition. (optional, default `true`)
     -   `options.placeholder` **[String][62]** Override the default placeholder attribute value. (optional, default `Search`)
@@ -95,31 +95,34 @@ A geocoder component that works with maplibre
     -   `options.reverseMode` **(distance | score)** Set the factors that are used to sort nearby results. (optional, default `distance`)
     -   `options.reverseGeocode` **[boolean][59]** If `true`, enable reverse geocoding mode. In reverse geocoding, search input is expected to be coordinates in the form `lat, lon`, with suggestions being the reverse geocodes. (optional, default `false`)
     -   `options.enableEventLogging` **[Boolean][59]** Allow Maplibre to collect anonymous usage statistics from the plugin. (optional, default `true`)
-    -   `options.marker` **([Boolean][59] \| [Object][55])** If `true`, a [Marker][57] will be added to the map at the location of the user-selected result using a default set of Marker options.  If the value is an object, the marker will be constructed using these options. If `false`, no marker will be added to the map. Requires that `options.mapboxgl` also be set. (optional, default `true`)
-    -   `options.popup` **([Boolean][59] \| [Object][55])** If `true`, a [Popup][67] will be added to the map when clicking on a marker using a default set of popup options.  If the value is an object, the popup will be constructed using these options. If `false`, no popup will be added to the map. Requires that `options.mapboxgl` also be set. (optional, default `true`)
-    -   `options.showResultMarkers` **([Boolean][59] \| [Object][55])** If `true`, [Markers][57] will be added to the map at the location the top results for the query.   If the value is an object, the marker will be constructed using these options. If `false`, no marker will be added to the map. Requires that `options.mapboxgl` also be set. (optional, default `true`)
+    -   `options.marker` **([Boolean][59] \| [Object][55])** If `true`, a [Marker][57] will be added to the map at the location of the user-selected result using a default set of Marker options.  If the value is an object, the marker will be constructed using these options. If `false`, no marker will be added to the map. Requires that `options.maplibregl` also be set. (optional, default `true`)
+    -   `options.popup` **([Boolean][59] \| [Object][55])** If `true`, a [Popup][67] will be added to the map when clicking on a marker using a default set of popup options.  If the value is an object, the popup will be constructed using these options. If `false`, no popup will be added to the map. Requires that `options.maplibregl` also be set. (optional, default `true`)
+    -   `options.showResultMarkers` **([Boolean][59] \| [Object][55])** If `true`, [Markers][57] will be added to the map at the location the top results for the query.   If the value is an object, the marker will be constructed using these options. If `false`, no marker will be added to the map. Requires that `options.maplibregl` also be set. (optional, default `true`)
     -   `options.render` **[Function][65]?** A function that specifies how the results should be rendered in the dropdown menu. This function should accepts a single [Carmen GeoJSON][66] object as input and return a string. Any HTML in the returned string will be rendered.
     -   `options.popupRender` **[Function][65]?** A function that specifies how the results should be rendered in the popup menu. This function should accept a single [Carmen GeoJSON][66] object as input and return a string. Any HTML in the returned string will be rendered.
     -   `options.getItemValue` **[Function][65]?** A function that specifies how the selected result should be rendered in the search bar. This function should accept a single [Carmen GeoJSON][66] object as input and return a string. HTML tags in the output string will not be rendered. Defaults to `(item) => item.place_name`.
-    -   `options.mode` **[String][62]** A string specifying the geocoding [endpoint][68] to query. Options are `mapbox.places` and `mapbox.places-permanent`. The `mapbox.places-permanent` mode requires an enterprise license for permanent geocodes. (optional, default `mapbox.places`)
     -   `options.localGeocoderOnly` **[Boolean][59]** If `true`, indicates that the `localGeocoder` results should be the only ones returned to the user. If `false`, indicates that the `localGeocoder` results should be combined with those from the Maplibre API with the `localGeocoder` results ranked higher. (optional, default `false`)
 
 ### Examples
 
 ```javascript
+var GeoApi = { 
+  forwardGeocode: (config) => { return { features: [] } },
+  reverseGeocode: (config) => { return { features: [] } } 
+}
 var geocoder = new MaplibreGeocoder(GeoApi, {});
 map.addControl(geocoder);
 ```
 
-Returns **[MaplibreGeocoder][69]** `this`
+Returns **[MaplibreGeocoder][68]** `this`
 
 ### addTo
 
-Add the geocoder to a container. The container can be either a `mapboxgl.Map`, an `HTMLElement` or a CSS selector string.
+Add the geocoder to a container. The container can be either a `maplibregl.Map`, an `HTMLElement` or a CSS selector string.
 
-If the container is a [`mapboxgl.Map`][70], this function will behave identically to [`Map.addControl(geocoder)`][71].
-If the container is an instance of [`HTMLElement`][72], then the geocoder will be appended as a child of that [`HTMLElement`][72].
-If the container is a [CSS selector string][73], the geocoder will be appended to the element returned from the query.
+If the container is a [`maplibregl.Map`][69], this function will behave identically to [`Map.addControl(geocoder)`][70].
+If the container is an instance of [`HTMLElement`][71], then the geocoder will be appended as a child of that [`HTMLElement`][71].
+If the container is a [CSS selector string][72], the geocoder will be appended to the element returned from the query.
 
 This function will throw an error if the container is none of the above.
 It will also throw an error if the referenced HTML element cannot be found in the `document.body`.
@@ -127,13 +130,17 @@ It will also throw an error if the referenced HTML element cannot be found in th
 For example, if the HTML body contains the element `<div id='geocoder-container'></div>`, the following script will append the geocoder to `#geocoder-container`:
 
 ```javascript
+var GeoApi = {
+  forwardGeocode: (config) => { return { features: [] } },
+  reverseGeocode: (config) => { return { features: [] } }
+}
 var geocoder = new MaplibreGeocoder(GeoAPI, {});
 geocoder.addTo('#geocoder-container');
 ```
 
 #### Parameters
 
--   `container` **([String][62] \| [HTMLElement][74] | mapboxgl.Map)** A reference to the container to which to add the geocoder
+-   `container` **([String][62] \| [HTMLElement][73] | maplibregl.Map)** A reference to the container to which to add the geocoder
 
 ### clear
 
@@ -141,7 +148,7 @@ Clear and then focus the input.
 
 #### Parameters
 
--   `ev` **[Event][75]?** the event that triggered the clear, if available
+-   `ev` **[Event][74]?** the event that triggered the clear, if available
 
 ### query
 
@@ -151,7 +158,7 @@ Set & query the input
 
 -   `searchInput` **[string][62]** location name or other search input
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### setInput
 
@@ -161,7 +168,7 @@ Set input
 
 -   `searchInput` **[string][62]** location name or other search input
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### setProximity
 
@@ -171,7 +178,7 @@ Set proximity
 
 -   `proximity` **[Object][55]** The new `options.proximity` value. This is a geographical point given as an object with `latitude` and `longitude` properties.
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### getProximity
 
@@ -187,7 +194,7 @@ Set the render function used in the results dropdown
 
 -   `fn` **[Function][65]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][66] object as input and returns a string.
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### getRenderFunction
 
@@ -205,7 +212,7 @@ Look first at the explicitly set options otherwise use the browser's language se
 
 -   `language` **[String][62]** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas.
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### getLanguage
 
@@ -227,7 +234,7 @@ Set the zoom level
 
 -   `zoom` **[Number][58]** The zoom level that the map should animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`.
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### getFlyTo
 
@@ -257,7 +264,7 @@ Set the value of the input element's placeholder
 
 -   `placeholder` **[String][62]** the text to use as the input element's placeholder
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### getBbox
 
@@ -273,7 +280,7 @@ Set the bounding box to limit search results to
 
 -   `bbox` **[Array][63]&lt;[Number][58]>** a bounding box given as an array in the format [minX, minY, maxX, maxY].
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### getCountries
 
@@ -289,7 +296,7 @@ Set the countries to limit search results to
 
 -   `countries` **[String][62]** a comma separated list of countries to limit to
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### getTypes
 
@@ -306,7 +313,7 @@ Set the types to limit search results to
 -   `types`  
 -   `countries` **[String][62]** a comma separated list of types to limit to
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### getMinLength
 
@@ -322,7 +329,7 @@ Set the minimum number of characters typed to trigger results used by the plugin
 
 -   `minLength` **[Number][58]** the minimum length in characters
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### getLimit
 
@@ -338,7 +345,7 @@ Set the limit value for the number of results to display used by the plugin
 
 -   `limit` **[Number][58]** the number of search results to return
 
-Returns **[MaplibreGeocoder][69]** 
+Returns **[MaplibreGeocoder][68]** 
 
 ### getFilter
 
@@ -354,7 +361,7 @@ Set the filter function used by the plugin.
 
 -   `filter` **[Function][65]** A function which accepts a Feature in the [Carmen GeoJSON][66] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### setGeocoderApi
 
@@ -362,15 +369,35 @@ Set the geocoding api used by the plugin.
 
 #### Parameters
 
--   `geocoderApi` **[object][55]** An API which contains reverseGeocoding and forwardGeocoding functions to be used by this plugin
+-   `geocoderApi` **[Object][55]** An API which contains reverseGeocode and forwardGeocode functions to be used by this plugin
+    -   `geocoderApi.forwardGeocode` **[Function][65]** Forward geocode function should return an object including a collection of Features in [Carmen GeoJSON][66] format
+        -   `geocoderApi.forwardGeocode.config` **[Object][55]** Query parameters
+            -   `geocoderApi.forwardGeocode.config.query` **[String][62]** Search query string
+            -   `geocoderApi.forwardGeocode.config.limit` **[Number][58]** Number of results to limit by
+            -   `geocoderApi.forwardGeocode.config.bbox` **[Array][63]** a bounding box given as an array in the format `[minX, minY, maxX, maxY]`. Search results will be limited to the bounding box.
+            -   `geocoderApi.forwardGeocode.config.proximity` **[Object][55]** a geographical point given as an object with `latitude` and `longitude` properties. Search results closer to this point will be given higher priority.
+            -   `geocoderApi.forwardGeocode.config.countries` **[Array][63]** a comma separated list of country codes to limit results to specified country or countries.
+            -   `geocoderApi.forwardGeocode.config.types` **[Array][63]** a comma seperated list of types that filter results to match those specified. See [https://docs.mapbox.com/api/search/#data-types][64] for available types. If reverseGeocode is enabled, you should specify one type. If you configure more than one type, the first type will be used.
+            -   `geocoderApi.forwardGeocode.config.language` **[String][62]** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas. Defaults to the browser's language settings.
+            -   `geocoderApi.forwardGeocode.config.reverseMode` **(distance | score)** Set the factors that are used to sort nearby results.
+    -   `geocoderApi.reverseGeocode` **[Function][65]** Reverse geocode function should return an object including a collection of Features in [Carmen GeoJSON][66] format
+        -   `geocoderApi.reverseGeocode.config` **[Object][55]** Query parameters
+            -   `geocoderApi.reverseGeocode.config.query` **[Object][55]** Search query coordinates
+            -   `geocoderApi.reverseGeocode.config.limit` **[Number][58]** Number of results to limit by
+            -   `geocoderApi.reverseGeocode.config.bbox` **[Array][63]** a bounding box given as an array in the format `[minX, minY, maxX, maxY]`. Search results will be limited to the bounding box.
+            -   `geocoderApi.reverseGeocode.config.proximity` **[Object][55]** a geographical point given as an object with `latitude` and `longitude` properties. Search results closer to this point will be given higher priority.
+            -   `geocoderApi.reverseGeocode.config.countries` **[Array][63]** a comma separated list of country codes to limit results to specified country or countries.
+            -   `geocoderApi.reverseGeocode.config.types` **[Array][63]** a comma seperated list of types that filter results to match those specified. See [https://docs.mapbox.com/api/search/#data-types][64] for available types. If reverseGeocode is enabled, you should specify one type. If you configure more than one type, the first type will be used.
+            -   `geocoderApi.reverseGeocode.config.language` **[String][62]** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas. Defaults to the browser's language settings.
+            -   `geocoderApi.reverseGeocode.config.reverseMode` **(distance | score)** Set the factors that are used to sort nearby results.
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 ### getGeocoderApi
 
 Get the geocoding endpoint the plugin is currently set to
 
-Returns **[Function][65]** the endpoint URL
+Returns **[Object][55]** the geocoding API
 
 ### on
 
@@ -385,7 +412,7 @@ Subscribe to events that happen within the plugin.
     -   **error** `{ error } Error as string`
 -   `fn` **[Function][65]** function that's called when the event is emitted.
 
-Returns **[MaplibreGeocoder][69]** this;
+Returns **[MaplibreGeocoder][68]** this;
 
 ### off
 
@@ -396,7 +423,7 @@ Remove an event
 -   `type` **[String][62]** Event name.
 -   `fn` **[Function][65]** Function that should unsubscribe to the event emitted.
 
-Returns **[MaplibreGeocoder][69]** this
+Returns **[MaplibreGeocoder][68]** this
 
 [1]: #maplibregeocoder
 
@@ -508,17 +535,17 @@ Returns **[MaplibreGeocoder][69]** this
 
 [55]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[56]: https://github.com/mapbox/mapbox-gl-js
+[56]: https://github.com/maplibre/maplibre-gl-js
 
-[57]: https://docs.mapbox.com/mapbox-gl-js/api/#marker
+[57]: https://maplibre.org/maplibre-gl-js-docs/api/markers/#marker
 
 [58]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
 [59]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[60]: https://docs.mapbox.com/mapbox-gl-js/api/#map#flyto
+[60]: https://maplibre.org/maplibre-gl-js-docs/api/map/#map#flyto
 
-[61]: https://docs.mapbox.com/mapbox-gl-js/api/#map#fitbounds
+[61]: https://maplibre.org/maplibre-gl-js-docs/api/map/#map#fitbounds
 
 [62]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
@@ -530,20 +557,18 @@ Returns **[MaplibreGeocoder][69]** this
 
 [66]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
 
-[67]: https://docs.mapbox.com/mapbox-gl-js/api/markers/#popup
+[67]: https://maplibre.org/maplibre-gl-js-docs/api/markers/#popup
 
-[68]: https://docs.mapbox.com/api/search/#endpoints
+[68]: #maplibregeocoder
 
-[69]: #maplibregeocoder
+[69]: https://maplibre.org/maplibre-gl-js-docs/api/map/#map
 
-[70]: https://docs.mapbox.com/mapbox-gl-js/api/map/
+[70]: https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addcontrol
 
-[71]: https://docs.mapbox.com/mapbox-gl-js/api/map/#map#addcontrol
+[71]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
 
-[72]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
+[72]: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors
 
-[73]: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors
+[73]: https://developer.mozilla.org/docs/Web/HTML/Element
 
-[74]: https://developer.mozilla.org/docs/Web/HTML/Element
-
-[75]: https://developer.mozilla.org/docs/Web/API/Event
+[74]: https://developer.mozilla.org/docs/Web/API/Event
