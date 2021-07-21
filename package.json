@@ -20,7 +20,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/thaddmt/maplibre-gl-geocoder.git"
+    "url": "git+ssh://git@github.com/maplibre/maplibre-gl-geocoder.git"
   },
   "engines": {
     "node": ">=6"
@@ -33,9 +33,9 @@
   "author": "Maplibre",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/thaddmt/maplibre-gl-geocoder/issues"
+    "url": "https://github.com/maplibre/maplibre-gl-geocoder/issues"
   },
-  "homepage": "https://github.com/thaddmt/maplibre-gl-geocoder#readme",
+  "homepage": "https://github.com/maplibre/maplibre-gl-geocoder#readme",
   "devDependencies": {
     "brfs": "^2.0.2",
     "browserify": "^16.2.3",
