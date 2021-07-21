@@ -15,7 +15,7 @@ import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder';
 import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css';
 ...
 // Functions should return Carmen GeoJSON https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-// View config definitions in our [documentation](https://github.com/thaddmt/maplibre-gl-geocoder/blob/master/API.md#setgeocoderapi)
+// View config definitions in our [documentation](https://github.com/maplibre/maplibre-gl-geocoder/blob/master/API.md#setgeocoderapi)
 var Geo = {
   forwardGeocode: async (config) => { /* definition here */ },
   reverseGeocode: async (config) => { /* definition here */ },
@@ -34,8 +34,8 @@ It is possible to use the plugin without it being placed as a control on a mapli
 
 #### API Documentation
 
-See [API.md](https://github.com/thaddmt/maplibre-gl-geocoder/blob/master/API.md) for complete reference.
+See [API.md](https://github.com/maplibre/maplibre-gl-geocoder/blob/master/API.md) for complete reference.
 
 ### Contributing
 
-See [CONTRIBUTING.md](https://github.com/thaddmt/maplibre-gl-geocoder/blob/master/CONTRIBUTING.md).
+See [CONTRIBUTING.md](https://github.com/maplibre/maplibre-gl-geocoder/blob/master/CONTRIBUTING.md).
