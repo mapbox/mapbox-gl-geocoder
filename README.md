@@ -39,3 +39,6 @@ See [API.md](https://github.com/maplibre/maplibre-gl-geocoder/blob/master/API.md
 ### Contributing
 
 See [CONTRIBUTING.md](https://github.com/maplibre/maplibre-gl-geocoder/blob/master/CONTRIBUTING.md).
+
+### Licence
+ISC © [MapLibre](https://github.com/maplibre) © [Mapbox](https://github.com/mapbox)
