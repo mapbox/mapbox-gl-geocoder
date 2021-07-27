@@ -1,0 +1,27 @@
+name: publish
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - v*
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js 10 x64
+        uses: actions/setup-node@v2
+        with:
+          node-version: 10
+          architecture: x64
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Publish
+        run: |
+          npm publish --access=public --non-interactive
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
