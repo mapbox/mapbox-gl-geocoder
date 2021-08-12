@@ -1,5 +1,11 @@
 ## master
 
+## 4.7.3
+
+### Dependency update
+
+- Bumps `mapbox-sdk-js` to v0.13.1 to resolve issue with `got` library.
+
 ## 4.7.2
 
 ### Bug fixes 🐛
