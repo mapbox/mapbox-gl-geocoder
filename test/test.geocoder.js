@@ -18,6 +18,7 @@ test('geocoder', function(tt) {
   function setup(opts) {
     opts = opts || {};
     opts.accessToken = mapboxgl.accessToken;
+    opts.mapboxgl = opts.mapboxgl || mapboxgl; // set default to prevent warnings littering the test logs
     opts.enableEventLogging = false;
     container = document.createElement('div');
     map = new mapboxgl.Map({ container: container });
@@ -968,6 +969,116 @@ test('geocoder', function(tt) {
     t.equals(typeof(nextFilter), 'function', 'the next filter is a function');
     t.deepEqual(nextFiltered, [], 'the changed filter is correctly applied');
     t.end();
+  });
+
+  tt.test('geocoder#autocomplete default results', function(t) {
+    t.plan(1)
+    setup();
+    geocoder.query('India');
+    geocoder.on('results', once(function(e) {
+      t.ok(e.features.some(feature => feature.place_name.indexOf('Indiana') !== -1 ), 'autocomplete is enabled in default responses');
+    }));
+  });
+
+  tt.test('geocoder#getAutocomplete', function(t) {
+    setup({autocomplete: false});
+    t.equals(geocoder.getAutocomplete(), false, 'getAutocomplete returns the correct autocomplete value');
+    t.end();
+  });
+
+  tt.test('geocoder#setAutocomplete', function(t){
+    t.plan(2);
+
+    setup({autocomplete: false});
+    geocoder.setAutocomplete(true);
+    t.equals(geocoder.options.autocomplete, true, 'the setAutocomplete changes the autocomplete value in the geocoder options');
+    geocoder.setAutocomplete(false);
+    geocoder.query('India');
+    geocoder.on('results', once(function(e) {
+      t.ok(e.features.every(feature => feature.place_name.indexOf('Indiana') === -1 ), 'disabling autocomplete correctly affects geocoding results');
+    }));
+  });
+
+  tt.test('geocoder#fuzzyMatch default results', function(t) {
+    t.plan(1)
+    setup();
+    geocoder.query('wahsingtno');
+    geocoder.on('results', once(function(e) {
+      t.ok(e.features.some(feature => feature.place_name.indexOf('Washington') !== -1 ), 'fuzzyMatch is enabled in default responses');
+    }));
+  });
+
+  tt.test('geocoder#getFuzzyMatch', function(t) {
+    setup({fuzzyMatch: false});
+    t.equals(geocoder.getFuzzyMatch(), false, 'getFuzzyMatch returns the correct fuzzyMatch value');
+    t.end();
+  });
+
+  tt.test('geocoder#setFuzzyMatch', function(t){
+    t.plan(2);
+
+    setup({fuzzyMatch: false});
+    geocoder.setFuzzyMatch(true);
+    t.equals(geocoder.options.fuzzyMatch, true, 'setFuzzyMatch changes the fuzzyMatch value in the geocoder options');
+    geocoder.setFuzzyMatch(false);
+    geocoder.query('wahsingtno');
+    geocoder.on('results', once(function(e) {
+      t.equals(e.features.length, 0, 'disabling fuzzyMatch correctly affects geocoding results');
+    }));
+  });
+
+  tt.test('geocoder#routing default results', function(t) {
+    t.plan(1)
+    setup();
+    geocoder.query('The White House');
+    geocoder.on('results', once(function(e) {
+      t.ok(e.features[0].routable_points === undefined, 'routing (returning routable_points) is disabled in default responses');
+    }));
+  });
+
+  tt.test('geocoder#getRouting', function(t) {
+    setup({routing: true});
+    t.equals(geocoder.getRouting(), true, 'getRouting returns the correct routing value');
+    t.end();
+  });
+
+  tt.test('geocoder#setRouting', function(t){
+    t.plan(2);
+
+    setup({routing: false});
+    geocoder.setRouting(true);
+    t.equals(geocoder.options.routing, true, 'setRouting changes the routing value in the geocoder options');
+    geocoder.query('The White House');
+    geocoder.on('results', once(function(e) {
+      t.ok(e.features[0].routable_points !== undefined, 'enabling routing returns routable_points in geocoding results');
+    }));
+  });
+
+  tt.test('geocoder#worldview default results', function(t) {
+    t.plan(1)
+    setup();
+    geocoder.query('Taipei');
+    geocoder.on('results', once(function(e) {
+      t.ok(e.features[0].place_name.indexOf('Taiwan') !== -1, 'worldview defaults to US in responses');
+    }));
+  });
+
+  tt.test('geocoder#getWorldview', function(t) {
+    setup({worldview: 'cn'});
+    t.equals(geocoder.getWorldview(), 'cn', 'getWorldview returns the correct worldview value');
+    t.end();
+  });
+
+  tt.test('geocoder#setWorldview', function(t){
+    t.plan(2);
+
+    setup({worldview: 'us'});
+    geocoder.setWorldview('cn');
+    t.equals(geocoder.options.worldview, 'cn', 'setWorldview changes the worldview value in the geocoder options');
+    geocoder.query('Taipei');
+    geocoder.on('results', once(function(e) {
+      t.ok(e.features[0].place_name.indexOf('China') !== -1, 'setting worldview correctly affects geocoding results');
+    }));
   });
 
   tt.test('geocoder#_renderMessage', function(t){
