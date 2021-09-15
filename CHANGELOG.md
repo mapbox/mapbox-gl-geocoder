@@ -1,5 +1,7 @@
 ## master
 
+## 4.7.4
+
 ### Features / Improvements 🚀
 
 - Adds support for `autocomplete`, `fuzzyMatch`, `routing`, and `worldview` parameters
