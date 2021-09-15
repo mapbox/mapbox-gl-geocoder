@@ -1,5 +1,10 @@
 ## master
 
+### Features / Improvements 🚀
+
+- Adds support for `autocomplete`, `fuzzyMatch`, `routing`, and `worldview` parameters
+- Bumps `mapbox-sd-js` to v0.13.2 to support `fuzzyMatch` and `worldview` parameters
+
 ## 4.7.3
 
 ### Dependency update
