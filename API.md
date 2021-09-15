@@ -440,7 +440,7 @@ Set the worldview parameter
 
 Get the current worldview parameter value used for requests
 
-Returns **[Boolean][73]** The worldview parameter value
+Returns **[String][69]** The worldview parameter value
 
 ### on
 
