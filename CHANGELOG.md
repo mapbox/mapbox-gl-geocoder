@@ -1,5 +1,11 @@
 ## master
 
+## 4.7.5
+
+### Features / Improvements 🚀
+
+- Adds `flipCoordinates` boolean option to support `lon,lat` coordinate order for reverse geocodes
+
 ## 4.7.4
 
 ### Features / Improvements 🚀
