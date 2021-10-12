@@ -1,5 +1,9 @@
 ## master
 
+### Features / Improvements 🚀
+
+- Configurable debounce delay [#436](https://github.com/mapbox/mapbox-gl-geocoder/pull/436)
+
 ## 4.7.4
 
 ### Features / Improvements 🚀
