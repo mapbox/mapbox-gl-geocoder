@@ -240,3 +240,20 @@
   }
 
 }
+
+.mapbox-powered-by {
+  display:block;
+  float:right;
+  margin:5px;
+  font-family:sans-serif;
+  font-size:14px;
+}
+
+.mapbox-powered-by a {
+  color: black;
+  text-decoration:none;  
+}
+
+.mapbox-powered-by svg {
+  margin-bottom:-3px;
+}
