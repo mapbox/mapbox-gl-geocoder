@@ -117,6 +117,8 @@ A geocoder component using the [Mapbox Geocoding API][67]
     -   `options.fuzzyMatch` **[Boolean][73]** Specify whether the Geocoding API should attempt approximate, as well as exact, matching when performing searches, or whether it should opt out of this behavior and only attempt exact matching. (optional, default `true`)
     -   `options.routing` **[Boolean][73]** Specify whether to request additional metadata about the recommended navigation destination corresponding to the feature or not. Only applicable for address features. (optional, default `false`)
     -   `options.worldview` **[String][69]** Filter results to geographic features whose characteristics are defined differently by audiences belonging to various regional, cultural, or political groups. (optional, default `"us"`)
+    -   `options.enableGeolocation` **[Boolean][73]** If `true` enable user geolocation feature. (optional, default `false`)
+    -   `options.addressAccuracy` **(`"address"` \| `"street"` \| `"place"` \| `"country"`)** The accuracy for the geolocation feature with which we define the address line to fill. The browser API returns the user's position with accuracy, and sometimes we can get the neighbor's address. To prevent receiving an incorrect address, you can reduce the accuracy of the definition. (optional, default `"street"`)
 
 ### Examples
 
