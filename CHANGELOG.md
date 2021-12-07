@@ -1,5 +1,11 @@
 ## master
 
+## 4.8.0
+
+### Features / Improvements 🚀
+
+- Added geolocate functionality [#444](https://github.com/mapbox/mapbox-gl-geocoder/pull/444)
+
 ## 4.7.4
 
 ### Features / Improvements 🚀
