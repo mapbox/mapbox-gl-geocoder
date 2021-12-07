@@ -505,7 +505,7 @@ test('Geocoder#addTo(String) -- no map', function(tt) {
       const geolocateEl = container.querySelector('.mapboxgl-ctrl-geocoder--icon-geolocate');
 
       t.ok(geolocateEl !== null, 'geolocate icon was shown');
-
+      container.remove();
       t.end(); 
     }, 100);
   });
@@ -531,7 +531,7 @@ test('Geocoder#addTo(String) -- no map', function(tt) {
       const geolocateEl = container.querySelector('.mapboxgl-ctrl-geocoder--icon-geolocate');
 
       t.ok(geolocateEl === null, 'geolocate icon was shown');
-
+      container.remove();
       t.end(); 
     }, 100);
   });
