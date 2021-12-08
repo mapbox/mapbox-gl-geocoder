@@ -497,7 +497,7 @@ test('Geocoder#addTo(String) -- no map', function(tt) {
 
     const geolocation = geocoder.geolocation;
 
-    sinon.stub(geolocation, 'checkGeolocationSupport').resolves(true);
+    sinon.stub(geolocation, 'isSupport').returns(true);
 
     geocoder.addTo(".notAMap")
 
@@ -523,7 +523,7 @@ test('Geocoder#addTo(String) -- no map', function(tt) {
 
     const geolocation = geocoder.geolocation;
 
-    sinon.stub(geolocation, 'checkGeolocationSupport').resolves(false);
+    sinon.stub(geolocation, 'isSupport').returns(false);
 
     geocoder.addTo(".notAMap")
 
