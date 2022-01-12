@@ -117,6 +117,7 @@ A geocoder component using the [Mapbox Geocoding API][67]
     -   `options.fuzzyMatch` **[Boolean][73]** Specify whether the Geocoding API should attempt approximate, as well as exact, matching when performing searches, or whether it should opt out of this behavior and only attempt exact matching. (optional, default `true`)
     -   `options.routing` **[Boolean][73]** Specify whether to request additional metadata about the recommended navigation destination corresponding to the feature or not. Only applicable for address features. (optional, default `false`)
     -   `options.worldview` **[String][69]** Filter results to geographic features whose characteristics are defined differently by audiences belonging to various regional, cultural, or political groups. (optional, default `"us"`)
+    -   `options.debounceDelay` **[Number][72]** Specify the input debounce delay (in milliseconds). (optional, default `200`)
 
 ### Examples
 
