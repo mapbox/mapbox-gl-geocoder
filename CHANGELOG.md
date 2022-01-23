@@ -1,5 +1,9 @@
 ## master
 
+### Dependency Update
+
+- Bumps `nanoid` to v3.1.31 to resolve security vulnerability warning
+
 ## 4.7.4
 
 ### Features / Improvements 🚀
@@ -9,7 +13,7 @@
 
 ## 4.7.3
 
-### Dependency update
+### Dependency Update
 
 - Bumps `mapbox-sdk-js` to v0.13.1 to resolve issue with `got` library.
 
