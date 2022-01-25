@@ -5,6 +5,17 @@
 - Bumps `nanoid` to v3.1.31 to resolve security vulnerability warning.
 - Adds `babelify` to build process to ensure mapbox-gl-geocoder remains ES5-compatible.
 
+### Footer
+
+- 🚨 Added Mapbox attribution footer. As we synthesize data sources in the future, based on data results there may be more lines.
+
+The footer pretty small and unobtrusive, but if this is an issue for your product please reach out to your Technical Account Management (TAM) representative.
+
+### Other
+
+- 🚨 Upgraded system font stack to include Apple fonts. This is used for text
+if Open Sans is not available.
+
 ## 4.7.4
 
 ### Features / Improvements 🚀
