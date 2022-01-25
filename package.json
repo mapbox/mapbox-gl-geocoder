@@ -7,7 +7,7 @@
   "style": "lib/mapbox-gl-geocoder.css",
   "scripts": {
     "start": "budo debug/index.js --dir debug --live -- -t brfs ",
-    "prepublish": "NODE_ENV=production && mkdir -p dist && browserify --standalone MapboxGeocoder lib/index.js | uglifyjs -c -m > dist/mapbox-gl-geocoder.min.js && cp lib/mapbox-gl-geocoder.css dist/",
+    "prepublish": "NODE_ENV=production && mkdir -p dist && browserify lib/index.js --transform [ babelify --global ] --standalone MapboxGeocoder | uglifyjs -c -m > dist/mapbox-gl-geocoder.min.js && cp lib/mapbox-gl-geocoder.css dist/",
     "test": "browserify -t envify test/index.js test/events.test.js | smokestack -b firefox | tap-status | tap-color",
     "docs": "documentation build lib/index.js --format=md > API.md",
     "pretest": "npm run lint",
@@ -37,6 +37,9 @@
   },
   "homepage": "https://github.com/mapbox/mapbox-gl-geocoder#readme",
   "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/preset-env": "^7.16.11",
+    "babelify": "^10.0.0",
     "brfs": "^2.0.2",
     "browserify": "^16.2.3",
     "budo": "^11.6.1",
@@ -53,7 +56,7 @@
     "tap-color": "^1.1.0",
     "tap-status": "^1.0.1",
     "tape": "^4.10.1",
-    "uglify-js": "^2.6.4"
+    "uglify-js": "^2.8.29"
   },
   "peerDependencies": {
     "mapbox-gl": ">= 0.47.0 < 3.0.0"
@@ -61,7 +64,7 @@
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.13.2",
     "lodash.debounce": "^4.0.6",
-    "nanoid": "^2.0.1",
+    "nanoid": "^3.1.31",
     "subtag": "^0.5.0",
     "suggestions": "^1.6.0",
     "xtend": "^4.0.1"

@@ -1,5 +1,10 @@
 ## master
 
+### Dependency update
+
+- Bumps `nanoid` to v3.1.31 to resolve security vulnerability warning.
+- Adds `babelify` to build process to ensure mapbox-gl-geocoder remains ES5-compatible.
+
 ## 4.7.4
 
 ### Features / Improvements 🚀
