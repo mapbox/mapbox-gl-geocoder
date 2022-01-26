@@ -9,7 +9,7 @@
 
 - 🚨 Added Mapbox attribution footer. As we synthesize data sources in the future, based on data results there may be more lines.
 
-The footer pretty small and unobtrusive, but if this is an issue for your product please reach out to your Technical Account Management (TAM) representative.
+The footer is pretty small and unobtrusive, but if this is an issue for your product please reach out to your Technical Account Management (TAM) representative.
 
 ### Other
 
