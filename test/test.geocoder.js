@@ -17,7 +17,7 @@ test('geocoder', function(tt) {
 
   function setup(opts) {
     opts = opts || {};
-    opts.accessToken = mapboxgl.accessToken;
+    opts.accessToken = opts.accessToken || mapboxgl.accessToken;
     opts.mapboxgl = opts.mapboxgl || mapboxgl; // set default to prevent warnings littering the test logs
     opts.enableEventLogging = false;
     container = document.createElement('div');
@@ -984,6 +984,21 @@ test('geocoder', function(tt) {
     setup({autocomplete: false});
     t.equals(geocoder.getAutocomplete(), false, 'getAutocomplete returns the correct autocomplete value');
     t.end();
+  });
+
+  tt.test('geocoder#setAccessToken', function(t){
+    const accessToken = process.env.MapboxAccessToken;
+    t.plan(1);
+    setup({ accessToken: `${accessToken}#foo` });
+    geocoder.setAccessToken(accessToken);
+    geocoder.query('pizza');
+    geocoder.on('results', function(e) {
+      t.equals(
+        e.request.client.accessToken,
+        accessToken,
+        "new access token applied to requests"
+      );
+    });
   });
 
   tt.test('geocoder#setAutocomplete', function(t){
