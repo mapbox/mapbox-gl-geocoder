@@ -1,4 +1,8 @@
-## master
+## HEAD
+
+### Features / Improvements 🚀
+
+- Adds `setAccessToken` method to update the accessToken after the Geocoder has been initialized [#449](https://github.com/mapbox/mapbox-gl-geocoder/pull/449)
 
 ### Dependency update
 
