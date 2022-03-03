@@ -84,11 +84,8 @@ A geocoder component using the [Mapbox Geocoding API][69]
     -   `options.zoom` **[Number][74]** On geocoded result what zoom level should the map animate to when a `bbox` isn't found in the response. If a `bbox` is found the map will fit to the `bbox`. (optional, default `16`)
     -   `options.flyTo` **([Boolean][75] \| [Object][70])** If `false`, animating the map to a selected result is disabled. If `true`, animating the map will use the default animation parameters. If an object, it will be passed as `options` to the map [`flyTo`][76] or [`fitBounds`][77] method providing control over the animation of the transition. (optional, default `true`)
     -   `options.placeholder` **[String][71]** Override the default placeholder attribute value. (optional, default `Search`)
-    -   `options.proximity` **[Object][70]?** a proximity argument: this is
-        a geographical point given as an object with `latitude` and `longitude`
-        properties. Search results closer to this point will be given
-        higher priority.
-    -   `options.trackProximity` **[Boolean][75]** If `true`, the geocoder proximity will automatically update based on the map view. (optional, default `true`)
+    -   `options.proximity` **([Object][70] \| `"ip"`)?** a geographical point given as an object with `latitude` and `longitude` properties, or the string 'ip' to use a user's IP address location. Search results closer to this point will be given higher priority.
+    -   `options.trackProximity` **[Boolean][75]** If `true`, the geocoder proximity will dynamically update based on the current map view or user's IP location, depending on zoom level. (optional, default `true`)
     -   `options.collapsed` **[Boolean][75]** If `true`, the geocoder control will collapse until hovered or in focus. (optional, default `false`)
     -   `options.clearAndBlurOnEsc` **[Boolean][75]** If `true`, the geocoder control will clear it's contents and blur when user presses the escape key. (optional, default `false`)
     -   `options.clearOnBlur` **[Boolean][75]** If `true`, the geocoder control will clear its value when the input blurs. (optional, default `false`)
@@ -185,7 +182,8 @@ Set proximity
 
 #### Parameters
 
--   `proximity` **[Object][70]** The new `options.proximity` value. This is a geographical point given as an object with `latitude` and `longitude` properties.
+-   `proximity` **([Object][70] \| `"ip"`)** The new `options.proximity` value. This is a geographical point given as an object with `latitude` and `longitude` properties or the string 'ip'.
+-   `disableTrackProximity` **[Boolean][75]** If true, sets `trackProximity` to false. True by default to prevent `trackProximity` from unintentionally overriding an explicitly set proximity value. (optional, default `true`)
 
 Returns **[MapboxGeocoder][83]** this
 
