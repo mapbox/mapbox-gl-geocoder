@@ -1,4 +1,20 @@
-## master
+## HEAD
+
+### Breaking Changes ⚠️
+- Adds Mapbox attribution footer. As we synthesize data sources in the future, based on data results there may be more lines. The footer is pretty small and unobtrusive, but if this is an issue for your product please reach out to your Technical Account Management (TAM) representative [#438](https://github.com/mapbox/mapbox-gl-geocoder/pull/438)
+
+### Features / Improvements 🚀
+
+- Adds `setAccessToken` method to update the accessToken after the Geocoder has been initialized [#449](https://github.com/mapbox/mapbox-gl-geocoder/pull/449)
+- Enables use of the value `'ip'` for `proximity` to bias around a user's location [#453](https://github.com/mapbox/mapbox-gl-geocoder/pull/453)
+- Added geolocate functionality [#444](https://github.com/mapbox/mapbox-gl-geocoder/pull/444)
+- Upgraded system font stack to include Apple fonts. This is used for text if Open Sans is not available [#438](https://github.com/mapbox/mapbox-gl-geocoder/pull/438)
+
+### Dependency update
+
+- Bumps `nanoid` to v3.1.31 to resolve security vulnerability warning.
+- Adds `babelify` to build process to ensure mapbox-gl-geocoder remains ES5-compatible.
+- Adds `events` dependency to resolve a Node emulation issue for use in packagers such as Vite [#451](https://github.com/mapbox/mapbox-gl-geocoder/pull/451)
 
 ## 4.7.5
 
