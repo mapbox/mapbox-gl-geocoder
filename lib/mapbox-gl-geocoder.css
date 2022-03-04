@@ -152,6 +152,13 @@
   fill: #909090;
 }
 
+.mapboxgl-ctrl-geocoder--icon-geolocate {
+  width: 22px;
+  height: 22px;
+  margin-top: 6px;
+  margin-right: 3px;
+}
+
 .mapboxgl-ctrl-geocoder--icon-loading {
   width: 26px;
   height: 26px;
@@ -227,6 +234,13 @@
     width: 16px;
     height: 16px;
     margin-top: 3px;
+    margin-right: 0;
+  }
+
+  .mapboxgl-ctrl-geocoder--icon-geolocate {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
     margin-right: 0;
   }
 
