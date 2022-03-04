@@ -1,5 +1,7 @@
 ## HEAD
 
+## 5.0.0
+
 ### Breaking Changes ⚠️
 - Adds Mapbox attribution footer. As we synthesize data sources in the future, based on data results there may be more lines. The footer is pretty small and unobtrusive, but if this is an issue for your product please reach out to your Technical Account Management (TAM) representative [#438](https://github.com/mapbox/mapbox-gl-geocoder/pull/438)
 
@@ -16,6 +18,12 @@
 - Bumps `nanoid` to v3.1.31 to resolve security vulnerability warning.
 - Adds `babelify` to build process to ensure mapbox-gl-geocoder remains ES5-compatible.
 - Adds `events` dependency to resolve a Node emulation issue for use in packagers such as Vite [#451](https://github.com/mapbox/mapbox-gl-geocoder/pull/451)
+
+### Bug fixes 🐛
+
+- Remove IE11-specific security vulnerability in `createIcon` method [#446](https://github.com/mapbox/mapbox-gl-geocoder/pull/446)
+- Resolve with empty results response when the `externalGeocoder` method returns null [#446](https://github.com/mapbox/mapbox-gl-geocoder/pull/446)
+
 ## 4.7.4
 
 ### Features / Improvements 🚀
