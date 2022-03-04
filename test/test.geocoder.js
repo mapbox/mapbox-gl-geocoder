@@ -205,6 +205,41 @@ test('geocoder', function(tt) {
     t.end();
   });
 
+  tt.test('options.flipCoordinates - false by default', function(t) {
+    t.plan(1);
+    setup({
+      reverseGeocode: true,
+    });
+    geocoder.query('-98, 40');
+    geocoder.on('results', once(function(e) {
+      t.equal(e.features.length, 0, 'No results returned')
+    }))
+  })
+
+  tt.test('options.flipCoordinates - true accepts lon,lat order', function(t) {
+    t.plan(1);
+    setup({
+      reverseGeocode: true,
+      flipCoordinates: true
+    });
+    geocoder.query('-98, 40');
+    geocoder.on('results', once(function(e) {
+      t.equal(e.features.length, 1, 'One result returned')
+    }))
+  })
+
+  tt.test('options.flipCoordinates - true does not accept lat,lon order', function(t) {
+    t.plan(1);
+    setup({
+      reverseGeocode: true,
+      flipCoordinates: true
+    });
+    geocoder.query('40, -98');
+    geocoder.on('results', once(function(e) {
+      t.equal(e.features.length, 0, 'No results returned')
+    }))
+  })
+
   tt.test('parses options correctly', function(t) {
     t.plan(4);
     setup({
