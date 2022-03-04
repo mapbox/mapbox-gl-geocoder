@@ -4,6 +4,7 @@
 
 - Adds `setAccessToken` method to update the accessToken after the Geocoder has been initialized [#449](https://github.com/mapbox/mapbox-gl-geocoder/pull/449)
 - Enables use of the value `'ip'` for `proximity` to bias around a user's location [#453](https://github.com/mapbox/mapbox-gl-geocoder/pull/453)
+- Adds `events` dependency to resolve a Node emulation issue for use in packagers such as Vite [#451](https://github.com/mapbox/mapbox-gl-geocoder/pull/451)
 
 ### Dependency update
 
