@@ -483,6 +483,59 @@ test('Geocoder#addTo(String) -- no map', function(tt) {
 
     geocoder.query('-79,43');
   });
+
+  tt.test('should add geolocate icon when browser supports geolocation', (t)=>{
+    t.plan(1);
+
+    const opts = { enableGeolocation: true };
+    opts.accessToken = mapboxgl.accessToken;
+    opts.enableEventLogging = false;
+    const container = document.createElement('div');
+    container.className = "notAMap"
+    document.body.appendChild(container)
+    const geocoder = new MapboxGeocoder(opts);
+
+    const geolocation = geocoder.geolocation;
+
+    sinon.stub(geolocation, 'isSupport').returns(true);
+
+    geocoder.addTo(".notAMap")
+
+    setTimeout(() => {
+      const geolocateEl = container.querySelector('.mapboxgl-ctrl-geocoder--icon-geolocate');
+
+      t.ok(geolocateEl !== null, 'geolocate icon was shown');
+      container.remove();
+      t.end(); 
+    }, 100);
+  });
+
+  tt.test('should hide geolocate icon when browser doesn\'t support geolocation', (t)=>{
+    t.plan(1);
+
+    const opts = { enableGeolocation: true };
+    opts.accessToken = mapboxgl.accessToken;
+    opts.enableEventLogging = false;
+    const container = document.createElement('div');
+    container.className = "notAMap"
+    document.body.appendChild(container)
+    const geocoder = new MapboxGeocoder(opts);
+
+    const geolocation = geocoder.geolocation;
+
+    sinon.stub(geolocation, 'isSupport').returns(false);
+
+    geocoder.addTo(".notAMap")
+
+    setTimeout(() => {
+      const geolocateEl = container.querySelector('.mapboxgl-ctrl-geocoder--icon-geolocate');
+
+      t.ok(geolocateEl === null, 'geolocate icon was shown');
+      container.remove();
+      t.end(); 
+    }, 100);
+  });
+  
 });
 
 
