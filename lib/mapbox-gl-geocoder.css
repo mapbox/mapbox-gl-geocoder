@@ -9,7 +9,7 @@
 .mapboxgl-ctrl-geocoder {
   font-size: 18px;
   line-height: 24px;
-  font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, Helvetica, sans-serif;
   position: relative;
   background-color: #fff;
   width: 100%;
@@ -169,6 +169,22 @@
   animation: rotate 0.8s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
+.mapboxgl-ctrl-geocoder--powered-by {
+  display: block;
+  float: left;
+  padding: 6px 12px;
+  padding-bottom: 9px;
+  font-size: 13px;
+}
+
+.mapboxgl-ctrl-geocoder--powered-by a {
+  color: #909090;
+}
+
+.mapboxgl-ctrl-geocoder--powered-by a:not(:hover) {
+  text-decoration: none;  
+}
+
 /* Animation */
 @-webkit-keyframes rotate {
   from {
@@ -253,4 +269,7 @@
     text-align: center
   }
 
+  .mapboxgl-ctrl-geocoder--powered-by {
+    font-size: 11px !important;
+  }
 }
