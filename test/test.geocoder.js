@@ -474,7 +474,7 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options.trackProximity', function(t) {
-    t.plan(2);
+    t.plan(3);
 
     setup({
       trackProximity: true
@@ -490,6 +490,7 @@ test('geocoder', function(tt) {
 
     map.setZoom(9);
     t.notOk(geocoder.getProximity(), 'proximity unset after zooming out');
+    t.true(geocoder.options.trackProximity, 'trackProximity remains enabled after it automatically updates proximity')
   });
 
   tt.test('options.trackProximity=false', function(t) {
@@ -503,13 +504,15 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options.setProximity', function(t) {
-    t.plan(1);
+    t.plan(4);
 
     setup({});
 
+    t.true(geocoder.options.trackProximity, 'trackProximity is set to true by default')
     map.setZoom(13);
     map.setCenter([-79.4512, 43.6568]);
     geocoder.setProximity({ longitude: -79.4512, latitude: 43.6568});
+    t.false(geocoder.options.trackProximity, 'trackProximity is set to false after explicitly setting proximity')
 
     geocoder.query('high');
     geocoder.on(
@@ -519,6 +522,19 @@ test('geocoder', function(tt) {
           e.features[0].place_name.indexOf('Toronto') !== -1,
           'proximity applied in geocoding request'
         );
+        // Move map and make sure _updateProximity not still changing proximity
+        map.setCenter([0,0]);
+        map.setZoom(5);
+        geocoder.query('high');
+        geocoder.on(
+          'results',
+          once(function(e) {
+            t.ok(
+              e.features[0].place_name.indexOf('Toronto') !== -1,
+              'explicitly-set proximity remains intact after moving map'
+            )
+          })
+        )
       })
     );
   });
@@ -563,6 +579,26 @@ test('geocoder', function(tt) {
       })
     );
   });
+
+  tt.test('proximity can be set to a value of "ip"', function(t) {
+    t.plan(1)
+
+    setup({trackProximity: false});
+
+    geocoder.setProximity('ip');
+    geocoder.query('par');
+
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.ok(e.features.length > 0,
+          'proximity=ip successfully returned results'
+        );
+      })
+    );
+
+
+  })
 
   tt.test('options.render', function(t){
     t.plan(3);
