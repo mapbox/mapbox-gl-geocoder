@@ -1,5 +1,11 @@
 ## HEAD
 
+## 5.0.1
+
+### Bug fixes 🐛
+
+- Fix string matching and regular expressions to remove security vulnerabilities and meet code scan compliance [#457](https://github.com/mapbox/mapbox-gl-geocoder/pull/457)
+
 ## 5.0.0
 
 ### Breaking Changes ⚠️
