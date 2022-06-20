@@ -1,5 +1,9 @@
 ## HEAD
 
+### Bug fixes 🐛
+
+- The `marker` and `flyTo` options are now respected when geolocation is enabled [#462](https://github.com/mapbox/mapbox-gl-geocoder/pull/462)
+
 ## 5.0.1
 
 ### Bug fixes 🐛
