@@ -787,7 +787,7 @@ test('geocoder', function(tt) {
       flyTo: true
     });
 
-    const flyToSpy = sinon.spy(map, "flyTo");
+    const flyToSpy = sinon.spy(map, 'flyTo');
 
     geocoder.query('Golden Gate Bridge');
 
