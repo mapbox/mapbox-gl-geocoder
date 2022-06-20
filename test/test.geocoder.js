@@ -26,6 +26,26 @@ test('geocoder', function(tt) {
     map.addControl(geocoder);
   }
 
+  function stubGeolocationPosition() {
+    const geolocationPositionStub = {
+      coords: {
+        accuracy: 10,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        latitude: 38.8999242,
+        longitude: -77.0361813,
+        speed: null
+      },
+      timestamp: new Date('2022-01-01T00:00:00Z')
+    };
+
+    sinon.replace(geocoder.geolocation, 'getCurrentPosition',
+      sinon.fake.resolves(geolocationPositionStub));
+
+    return geolocationPositionStub;
+  }
+
   tt.test('initialized', function(t) {
     setup();
     t.ok(geocoder, 'geocoder is initialized');
@@ -861,21 +881,7 @@ test('geocoder', function(tt) {
       mapboxgl: mapboxgl
     });
 
-    const geolocationPositionStub = {
-      coords: {
-        accuracy: 10,
-        altitude: null,
-        altitudeAccuracy: null,
-        heading: null,
-        latitude: 38.8999242,
-        longitude: -77.0361813,
-        speed: null
-      },
-      timestamp: new Date('2022-01-01T00:00:00Z')
-    };
-    sinon.replace(geocoder.geolocation, 'getCurrentPosition',
-      sinon.fake.resolves(geolocationPositionStub));
-
+    const geolocationPositionStub = stubGeolocationPosition();
     const markerConstructorSpy = sinon.spy(mapboxgl, 'Marker');
 
     geocoder._geolocateUser();
@@ -948,21 +954,7 @@ test('geocoder', function(tt) {
       marker: false
     });
 
-    const geolocationPositionStub = {
-      coords: {
-        accuracy: 10,
-        altitude: null,
-        altitudeAccuracy: null,
-        heading: null,
-        latitude: 38.8999242,
-        longitude: -77.0361813,
-        speed: null
-      },
-      timestamp: new Date('2022-01-01T00:00:00Z')
-    };
-    sinon.replace(geocoder.geolocation, 'getCurrentPosition',
-      sinon.fake.resolves(geolocationPositionStub));
-
+    stubGeolocationPosition();
     const markerConstructorSpy = sinon.spy(mapboxgl, 'Marker');
 
     geocoder._geolocateUser();
