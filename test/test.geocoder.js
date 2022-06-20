@@ -828,7 +828,7 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('options.marker [true]', function(t) {
+  tt.test('options.marker [true] when querying', function(t) {
     t.plan(2);
 
     setup({
@@ -845,6 +845,49 @@ test('geocoder', function(tt) {
         var calledWithOptions = markerConstructorSpy.args[0][0];
         t.equals(calledWithOptions.color, '#4668F2', 'a default color is set');
         markerConstructorSpy.restore();
+      })
+    );
+  });
+
+  tt.test('options.marker [true] when geolocating', function(t) {
+    t.plan(4);
+
+    t.teardown(function() {
+      sinon.restore();
+    });
+
+    setup({
+      marker: true,
+      mapboxgl: mapboxgl
+    });
+
+    const geolocationPositionStub = {
+      coords: {
+        accuracy: 10,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        latitude: 38.8999242,
+        longitude: -77.0361813,
+        speed: null
+      },
+      timestamp: new Date('2022-01-01T00:00:00Z')
+    };
+    sinon.replace(geocoder.geolocation, 'getCurrentPosition',
+      sinon.fake.resolves(geolocationPositionStub));
+
+    const markerConstructorSpy = sinon.spy(mapboxgl, 'Marker');
+
+    geocoder._geolocateUser();
+
+    geocoder.on(
+      'result',
+      once(function(event) {
+        t.ok(markerConstructorSpy.calledOnce, 'a new marker is added to the map');
+        const calledWithOptions = markerConstructorSpy.args[0][0];
+        t.equals(calledWithOptions.color, '#4668F2', 'a default color is set');
+        t.equals(geolocationPositionStub.coords.latitude, event.result.user_coordinates[1], 'the marker is placed at the correct latitude');
+        t.equals(geolocationPositionStub.coords.longitude, event.result.user_coordinates[0], 'the marker is placed at the correct longitude');
       })
     );
   });
@@ -876,7 +919,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.marker [false]', function(t) {
+  tt.test('options.marker [false] when querying', function(t) {
     t.plan(1);
 
     setup({
@@ -890,6 +933,44 @@ test('geocoder', function(tt) {
       once(function() {
         t.ok(markerConstructorSpy.notCalled, "a new marker is not added to the map");
         markerConstructorSpy.restore();
+      })
+    );
+  });
+
+  tt.test('options.marker [false] when geolocating', function(t) {
+    t.plan(1);
+
+    t.teardown(function() {
+      sinon.restore();
+    });
+
+    setup({
+      marker: false
+    });
+
+    const geolocationPositionStub = {
+      coords: {
+        accuracy: 10,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        latitude: 38.8999242,
+        longitude: -77.0361813,
+        speed: null
+      },
+      timestamp: new Date('2022-01-01T00:00:00Z')
+    };
+    sinon.replace(geocoder.geolocation, 'getCurrentPosition',
+      sinon.fake.resolves(geolocationPositionStub));
+
+    const markerConstructorSpy = sinon.spy(mapboxgl, 'Marker');
+
+    geocoder._geolocateUser();
+
+    geocoder.on(
+      'result',
+      once(function() {
+        t.ok(markerConstructorSpy.notCalled, 'a new marker is not added to the map');
       })
     );
   });
