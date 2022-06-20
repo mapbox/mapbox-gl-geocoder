@@ -737,39 +737,108 @@ test('geocoder', function(tt) {
     t.end()
   });
 
-  tt.test('options.flyTo [false]', function(t){
+  tt.test('options.flyTo [false] when querying', function(t){
     t.plan(1)
     setup({
       flyTo: false
     });
 
-    var mapFlyMethod =  sinon.spy(map, "flyTo");
+    const mapFlySpy =  sinon.spy(map, 'flyTo');
+
     geocoder.query('Golden Gate Bridge');
+
     geocoder.on(
       'result',
       once(function() {
-        t.ok(mapFlyMethod.notCalled, "The map flyTo was not called when the option was set to false")
+        t.ok(mapFlySpy.notCalled, 'flyTo() was not called after querying');
       })
     );
   });
 
+  tt.test('options.flyTo [false] when geolocating', function(t) {
+    t.plan(1);
 
-  tt.test('options.flyTo [true]', function(t){
+    t.teardown(function() {
+      sinon.restore();
+    });
+
+    setup({
+      flyTo: false
+    });
+
+    stubGeolocationPosition();
+    const flyToSpy = sinon.spy(map, 'flyTo');
+
+    geocoder._geolocateUser();
+
+    geocoder.on(
+      'result',
+      once(function() {
+        t.ok(flyToSpy.notCalled, 'flyTo() was not called after geolocating');
+      })
+    );
+  });
+
+  tt.test('options.flyTo [true] when querying', function(t){
     t.plan(4)
     setup({
       flyTo: true
     });
 
-    var mapFlyMethod =  sinon.spy(map, "flyTo");
+    const flyToSpy = sinon.spy(map, "flyTo");
+
     geocoder.query('Golden Gate Bridge');
+
     geocoder.on(
       'result',
       once(function() {
-        t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
-        var calledWithArgs = mapFlyMethod.args[0][0];
-        t.equals(+calledWithArgs.center[0].toFixed(4), +-122.4809.toFixed(4), 'the map is directed to fly to the right longitude');
-        t.equals(+calledWithArgs.center[1].toFixed(4),  +37.8181.toFixed(4), 'the map is directed to fly to the right latitude');
-        t.deepEqual(calledWithArgs.zoom, 16, 'the map is directed to fly to the right zoom');
+        t.ok(flyToSpy.calledOnce, 'flyTo() is called after querying');
+
+        const calledWithArgs = flyToSpy.args[0][0];
+
+        t.equals(+calledWithArgs.center[0].toFixed(4),
+          +-122.4809.toFixed(4),
+          'the map is directed to fly to the right longitude');
+
+        t.equals(+calledWithArgs.center[1].toFixed(4),
+          +37.8181.toFixed(4),
+          'the map is directed to fly to the right latitude');
+
+        t.deepEqual(calledWithArgs.zoom, 16,
+          'the map is directed to fly to the right zoom level');
+      })
+    );
+  });
+
+  tt.test('options.flyTo [true] when geolocating', function(t) {
+    t.plan(4);
+
+    t.teardown(function() {
+      sinon.restore();
+    });
+
+    setup({
+      flyTo: true
+    });
+
+    const geolocationPositionStub = stubGeolocationPosition();
+    const flyToSpy = sinon.spy(map, 'flyTo');
+
+    geocoder._geolocateUser();
+
+    geocoder.on(
+      'result',
+      once(function() {
+        t.ok(flyToSpy.calledOnce, 'flyTo() is called after geolocating');
+        const calledWithArgs = flyToSpy.args[0][0];
+        t.equals(+calledWithArgs.center[0].toFixed(4),
+          +geolocationPositionStub.coords.longitude.toFixed(4),
+          'the map is directed to fly to the right longitude');
+        t.equals(+calledWithArgs.center[1].toFixed(4),
+          +geolocationPositionStub.coords.latitude.toFixed(4),
+          'the map is directed to fly to the right latitude');
+        t.deepEqual(calledWithArgs.zoom, 16,
+          'the map is directed to fly to the right zoom level');
       })
     );
   });
@@ -892,8 +961,12 @@ test('geocoder', function(tt) {
         t.ok(markerConstructorSpy.calledOnce, 'a new marker is added to the map');
         const calledWithOptions = markerConstructorSpy.args[0][0];
         t.equals(calledWithOptions.color, '#4668F2', 'a default color is set');
-        t.equals(geolocationPositionStub.coords.latitude, event.result.user_coordinates[1], 'the marker is placed at the correct latitude');
-        t.equals(geolocationPositionStub.coords.longitude, event.result.user_coordinates[0], 'the marker is placed at the correct longitude');
+        t.equals(+event.result.user_coordinates[1].toFixed(4),
+          +geolocationPositionStub.coords.latitude.toFixed(4),
+          'the marker is placed at the correct latitude');
+        t.equals(+event.result.user_coordinates[0].toFixed(4),
+          +geolocationPositionStub.coords.longitude.toFixed(4),
+          'the marker is placed at the correct longitude');
       })
     );
   });
