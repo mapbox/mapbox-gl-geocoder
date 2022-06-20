@@ -738,7 +738,8 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options.flyTo [false] when querying', function(t){
-    t.plan(1)
+    t.plan(1);
+
     setup({
       flyTo: false
     });
@@ -780,7 +781,8 @@ test('geocoder', function(tt) {
   });
 
   tt.test('options.flyTo [true] when querying', function(t){
-    t.plan(4)
+    t.plan(4);
+
     setup({
       flyTo: true
     });
