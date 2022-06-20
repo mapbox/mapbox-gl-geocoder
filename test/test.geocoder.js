@@ -965,11 +965,15 @@ test('geocoder', function(tt) {
       'result',
       once(function(event) {
         t.ok(markerConstructorSpy.calledOnce, 'a new marker is added to the map');
+
         const calledWithOptions = markerConstructorSpy.args[0][0];
+
         t.equals(calledWithOptions.color, '#4668F2', 'a default color is set');
+
         t.equals(+event.result.user_coordinates[1].toFixed(4),
           +geolocationPositionStub.coords.latitude.toFixed(4),
           'the marker is placed at the correct latitude');
+
         t.equals(+event.result.user_coordinates[0].toFixed(4),
           +geolocationPositionStub.coords.longitude.toFixed(4),
           'the marker is placed at the correct longitude');
