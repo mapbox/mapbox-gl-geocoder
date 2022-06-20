@@ -830,13 +830,17 @@ test('geocoder', function(tt) {
       'result',
       once(function() {
         t.ok(flyToSpy.calledOnce, 'flyTo() is called after geolocating');
+
         const calledWithArgs = flyToSpy.args[0][0];
+
         t.equals(+calledWithArgs.center[0].toFixed(4),
           +geolocationPositionStub.coords.longitude.toFixed(4),
           'the map is directed to fly to the right longitude');
+
         t.equals(+calledWithArgs.center[1].toFixed(4),
           +geolocationPositionStub.coords.latitude.toFixed(4),
           'the map is directed to fly to the right latitude');
+
         t.deepEqual(calledWithArgs.zoom, 16,
           'the map is directed to fly to the right zoom level');
       })
