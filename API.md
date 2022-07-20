@@ -679,7 +679,7 @@ Returns **[object][75]**
 
 [85]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[86]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+[86]: https://docs.mapbox.com/api/search/geocoding/#geocoding-response-object
 
 [87]: https://docs.mapbox.com/api/search/#endpoints
 
