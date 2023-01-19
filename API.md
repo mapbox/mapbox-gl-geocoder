@@ -185,8 +185,8 @@ Set input
 
 #### Parameters
 
-*   `searchInput` **[string][57]** location name or other search input
--   `showSuggestions` **[boolean][61]** display suggestion on setInput call (optional, default `false`)
+*   `searchInput` **[string][76]** location name or other search input
+-   `showSuggestions` **[boolean][80]** display suggestion on setInput call (optional, default `false`)
 
 Returns **[MapboxGeocoder][2]** this
 
