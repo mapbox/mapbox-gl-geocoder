@@ -85,7 +85,9 @@ var geocoder = new MapboxGeocoder({
         .then(response => response.json())
     }
   },
-  mapboxgl: mapboxgl
+  mapboxgl: mapboxgl,
+  reverseGeocode: true,
+  version: 'v6',
 });
 
 map.addControl(geocoder)
