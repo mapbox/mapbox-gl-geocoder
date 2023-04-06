@@ -1,5 +1,5 @@
-var test = require('tape');
-var utils = require('../lib/utils');
+import test from 'tape';
+import * as utils from '../lib/utils.js';
 
 test('REVERSE_GEOCODE_COORD_RGX', function (t) {
   t.ok(utils.REVERSE_GEOCODE_COORD_RGX.test('12, 34'), 'Reverse: "12, 34"');

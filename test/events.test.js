@@ -1,9 +1,7 @@
-'use strict';
-
-var test = require('tape');
-var MapboxEventsManager = require('./../lib/events');
-var sinon = require('sinon');
-var MapboxGeocoder = require('../');
+import test from 'tape';
+import sinon from 'sinon';
+import { MapboxEventManager }  from './../lib/events.js';
+import { MapboxGeocoder } from '../lib/index.js';
 
 test('it constructs a new event manager instance with the correct properties', function (assert) {
   var options = {
@@ -14,7 +12,7 @@ test('it constructs a new event manager instance with the correct properties', f
     language: 'en,fr',
     limit: 2
   }
-  var eventsManager = new MapboxEventsManager(options)
+  var eventsManager = new MapboxEventManager(options)
   assert.equals(eventsManager.origin, 'https://api.mapbox.com', 'the correct event origin is set');
   assert.equals(eventsManager.endpoint, 'events/v2', 'the correct event endpoint is set');
   assert.equals(eventsManager.access_token, options.accessToken, 'sets the right access tokens for the request');
@@ -38,7 +36,7 @@ test('it constructs a new event manager instance with the correct properties', f
 });
 
 test('send event', function (assert) {
-  var eventsManager = new MapboxEventsManager({
+  var eventsManager = new MapboxEventManager({
     accessToken: 'abc123'
   })
   var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
@@ -54,7 +52,7 @@ test('send event', function (assert) {
 });
 
 test('send event with disabled logging', function (assert) {
-  var eventsManager = new MapboxEventsManager({
+  var eventsManager = new MapboxEventManager({
     accessToken: 'abc123'
   });
 
@@ -72,7 +70,7 @@ test('send event with disabled logging', function (assert) {
 });
 
 test('get requst options', function(assert){
-  var eventsManager = new MapboxEventsManager({
+  var eventsManager = new MapboxEventManager({
     accessToken: 'abc123'
   })
 
@@ -89,7 +87,7 @@ test('get requst options', function(assert){
 
 test('get event payload', function(assert){
   var geocoder = new MapboxGeocoder({accessToken:'abc123'});
-  var eventsManager = new MapboxEventsManager({accessToken: 'abc123'});
+  var eventsManager = new MapboxEventManager({accessToken: 'abc123'});
   geocoder.inputString = 'my string';
   assert.equals(eventsManager.getEventPayload('test.event', geocoder).event, 'test.event', 'the correct event is set');
   assert.equals(typeof eventsManager.getEventPayload('test.event', geocoder).created, 'number', 'a timestamp is set on the event');
@@ -115,7 +113,7 @@ test('get event payload with geocoder options', function(assert){
     proximity: {latitude: 1, longitude: 2}
   }
   var geocoder = new MapboxGeocoder(options);
-  var eventsManager = new MapboxEventsManager(options);
+  var eventsManager = new MapboxEventManager(options);
   geocoder.inputString = 'my string';
   assert.equals(eventsManager.getEventPayload('test.event', geocoder).event, 'test.event', 'the correct event is set');
   assert.equals(typeof eventsManager.getEventPayload('test.event', geocoder).created, 'number', 'a timestamp is set on the event');
@@ -131,7 +129,7 @@ test('get event payload with geocoder options', function(assert){
 });
 
 test('search start event', function(assert){
-  var eventsManager = new MapboxEventsManager({
+  var eventsManager = new MapboxEventManager({
     accessToken: 'abc123'
   })
   var sendMethod = sinon.spy(eventsManager, "send");
@@ -151,7 +149,7 @@ test('search start event', function(assert){
 });
 
 test('search selects event', function(assert){
-  var eventsManager = new MapboxEventsManager({
+  var eventsManager = new MapboxEventManager({
     accessToken: 'abc123'
   })
   var sendMethod = sinon.spy(eventsManager, "send")
@@ -177,7 +175,7 @@ test('search selects event', function(assert){
 })
 
 test('generate session id', function(assert){
-  var eventsManager = new MapboxEventsManager({
+  var eventsManager = new MapboxEventManager({
     accessToken: 'abc123'
   })
   assert.equals(typeof eventsManager.generateSessionID(), 'string', 'generates a string id');
@@ -188,7 +186,7 @@ test('generate session id', function(assert){
 
 
 test('get user agent', function(assert){
-  var eventsManager = new MapboxEventsManager({
+  var eventsManager = new MapboxEventManager({
     accessToken: 'abc123'
   })
   assert.equals(typeof eventsManager.getUserAgent(), 'string', 'returns a string');
@@ -199,7 +197,7 @@ test('get user agent', function(assert){
 test('get selected index', function(assert){
   var needle = {id: 'abc.123'};
   var haystack = [{id: 'abc.999'}, {id: 'abc.123'}, {id: 'abc.888'}, {id: 'abc.777'}, {id: 'abc.666'}];
-  var eventsManager = new MapboxEventsManager({
+  var eventsManager = new MapboxEventManager({
     accessToken: 'abc123'
   })
   var geocoder = new MapboxGeocoder({accessToken: 'abc123'});
@@ -216,13 +214,13 @@ test('should enable logging', function(assert){
     accessToken: 'abc123',
     origin: 'https://my.server.endpoint'
   }
-  var eventsManager = new MapboxEventsManager(nonMapboxOptions);
+  var eventsManager = new MapboxEventManager(nonMapboxOptions);
   assert.false(eventsManager.shouldEnableLogging(nonMapboxOptions), 'logging is not enabled when origin is not mapbox');
   var mapboxOptions = {
     accessToken: 'abc123',
     origin: 'https://api.mapbox.com'
   }
-  var eventsManagerMapbox = new MapboxEventsManager(mapboxOptions);
+  var eventsManagerMapbox = new MapboxEventManager(mapboxOptions);
   assert.true(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is enabled when origin is mapbox');
     
   mapboxOptions.filter = function(){return true};
@@ -240,7 +238,7 @@ test('should enable logging [opt-out]', function(assert){
     accessToken: 'abc123',
     enableEventLogging: false
   }
-  var eventsManager = new MapboxEventsManager(optOutOptions);
+  var eventsManager = new MapboxEventManager(optOutOptions);
   assert.false(eventsManager.shouldEnableLogging(optOutOptions), 'logging is not enabled when origin is not mapbox');
   assert.end();
 });
@@ -248,7 +246,7 @@ test('should enable logging [opt-out]', function(assert){
 
 test('should properly handle keypress events', function(assert){
   var testEvent = {key: 'S', code :'KeyS', metaKey: false, keyCode: 83, shiftKey: true};
-  var eventsManager = new MapboxEventsManager({
+  var eventsManager = new MapboxEventManager({
     accessToken: 'abc123'
   })
   var sendMethod = sinon.spy(eventsManager, "send");
@@ -271,7 +269,7 @@ test('should properly handle keypress events', function(assert){
 });
 
 test('it should properly flush events after the queue is full', function(assert){
-  var eventsManager = new MapboxEventsManager({
+  var eventsManager = new MapboxEventManager({
     accessToken: 'abc123',
     maxQueueSize: 5
   });
@@ -289,7 +287,7 @@ test('it should properly flush events after the queue is full', function(assert)
 });
 
 test('it should properly flush events if forced', function(assert){
-  var eventsManager = new MapboxEventsManager({
+  var eventsManager = new MapboxEventManager({
     accessToken: 'abc123',
     maxQueueSize: 25
   });
@@ -308,7 +306,7 @@ test('it should properly flush events if forced', function(assert){
 });
 
 test('remove event manager', function(assert){
-  var eventsManager = new MapboxEventsManager({
+  var eventsManager = new MapboxEventManager({
     accessToken: 'abc123'
   });
   var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});

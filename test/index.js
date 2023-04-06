@@ -1,10 +1,8 @@
-'use strict';
+import test from 'tape';
 
-var test = require('tape');
-
-// Tests
-require('./test.geocoder');
-require('./test.ui');
+// // Tests
+import './test.geocoder';
+import './test.ui';
 
 // close the smokestack window once tests are complete
 test('shutdown', function(t) {

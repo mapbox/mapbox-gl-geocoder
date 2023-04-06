@@ -2,5 +2,6 @@
   "plugins": [],
   "presets": [
     "@babel/preset-env"
-  ]
+  ],
+  "exclude": "node_modules/mapbox-gl"
 }
