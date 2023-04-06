@@ -1,5 +1,15 @@
 ## HEAD
 
+## 6.0.0
+
+### Breaking Changes ⚠️
+- Update the library to use ES6 modules [#495](https://github.com/mapbox/mapbox-gl-geocoder/pull/495)
+
+### Dependency update
+
+- Bumps `sinon` to 15.0.3 to allow unit tests to run with ES6.
+- Adds `esmify` to allow compatibility between ES6 modules and commonjs modules for debug and unit tests scripts.
+
 ## 5.0.1
 
 ### Bug fixes 🐛
