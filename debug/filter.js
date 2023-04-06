@@ -1,15 +1,12 @@
-'use strict';
-var mapboxgl = require('mapbox-gl');
-var insertCss = require('insert-css');
-var fs = require('fs');
+import mapboxgl from 'mapbox-gl';
+import { insertCss } from 'insert-css';
+import fs from 'fs';
+import { MapboxGeocoder } from '../lib/index';
+
 mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
 
 insertCss(fs.readFileSync('./lib/mapbox-gl-geocoder.css', 'utf8'));
-insertCss(
-  fs.readFileSync('./node_modules/mapbox-gl/dist/mapbox-gl.css', 'utf8')
-);
-
-var MapboxGeocoder = require('../');
+insertCss(fs.readFileSync('./node_modules/mapbox-gl/dist/mapbox-gl.css', 'utf8'));
 
 var mapDiv = document.body.appendChild(document.createElement('div'));
 mapDiv.style.position = 'absolute';

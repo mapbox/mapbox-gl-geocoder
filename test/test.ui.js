@@ -1,10 +1,8 @@
-'use strict';
-
-var once = require('lodash.once');
-var MapboxGeocoder = require('../lib/index');
-var mapboxgl = require('mapbox-gl');
-var test = require('tape');
-var sinon = require('sinon');
+import test from 'tape';
+import mapboxgl from 'mapbox-gl';
+import once from 'lodash.once';
+import sinon from 'sinon';
+import { MapboxGeocoder } from '../lib/index.js';
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
 

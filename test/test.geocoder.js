@@ -1,14 +1,11 @@
-'use strict';
-
-var test = require('tape');
-var MapboxGeocoder = require('../');
-var mapboxgl = require('mapbox-gl');
-var once = require('lodash.once');
-var mapboxEvents = require('./../lib/events');
-var sinon = require('sinon');
-var localization = require('./../lib/localization');
-var exceptions = require('./../lib/exceptions');
-
+import test from 'tape';
+import mapboxgl from 'mapbox-gl';
+import once from 'lodash.once';
+import sinon from 'sinon';
+import { MapboxGeocoder } from '../lib/index';
+import { MapboxEventManager }  from './../lib/events.js';
+import * as localization from './../lib/localization.js';
+import * as exceptions from './../lib/exceptions.js';
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
 
@@ -31,7 +28,7 @@ test('geocoder', function(tt) {
     t.ok(geocoder, 'geocoder is initialized');
     t.ok(geocoder.fresh, 'geocoder is initialized with fresh status to enable turnstile event');
     t.equals(geocoder.inputString, '', 'geocoder is initialized with an input string for keeping track of state');
-    t.ok(geocoder.eventManager instanceof mapboxEvents, 'the geocoder has a mapbox event manager');
+    t.ok(geocoder.eventManager instanceof MapboxEventManager, 'the geocoder has a mapbox event manager');
     t.true(geocoder.options.trackProximity, 'sets trackProximity to true by default');
     t.end();
   });
