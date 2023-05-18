@@ -1,5 +1,11 @@
 ## HEAD
 
+## 5.1.0-beta.0
+
+### Features / Improvements 🚀
+
+- Added version="v5"|"v6" flag to the options of the MapboxGeocoder class which makes it possible to use v6 endpoint instead of v5 by default for geocoding. [#485](https://github.com/mapbox/mapbox-gl-geocoder/pull/485). For more details please refer to [v6 API documentation](https://docs.mapbox.com/api/search/geocoding-v6/).
+
 ## 5.0.1
 
 ### Bug fixes 🐛
