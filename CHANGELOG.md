@@ -1,5 +1,11 @@
 ## HEAD
 
+## 5.0.2
+
+### Bug fixes 🐛
+
+- Fix `setPlaceholder` so that when `setPlaceholder` is called afterwards it return updated placeholder string [#502](https://github.com/mapbox/mapbox-gl-geocoder/pull/502)
+
 ## 5.0.1
 
 ### Bug fixes 🐛
