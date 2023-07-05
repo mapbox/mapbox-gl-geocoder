@@ -959,6 +959,7 @@ test('geocoder', function(tt) {
     t.equals(geocoder._inputEl.placeholder, 'Test', 'the right placeholder is set on initialization');
     geocoder.setPlaceholder('Search');
     t.equals(geocoder._inputEl.placeholder, 'Search', 'the placeholder was changed in the  UI element');
+    t.equals(geocoder.getPlaceholder(), 'Search', 'the placeholder returned from getPlaceholder is the right value');
     t.end();
   });
 
