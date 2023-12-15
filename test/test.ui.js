@@ -22,7 +22,12 @@ test('Geocoder#inputControl', function(tt) {
     opts.accessToken = mapboxgl.accessToken;
     opts.enableEventLogging = false;
     container = document.createElement('div');
-    map = new mapboxgl.Map({ container: container });
+    map = new mapboxgl.Map({
+      container: container,
+      projection: 'mercator',
+      // update to Standard after fix of GLJS-624
+      style: 'mapbox://styles/mapbox/streets-v12',
+    });
     geocoder = new MapboxGeocoder(opts);
     map.addControl(geocoder);
   }

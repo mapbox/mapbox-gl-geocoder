@@ -21,7 +21,12 @@ test('geocoder', function(tt) {
     opts.mapboxgl = opts.mapboxgl || mapboxgl; // set default to prevent warnings littering the test logs
     opts.enableEventLogging = false;
     container = document.createElement('div');
-    map = new mapboxgl.Map({ container: container });
+    map = new mapboxgl.Map({
+      container: container,
+      projection: 'mercator',
+      // update to Standard after fix of GLJS-624
+      style: 'mapbox://styles/mapbox/streets-v12',
+    });
     geocoder = new MapboxGeocoder(opts);
     map.addControl(geocoder);
   }
@@ -39,18 +44,21 @@ test('geocoder', function(tt) {
   tt.test('set/get input', function(t) {
     t.plan(4)
     setup({ proximity: { longitude: -79.45, latitude: 43.65 } });
-    geocoder.query('Queen Street');
-    var mapMoveSpy = sinon.spy(map, "flyTo");
-    geocoder.on(
-      'result',
-      once(function(e) {
-        t.ok(e.result, 'feature is in the event object');
-        var mapMoveArgs = mapMoveSpy.args[0][0];
-        t.ok(mapMoveSpy.calledOnce, 'the map#flyTo method was called when a result was selected');
-        t.notEquals(mapMoveArgs.center[0], 0, 'center.lng changed')
-        t.notEquals(mapMoveArgs.center[1], 0, 'center.lat changed')
-      })
-    );
+
+    map.once('style.load', () => {
+      geocoder.query('Queen Street');
+      var mapMoveSpy = sinon.spy(map, "flyTo");
+      geocoder.on(
+        'result',
+        once(function(e) {
+          t.ok(e.result, 'feature is in the event object');
+          var mapMoveArgs = mapMoveSpy.args[0][0];
+          t.ok(mapMoveSpy.calledOnce, 'the map#flyTo method was called when a result was selected');
+          t.notEquals(mapMoveArgs.center[0], -92.25, 'center.lng changed')
+          t.notEquals(mapMoveArgs.center[1], 37.75, 'center.lat changed')
+        })
+      );
+    });
   });
 
   tt.test('options', function(t) {
@@ -61,33 +69,35 @@ test('geocoder', function(tt) {
       types: 'region'
     });
 
-    geocoder.query('Paris');
-    var startEventMethod = sinon.stub(geocoder.eventManager, "start")
+    map.once('style.load', () => {
+      geocoder.query('Paris');
+      var startEventMethod = sinon.stub(geocoder.eventManager, "start")
 
-    geocoder.on(
-      'results',
-      once(function(e) {
-        t.ok(e.features.length, 'Event for results emitted');
-        t.equals(geocoder.inputString, 'Paris', 'input string keeps track of state');
-        t.equals(geocoder.fresh, false, 'once a search has been completed, the geocoder is no longer fresh');
-        t.ok(startEventMethod.called, 'a search start event was issued');
-        t.ok(startEventMethod.calledOnce, 'a search start event was issued only once');
-      })
-    );
+      geocoder.on(
+        'results',
+        once(function(e) {
+          t.ok(e.features.length, 'Event for results emitted');
+          t.equals(geocoder.inputString, 'Paris', 'input string keeps track of state');
+          t.equals(geocoder.fresh, false, 'once a search has been completed, the geocoder is no longer fresh');
+          t.ok(startEventMethod.called, 'a search start event was issued');
+          t.ok(startEventMethod.calledOnce, 'a search start event was issued only once');
+        })
+      );
 
-    geocoder.on(
-      'result',
-      once(function(e) {
-        var center = map.getCenter();
-        t.equals(center.lng, 0, 'center.lng is unchanged');
-        t.equals(center.lat, 0, 'center.lat is unchanged');
-        t.equals(
-          e.result.place_name,
-          'Paris, France',
-          'one result is returned with expected place name'
-        );
-      })
-    );
+      geocoder.on(
+        'result',
+        once(function(e) {
+          var center = map.getCenter();
+          t.equals(center.lng, -92.25, 'center.lng is unchanged');
+          t.equals(center.lat, 37.75, 'center.lat is unchanged');
+          t.equals(
+            e.result.place_name,
+            'Paris, France',
+            'one result is returned with expected place name'
+          );
+        })
+      );
+    });
   });
 
   tt.test('custom endpoint', function(t) {
