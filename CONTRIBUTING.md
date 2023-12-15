@@ -19,17 +19,17 @@ Lastly, run the test command from the console:
 
 ## Deploying
 
-Follow this deploy process after all changes for the release are merged into master. You will copy and paste this checklist in the comment of the release pull request.
+Follow this deploy process after all changes for the release are merged into main. You will copy and paste this checklist in the comment of the release pull request.
 
 ```
 ## Release checklist
 
-1. Create a branch off `master` and a pull request with the following changes. Copy this checklist in the comment of the pull request.
-    - [ ] Update the [CHANGELOG.md](https://github.com/mapbox/mapbox-gl-geocoder/blob/master/CHANGELOG.md) by comparing the last release and what is on `master`. In the changelog, replace the `master` heading with the to-be-released stable version.
+1. Create a branch off `main` and a pull request with the following changes. Copy this checklist in the comment of the pull request.
+    - [ ] Update the [CHANGELOG.md](https://github.com/mapbox/mapbox-gl-geocoder/blob/main/CHANGELOG.md) by comparing the last release and what is on `main`. In the changelog, replace the `HEAD` heading with the to-be-released stable version.
     - [ ] Update the version number in `package.json` and `package-lock.json`.
-3. Request a PR review and then merge it into `master`.
+3. Request a PR review and then merge it into `main`.
 4. Tag the release and start the build.
-    - [ ] Make sure you've pulled in all changes to `master` locally.
+    - [ ] Make sure you've pulled in all changes to `main` locally.
     - [ ] Build the release with `npm run prepublish && npm run docs`
     - [ ] Commit and push with commit message `vX.X.X`
     - [ ] Create the git tag for the release with `git tag -a vX.X.X -m 'vX.X.X'`
