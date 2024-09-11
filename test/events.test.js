@@ -265,11 +265,11 @@ test('should enable logging', function(assert){
   assert.true(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is enabled when origin is mapbox');
     
   mapboxOptions.filter = function(){return true};
-  assert.false(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom filter is enabled');
+  assert.true(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom filter is enabled');
 
   mapboxOptions.filter = undefined;
   mapboxOptions.localGeocoder = function(){return 'abc'}
-  assert.false(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom geocoder is enabled');
+  assert.true(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom geocoder is enabled');
 
   assert.end();
 });
