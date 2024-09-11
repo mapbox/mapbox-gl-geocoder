@@ -131,6 +131,24 @@ test('get event payload with geocoder options', function(assert){
   assert.end();
 });
 
+test('get event payload with geocoder options - proximity=ip', function(assert){
+  var options = {
+    accessToken: 'abc123',
+    proximity: 'ip'
+  }
+  var geocoder = new MapboxGeocoder(options);
+  geocoder._headers = { 'ip-proximity': '3,4' }
+  var eventsManager = new MapboxEventsManager(options);
+  geocoder.inputString = 'my string';
+  assert.equals(eventsManager.getEventPayload('test.event', geocoder).event, 'test.event', 'the correct event is set');
+  assert.equals(typeof eventsManager.getEventPayload('test.event', geocoder).created, 'number', 'a timestamp is set on the event');
+  assert.equals(typeof eventsManager.getEventPayload('test.event', geocoder).sessionIdentifier, 'string', 'the correct event is set');
+  assert.equals(eventsManager.getEventPayload('test.event', geocoder).endpoint, 'mapbox.places', 'the endpoint is always mapbox places');
+  assert.deepEqual(eventsManager.getEventPayload('test.event', geocoder).proximity, [3, 4], 'no proximity is set if no proximity is set on the geocoder');
+  assert.equals(eventsManager.getEventPayload('test.event', geocoder).queryString, 'my string', 'the query string is found from the geocoder');
+  assert.end();
+});
+
 test('search start event', function(assert){
   var eventsManager = new MapboxEventsManager({
     accessToken: 'abc123'
