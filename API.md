@@ -111,16 +111,16 @@ A geocoder component using the [Mapbox Geocoding API][74]
     *   `options.minLength` **[Number][79]** Minimum number of characters to enter before results are shown. (optional, default `2`)
     *   `options.limit` **[Number][79]** Maximum number of results to show. (optional, default `5`)
     *   `options.language` **[string][76]?** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas. Defaults to the browser's language settings.
-    *   `options.filter` **[Function][85]?** A function which accepts a Feature in the [Carmen GeoJSON][86] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
-    *   `options.localGeocoder` **[Function][85]?** A function accepting the query string which performs local geocoding to supplement results from the Mapbox Geocoding API. Expected to return an Array of GeoJSON Features in the [Carmen GeoJSON][86] format.
-    *   `options.externalGeocoder` **[Function][85]?** A function accepting the query string and current features list which performs geocoding to supplement results from the Mapbox Geocoding API. Expected to return a Promise which resolves to an Array of GeoJSON Features in the [Carmen GeoJSON][86] format.
+    *   `options.filter` **[Function][85]?** A function which accepts a Feature in the [extended GeoJSON][86] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
+    *   `options.localGeocoder` **[Function][85]?** A function accepting the query string which performs local geocoding to supplement results from the Mapbox Geocoding API. Expected to return an Array of GeoJSON Features in the [extended GeoJSON][86] format.
+    *   `options.externalGeocoder` **[Function][85]?** A function accepting the query string and current features list which performs geocoding to supplement results from the Mapbox Geocoding API. Expected to return a Promise which resolves to an Array of GeoJSON Features in the [extended GeoJSON][86] format.
     *   `options.reverseMode` **(distance | score)** Set the factors that are used to sort nearby results. (optional, default `distance`)
     *   `options.reverseGeocode` **[boolean][80]** If `true`, enable reverse geocoding mode. In reverse geocoding, search input is expected to be coordinates in the form `lat, lon`, with suggestions being the reverse geocodes. (optional, default `false`)
     *   `options.flipCoordinates` **[boolean][80]** If `true`, search input coordinates for reverse geocoding is expected to be in the form `lon, lat` instead of the default `lat, lon`. (optional, default `false`)
     *   `options.enableEventLogging` **[Boolean][80]** Allow Mapbox to collect anonymous usage statistics from the plugin. (optional, default `true`)
     *   `options.marker` **([Boolean][80] | [Object][75])** If `true`, a [Marker][78] will be added to the map at the location of the user-selected result using a default set of Marker options.  If the value is an object, the marker will be constructed using these options. If `false`, no marker will be added to the map. Requires that `options.mapboxgl` also be set. (optional, default `true`)
-    *   `options.render` **[Function][85]?** A function that specifies how the results should be rendered in the dropdown menu. This function should accepts a single [Carmen GeoJSON][86] object as input and return a string. Any HTML in the returned string will be rendered.
-    *   `options.getItemValue` **[Function][85]?** A function that specifies how the selected result should be rendered in the search bar. This function should accept a single [Carmen GeoJSON][86] object as input and return a string. HTML tags in the output string will not be rendered. Defaults to `(item) => item.place_name`.
+    *   `options.render` **[Function][85]?** A function that specifies how the results should be rendered in the dropdown menu. This function should accepts a single [extended GeoJSON][86] object as input and return a string. Any HTML in the returned string will be rendered.
+    *   `options.getItemValue` **[Function][85]?** A function that specifies how the selected result should be rendered in the search bar. This function should accept a single [extended GeoJSON][86] object as input and return a string. HTML tags in the output string will not be rendered. Defaults to `(item) => item.place_name`.
     *   `options.mode` **[String][76]** A string specifying the geocoding [endpoint][87] to query. Options are `mapbox.places` and `mapbox.places-permanent`. The `mapbox.places-permanent` mode requires an enterprise license for permanent geocodes. (optional, default `mapbox.places`)
     *   `options.localGeocoderOnly` **[Boolean][80]** If `true`, indicates that the `localGeocoder` results should be the only ones returned to the user. If `false`, indicates that the `localGeocoder` results should be combined with those from the Mapbox API with the `localGeocoder` results ranked higher. (optional, default `false`)
     *   `options.autocomplete` **[Boolean][80]** Specify whether to return autocomplete results or not. When autocomplete is enabled, results will be included that start with the requested string, rather than just responses that match it exactly. (optional, default `true`)
@@ -186,7 +186,7 @@ Set input
 #### Parameters
 
 *   `searchInput` **[string][76]** location name or other search input
--   `showSuggestions` **[boolean][80]** display suggestion on setInput call (optional, default `false`)
+*   `showSuggestions` **[boolean][80]** display suggestion on setInput call (optional, default `false`)
 
 Returns **[MapboxGeocoder][2]** this
 
@@ -213,7 +213,7 @@ Set the render function used in the results dropdown
 
 #### Parameters
 
-*   `fn` **[Function][85]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][86] object as input and returns a string.
+*   `fn` **[Function][85]** The function to use as a render function. This function accepts a single [extended GeoJSON][86] object as input and returns a string.
 
 Returns **[MapboxGeocoder][2]** this
 
@@ -380,7 +380,7 @@ Set the filter function used by the plugin.
 
 #### Parameters
 
-*   `filter` **[Function][85]** A function which accepts a Feature in the [Carmen GeoJSON][86] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
+*   `filter` **[Function][85]** A function which accepts a Feature in the [extended GeoJSON][86] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
 
 Returns **[MapboxGeocoder][2]** this
 
@@ -681,7 +681,7 @@ Returns **[object][75]**&#x20;
 
 [85]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[86]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+[86]: https://docs.mapbox.com/api/search/geocoding-v5/#geocoding-response-object
 
 [87]: https://docs.mapbox.com/api/search/#endpoints
 
