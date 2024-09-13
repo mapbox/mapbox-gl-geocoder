@@ -219,6 +219,9 @@ test('generate session id', function(assert){
   var eventsManager = new MapboxEventsManager({
     accessToken: 'abc123'
   })
+  assert.equals(eventsManager.getSessionId(), eventsManager.pluginSessionID + '.0', 'sessionId constructed from base pluginSessionId and incrementer');
+  eventsManager.sessionIncrementer++;
+  assert.equals(eventsManager.getSessionId(), eventsManager.pluginSessionID + '.1', 'sessionId correctly increments');
   assert.equals(typeof eventsManager.generateSessionID(), 'string', 'generates a string id');
   assert.notEqual(eventsManager.generateSessionID(), eventsManager.generateSessionID(), 'session id is generated randomly');
   assert.equals(eventsManager.generateSessionID().length, 21, 'generates an ID of the correct length');
