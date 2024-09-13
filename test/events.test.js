@@ -31,7 +31,7 @@ test('it constructs a new event manager instance with the correct properties', f
   assert.equals(typeof eventsManager.version, 'string', 'it has a version string');
   assert.equals(eventsManager.flushInterval, 1000, 'the correct default flush interval is set');
   assert.equals(eventsManager.maxQueueSize, 100, 'the correct default queue size is set');
-  assert.ok(eventsManager.userAgent.startsWith('mapbox-gl-geocoder.0.2.0'), 'has a user agent string of the correct format');
+  assert.ok(eventsManager.userAgent.startsWith('mapbox-gl-geocoder.0.3.0'), 'has a user agent string of the correct format');
   assert.ok(eventsManager.origin, 'has an origin');
   assert.deepEqual(eventsManager.options, options, 'sets the options for later use');
   assert.end();
@@ -71,7 +71,7 @@ test('send event with disabled logging', function (assert) {
   })
 });
 
-test('get requst options', function(assert){
+test('get request options', function(assert){
   var eventsManager = new MapboxEventsManager({
     accessToken: 'abc123'
   })
@@ -92,6 +92,7 @@ test('get event payload', function(assert){
   var eventsManager = new MapboxEventsManager({accessToken: 'abc123'});
   geocoder.inputString = 'my string';
   assert.equals(eventsManager.getEventPayload('test.event', geocoder).event, 'test.event', 'the correct event is set');
+  assert.equals(eventsManager.getEventPayload('test.event', geocoder).version, '2.0', 'the default schema version is set');
   assert.equals(typeof eventsManager.getEventPayload('test.event', geocoder).created, 'number', 'a timestamp is set on the event');
   assert.equals(typeof eventsManager.getEventPayload('test.event', geocoder).sessionIdentifier, 'string', 'the correct event is set');
   assert.equals(eventsManager.getEventPayload('test.event', geocoder).country, null, 'no country is set if no country is set on the geocoder');
@@ -130,6 +131,24 @@ test('get event payload with geocoder options', function(assert){
   assert.end();
 });
 
+test('get event payload with geocoder options - proximity=ip', function(assert){
+  var options = {
+    accessToken: 'abc123',
+    proximity: 'ip'
+  }
+  var geocoder = new MapboxGeocoder(options);
+  geocoder._headers = { 'ip-proximity': '3,4' }
+  var eventsManager = new MapboxEventsManager(options);
+  geocoder.inputString = 'my string';
+  assert.equals(eventsManager.getEventPayload('test.event', geocoder).event, 'test.event', 'the correct event is set');
+  assert.equals(typeof eventsManager.getEventPayload('test.event', geocoder).created, 'number', 'a timestamp is set on the event');
+  assert.equals(typeof eventsManager.getEventPayload('test.event', geocoder).sessionIdentifier, 'string', 'the correct event is set');
+  assert.equals(eventsManager.getEventPayload('test.event', geocoder).endpoint, 'mapbox.places', 'the endpoint is always mapbox places');
+  assert.deepEqual(eventsManager.getEventPayload('test.event', geocoder).proximity, [3, 4], 'no proximity is set if no proximity is set on the geocoder');
+  assert.equals(eventsManager.getEventPayload('test.event', geocoder).queryString, 'my string', 'the query string is found from the geocoder');
+  assert.end();
+});
+
 test('search start event', function(assert){
   var eventsManager = new MapboxEventsManager({
     accessToken: 'abc123'
@@ -144,6 +163,7 @@ test('search start event', function(assert){
   assert.notOk(sendMethod.called, 'the send method is not called on each event');
   var calledWithArgs = pushMethod.args[0][0];
   assert.equals(calledWithArgs.event, 'search.start', 'pushes the correct event type');
+  assert.equals(calledWithArgs.version, '2.0', 'pushes the correct schema version');
   sendMethod.restore();
   pushMethod.restore();
   requestMethod.restore();
@@ -158,28 +178,50 @@ test('search selects event', function(assert){
   var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
   var pushMethod = sinon.spy(eventsManager, "push");
   var geocoder = new MapboxGeocoder({accessToken: 'abc123'});
+  geocoder._typeahead = {
+    data: [
+      {id: 'place.1', place_name: 'Place A', place_type: ['place'], properties: { mapbox_id: 'mapboxId1' }, _source: 'mapbox'},
+      {id: 'place.2', place_name: 'Place B', place_type: ['place'], properties: { mapbox_id: 'mapboxId2' }, _source: 'mapbox'},
+      {id: 'place.3', place_name: 'Place C', place_type: ['place'], properties: { mapbox_id: 'mapboxId3' }, _source: 'mapbox'},
+      {id: 'place.4', place_name: 'Place D', place_type: ['place'], properties: { mapbox_id: 'mapboxId4' }, _source: 'mapbox'},
+      {id: 'place.5', place_name: 'Place E', place_type: ['place'], properties: { mapbox_id: 'mapboxId5' }, _source: 'mapbox'}
+    ]
+  };
   geocoder.inputString = "My String";
   var selectedFeature = {
-    id: 'layer.1234',
+    id: 'place.1',
     place_name: 'Peets Coffee, 123 Main Street, San Francisco, CA, 94122, United States',
+    properties: { mapbox_id: 'mapboxId1' }
   }
   eventsManager.select(selectedFeature, geocoder);
   assert.ok(pushMethod.called, 'the event was pushed to the queue');
   assert.notOk(sendMethod.called, 'the send method is not called on each event');
   var calledWithArgs = pushMethod.args[0][0];
   assert.equals(calledWithArgs.event, 'search.select', 'pushes the correct event type');
-  assert.equals(calledWithArgs.resultId, 'layer.1234', 'pushes the correct result id');
+  assert.equals(calledWithArgs.version, '2.2', 'pushes the correct schema version');
+  assert.equals(calledWithArgs.resultId, 'place.1', 'pushes the correct result id');
   assert.equals(calledWithArgs.resultPlaceName, 'Peets Coffee, 123 Main Street, San Francisco, CA, 94122, United States', 'pushes the correct place name');
+  assert.equals(calledWithArgs.resultIndex, 0, 'pushes the correct resultIndex');
+  assert.equals(calledWithArgs.queryString, 'My String', 'pushes the correct queryString');
+  assert.equals(calledWithArgs.path, 'geocoding/v5/mapbox.places', 'pushes the correct path');
+  assert.deepEqual(calledWithArgs.suggestionIds, ['mapboxId1', 'mapboxId2', 'mapboxId3', 'mapboxId4', 'mapboxId5'], 'pushes the correct suggestionIds');
+  assert.deepEqual(calledWithArgs.suggestionTypes, ['place', 'place', 'place', 'place', 'place'], 'pushes the correct suggestionTypes');
+  assert.deepEqual(calledWithArgs.suggestionNames, ['Place A', 'Place B', 'Place C', 'Place D', 'Place E'], 'pushes the correct suggestionNames');
+  assert.deepEqual(calledWithArgs.suggestionSources, ['mapbox', 'mapbox', 'mapbox', 'mapbox', 'mapbox'], 'pushes the correct suggestionSources');
+  assert.equals(calledWithArgs.resultMapboxId, 'mapboxId1', 'pushes the correct resultMapboxId');
   sendMethod.restore();
   pushMethod.restore();
   requestMethod.restore();
   assert.end();
-})
+});
 
 test('generate session id', function(assert){
   var eventsManager = new MapboxEventsManager({
     accessToken: 'abc123'
   })
+  assert.equals(eventsManager.getSessionId(), eventsManager.pluginSessionID + '.0', 'sessionId constructed from base pluginSessionId and incrementer');
+  eventsManager.sessionIncrementer++;
+  assert.equals(eventsManager.getSessionId(), eventsManager.pluginSessionID + '.1', 'sessionId correctly increments');
   assert.equals(typeof eventsManager.generateSessionID(), 'string', 'generates a string id');
   assert.notEqual(eventsManager.generateSessionID(), eventsManager.generateSessionID(), 'session id is generated randomly');
   assert.equals(eventsManager.generateSessionID().length, 21, 'generates an ID of the correct length');
@@ -226,11 +268,11 @@ test('should enable logging', function(assert){
   assert.true(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is enabled when origin is mapbox');
     
   mapboxOptions.filter = function(){return true};
-  assert.false(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom filter is enabled');
+  assert.true(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom filter is enabled');
 
   mapboxOptions.filter = undefined;
   mapboxOptions.localGeocoder = function(){return 'abc'}
-  assert.false(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom geocoder is enabled');
+  assert.true(eventsManagerMapbox.shouldEnableLogging(mapboxOptions), 'logging is disabled when a custom geocoder is enabled');
 
   assert.end();
 });
@@ -262,8 +304,31 @@ test('should properly handle keypress events', function(assert){
   assert.ok(pushMethod.calledOnce, 'the event was pushed to the event queue');
   var calledWithArgs = pushMethod.args[0][0];
   assert.equals(calledWithArgs.event, 'search.keystroke', 'sends the correct event type');
+  assert.equals(calledWithArgs.version, '2.2', 'sends the correct schema version');
+  assert.equals(calledWithArgs.path, 'geocoding/v5/mapbox.places', 'sends the correct path');
   assert.equals(calledWithArgs.lastAction, 'S', 'sends the right key action');
   assert.equals(eventsManager.eventQueue.length, 1, 'the right number of events is in the queue');
+  sendMethod.restore();
+  pushMethod.restore();
+  requestMethod.restore();
+  assert.end();
+});
+
+test('does not send event when queryString empty', function(assert){
+  var testEvent = {key: 'Backspace', code :'Backspace', metaKey: false, keyCode: 8, shiftKey: false};
+  var eventsManager = new MapboxEventsManager({
+    accessToken: 'abc123'
+  })
+  var sendMethod = sinon.spy(eventsManager, "send");
+  var pushMethod =  sinon.spy(eventsManager, "push");
+  var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
+  var geocoder = new MapboxGeocoder({accessToken: 'abc123'});
+  geocoder.inputString = "";
+  eventsManager.keyevent(testEvent, geocoder);
+  assert.ok(requestMethod.notCalled, 'the http request was not initated');
+  assert.ok(sendMethod.notCalled, "the send method was not called");
+  assert.ok(pushMethod.notCalled, 'the event was NOT pushed to the event queue');
+  assert.equals(eventsManager.eventQueue.length, 0, 'the right number of events is in the queue');
   sendMethod.restore();
   pushMethod.restore();
   requestMethod.restore();

@@ -61,7 +61,7 @@
     "uglify-js": "^2.8.29"
   },
   "dependencies": {
-    "@mapbox/mapbox-sdk": "^0.13.7",
+    "@mapbox/mapbox-sdk": "^0.16.1",
     "events": "^3.3.0",
     "lodash.debounce": "^4.0.6",
     "nanoid": "^3.1.31",
