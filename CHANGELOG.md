@@ -1,5 +1,7 @@
 ## HEAD
 
+## 5.0.3
+
 ### Features / Improvements 🚀
 
 - Updates event service to latest schema
