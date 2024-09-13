@@ -311,6 +311,27 @@ test('should properly handle keypress events', function(assert){
   assert.end();
 });
 
+test('does not send event when queryString empty', function(assert){
+  var testEvent = {key: 'Backspace', code :'Backspace', metaKey: false, keyCode: 8, shiftKey: false};
+  var eventsManager = new MapboxEventsManager({
+    accessToken: 'abc123'
+  })
+  var sendMethod = sinon.spy(eventsManager, "send");
+  var pushMethod =  sinon.spy(eventsManager, "push");
+  var requestMethod = sinon.stub(eventsManager, "request").yields(null, {statusCode: 204});
+  var geocoder = new MapboxGeocoder({accessToken: 'abc123'});
+  geocoder.inputString = "";
+  eventsManager.keyevent(testEvent, geocoder);
+  assert.ok(requestMethod.notCalled, 'the http request was not initated');
+  assert.ok(sendMethod.notCalled, "the send method was not called");
+  assert.ok(pushMethod.notCalled, 'the event was NOT pushed to the event queue');
+  assert.equals(eventsManager.eventQueue.length, 0, 'the right number of events is in the queue');
+  sendMethod.restore();
+  pushMethod.restore();
+  requestMethod.restore();
+  assert.end();
+});
+
 test('it should properly flush events after the queue is full', function(assert){
   var eventsManager = new MapboxEventsManager({
     accessToken: 'abc123',
