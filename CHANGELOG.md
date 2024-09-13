@@ -1,5 +1,13 @@
 ## HEAD
 
+### Features / Improvements 🚀
+
+- Updates event service to latest schema
+
+### Dependency update
+
+- Bumps `mapbox-sdk-js` to v0.16.1
+
 ## 5.0.2
 
 ### Bug fixes 🐛
