@@ -128,6 +128,7 @@ A geocoder component using the [Mapbox Geocoding API][74]
     *   `options.routing` **[Boolean][80]** Specify whether to request additional metadata about the recommended navigation destination corresponding to the feature or not. Only applicable for address features. (optional, default `false`)
     *   `options.worldview` **[String][76]** Filter results to geographic features whose characteristics are defined differently by audiences belonging to various regional, cultural, or political groups. (optional, default `"us"`)
     *   `options.enableGeolocation` **[Boolean][80]** If `true` enable user geolocation feature. (optional, default `false`)
+    *   `options.useBrowserFocus` **[Boolean][80]** If `true`, the geocoder will use the browser's focus event to show suggestions. If `false`, it will only highlight active suggestions and Tab will not propagate to the suggestions list. (optional, default `false`)
     *   `options.addressAccuracy` **(`"address"` | `"street"` | `"place"` | `"country"`)** The accuracy for the geolocation feature with which we define the address line to fill. The browser API returns the user's position with accuracy, and sometimes we can get the neighbor's address. To prevent receiving an incorrect address, you can reduce the accuracy of the definition. (optional, default `"street"`)
 
 ### Examples
