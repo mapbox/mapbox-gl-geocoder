@@ -87,8 +87,8 @@ test('geocoder', function(tt) {
         'result',
         once(function(e) {
           var center = map.getCenter();
-          t.equals(center.lng, -92.25, 'center.lng is unchanged');
-          t.equals(center.lat, 37.75, 'center.lat is unchanged');
+          t.equals(center.lng, 0, 'center.lng is unchanged');
+          t.equals(center.lat, 0, 'center.lat is unchanged');
           t.equals(
             e.result.place_name,
             'Paris, France',

@@ -51,7 +51,7 @@
     "json-schema": "^0.4.0",
     "lint-staged": "^13.0.3",
     "lodash.once": "^4.0.0",
-    "mapbox-gl": "^3.0.1",
+    "mapbox-gl": "^3.13.0",
     "minimist": "^1.2.6",
     "sinon": "^7.2.7",
     "smokestack": "^3.6.0",

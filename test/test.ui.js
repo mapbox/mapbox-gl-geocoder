@@ -411,41 +411,33 @@ test('Geocoder#inputControl', function(tt) {
     });
 
     var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
-    inputEl.value = 'Helsinki';
 
-    inputEl.dispatchEvent(new KeyboardEvent('keydown', {
-      key: ' ',
-      keyCode: 32,
-      which: 32,
-      bubbles: true,
-      cancelable: true
-    }));
+    geocoder.query('Golden Gate Bridge');
 
     document.body.appendChild(container);
 
     sinon.spy(map, 'flyTo')
 
-    geocoder.on(
-      'results',
-      once(function() {
-        container.querySelector('.suggestions li').addEventListener('focus', function() {
-          t.pass('focus was switched to the first item');
-          t.ok(!map.flyTo.called, 'map.flyTo was not called');
-          document.body.removeChild(container);
-          t.end();
-        });
-        inputEl.addEventListener('focus', function() {
-          inputEl.dispatchEvent(new KeyboardEvent('keydown', {
-            key: 'ArrowDown',
-            keyCode: 40,
-            which: 40,
-            bubbles: true,
-            cancelable: true
-          }));
-        });
-        inputEl.focus();
-      })
-    );
+    const updateList = geocoder._typeahead.list.update.bind(geocoder._typeahead.list);
+
+    geocoder._tyeahead.list.update = function(data) {
+      updateList(data);
+      container.querySelector('.suggestions li').addEventListener('focus', function() {
+        t.pass('focus was switched to the first item');
+        t.ok(!map.flyTo.called, 'map.flyTo was not called');
+        t.end();
+      });
+      inputEl.addEventListener('focus', function() {
+        inputEl.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          keyCode: 40,
+          which: 40,
+          bubbles: true,
+          cancelable: true
+        }));
+      });
+      inputEl.focus();
+    }
   });
 
   tt.end();
