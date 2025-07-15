@@ -25,8 +25,7 @@ test('Geocoder#inputControl', function(tt) {
     map = new mapboxgl.Map({
       container: container,
       projection: 'mercator',
-      // update to Standard after fix of GLJS-624
-      style: 'mapbox://styles/mapbox/streets-v12',
+      style: 'mapbox://styles/mapbox/standard',
     });
     geocoder = new MapboxGeocoder(opts);
     map.addControl(geocoder);
@@ -401,6 +400,50 @@ test('Geocoder#inputControl', function(tt) {
       once(function() {
         t.pass("results are returned");
         t.end();
+      })
+    );
+  });
+
+  tt.test('focus switches to the first item with useBrowserFocus', (t)=>{
+    t.plan(2);
+    setup({
+      useBrowserFocus: true
+    });
+
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+    inputEl.value = 'Helsinki';
+
+    inputEl.dispatchEvent(new KeyboardEvent('keydown', {
+      key: ' ',
+      keyCode: 32,
+      which: 32,
+      bubbles: true,
+      cancelable: true
+    }));
+
+    document.body.appendChild(container);
+
+    sinon.spy(map, 'flyTo')
+
+    geocoder.on(
+      'results',
+      once(function() {
+        container.querySelector('.suggestions li').addEventListener('focus', function() {
+          t.pass('focus was switched to the first item');
+          t.ok(!map.flyTo.called, 'map.flyTo was not called');
+          document.body.removeChild(container);
+          t.end();
+        });
+        inputEl.addEventListener('focus', function() {
+          inputEl.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'ArrowDown',
+            keyCode: 40,
+            which: 40,
+            bubbles: true,
+            cancelable: true
+          }));
+        });
+        inputEl.focus();
       })
     );
   });
