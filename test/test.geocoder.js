@@ -24,8 +24,7 @@ test('geocoder', function(tt) {
     map = new mapboxgl.Map({
       container: container,
       projection: 'mercator',
-      // update to Standard after fix of GLJS-624
-      style: 'mapbox://styles/mapbox/streets-v12',
+      style: 'mapbox://styles/mapbox/standard',
     });
     geocoder = new MapboxGeocoder(opts);
     map.addControl(geocoder);
