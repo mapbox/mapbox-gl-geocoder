@@ -39,27 +39,26 @@ describe('geocoder', function () {
     t.end();
   });
 
-  test('set/get input', function(t) {
+  test('set/get input', async function(t) {
     t.plan(4)
     setup({ proximity: { longitude: -79.45, latitude: 43.65 } });
 
-    map.once('style.load', () => {
-      geocoder.query('Queen Street');
-      var mapMoveSpy = sinon.spy(map, "flyTo");
-      geocoder.on(
-        'result',
-        once(function(e) {
-          t.ok(e.result, 'feature is in the event object');
-          var mapMoveArgs = mapMoveSpy.args[0][0];
-          t.ok(mapMoveSpy.calledOnce, 'the map#flyTo method was called when a result was selected');
-          t.notEquals(mapMoveArgs.center[0], -92.25, 'center.lng changed')
-          t.notEquals(mapMoveArgs.center[1], 37.75, 'center.lat changed')
-        })
-      );
-    });
+    await map.once("style.load");
+    geocoder.query('Queen Street');
+    var mapMoveSpy = sinon.spy(map, "flyTo");
+    geocoder.on(
+      'result',
+      once(function(e) {
+        t.ok(e.result, 'feature is in the event object');
+        var mapMoveArgs = mapMoveSpy.args[0][0];
+        t.ok(mapMoveSpy.calledOnce, 'the map#flyTo method was called when a result was selected');
+        t.notEquals(mapMoveArgs.center[0], -92.25, 'center.lng changed')
+        t.notEquals(mapMoveArgs.center[1], 37.75, 'center.lat changed')
+      })
+    );
   });
 
-  test('options', function(t) {
+  test('options', async function(t) {
     t.plan(8);
     setup({
       flyTo: false,
@@ -67,35 +66,34 @@ describe('geocoder', function () {
       types: 'region'
     });
 
-    map.once('style.load', () => {
-      geocoder.query('Paris');
-      var startEventMethod = sinon.stub(geocoder.eventManager, "start")
+    await map.once("style.load");
+    geocoder.query('Paris');
+    var startEventMethod = sinon.stub(geocoder.eventManager, "start")
 
-      geocoder.on(
-        'results',
-        once(function(e) {
-          t.ok(e.features.length, 'Event for results emitted');
-          t.equals(geocoder.inputString, 'Paris', 'input string keeps track of state');
-          t.equals(geocoder.fresh, false, 'once a search has been completed, the geocoder is no longer fresh');
-          t.ok(startEventMethod.called, 'a search start event was issued');
-          t.ok(startEventMethod.calledOnce, 'a search start event was issued only once');
-        })
-      );
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.ok(e.features.length, 'Event for results emitted');
+        t.equals(geocoder.inputString, 'Paris', 'input string keeps track of state');
+        t.equals(geocoder.fresh, false, 'once a search has been completed, the geocoder is no longer fresh');
+        t.ok(startEventMethod.called, 'a search start event was issued');
+        t.ok(startEventMethod.calledOnce, 'a search start event was issued only once');
+      })
+    );
 
-      geocoder.on(
-        'result',
-        once(function(e) {
-          var center = map.getCenter();
-          t.equals(center.lng, 0, 'center.lng is unchanged');
-          t.equals(center.lat, 0, 'center.lat is unchanged');
-          t.equals(
-            e.result.place_name,
-            'Paris, France',
-            'one result is returned with expected place name'
-          );
-        })
-      );
-    });
+    geocoder.on(
+      'result',
+      once(function(e) {
+        var center = map.getCenter();
+        t.equals(center.lng, 0, 'center.lng is unchanged');
+        t.equals(center.lat, 0, 'center.lat is unchanged');
+        t.equals(
+          e.result.place_name,
+          'Paris, France',
+          'one result is returned with expected place name'
+        );
+      })
+    );
   });
 
   test('custom endpoint', function(t) {
@@ -755,8 +753,8 @@ describe('geocoder', function () {
       once(function() {
         t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
         var calledWithArgs = mapFlyMethod.args[0][0];
-        t.equals(+calledWithArgs.center[0].toFixed(4), +-122.4802.toFixed(4), 'the map is directed to fly to the right longitude');
-        t.equals(+calledWithArgs.center[1].toFixed(4),  +37.8317.toFixed(4), 'the map is directed to fly to the right latitude');
+        t.equals(+calledWithArgs.center[0].toFixed(4), +-(122.4802).toFixed(4), 'the map is directed to fly to the right longitude');
+        t.equals(+calledWithArgs.center[1].toFixed(4),  +(37.8317).toFixed(4), 'the map is directed to fly to the right latitude');
         t.deepEqual(calledWithArgs.zoom, 16, 'the map is directed to fly to the right zoom');
       })
     );
@@ -779,8 +777,8 @@ describe('geocoder', function () {
       once(function() {
         t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
         var calledWithArgs = mapFlyMethod.args[0][0];
-        t.equals(+calledWithArgs.center[0].toFixed(4), +-122.4802.toFixed(4), 'the map is directed to fly to the right longitude');
-        t.equals(+calledWithArgs.center[1].toFixed(4),  +37.8317.toFixed(4), 'the map is directed to fly to the right latitude');        t.deepEqual(calledWithArgs.zoom, 4, 'the selected result overrides the constructor zoom option');
+        t.equals(+calledWithArgs.center[0].toFixed(4), +-(122.4802).toFixed(4), 'the map is directed to fly to the right longitude');
+        t.equals(+calledWithArgs.center[1].toFixed(4),  +(37.8317).toFixed(4), 'the map is directed to fly to the right latitude');        t.deepEqual(calledWithArgs.zoom, 4, 'the selected result overrides the constructor zoom option');
         t.deepEqual(calledWithArgs.speed, 5, 'speed argument is passed to the flyTo method');
       })
     );
