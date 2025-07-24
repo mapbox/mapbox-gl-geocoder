@@ -1,14 +1,13 @@
-'use strict';
+import {describe, test} from 'vitest';
+import once from 'lodash.once';
+import mapboxgl from 'mapbox-gl';
+import sinon from 'sinon';
 
-var once = require('lodash.once');
-var MapboxGeocoder = require('../lib/index');
-var mapboxgl = require('mapbox-gl');
-var test = require('tape');
-var sinon = require('sinon');
+import MapboxGeocoder from '../lib/index';
 
-mapboxgl.accessToken = process.env.MapboxAccessToken;
+mapboxgl.accessToken = import.meta.env.MapboxAccessToken;
 
-test('Geocoder#inputControl', function(tt) {
+describe('Geocoder#inputControl', function(tt) {
   var container, map, geocoder;
 
   var changeEvent = document.createEvent('HTMLEvents');
@@ -31,7 +30,7 @@ test('Geocoder#inputControl', function(tt) {
     map.addControl(geocoder);
   }
 
-  tt.test('input', function(t) {
+  test('input', function(t) {
     setup({
       types: 'place',
       mapboxgl: mapboxgl
@@ -83,7 +82,7 @@ test('Geocoder#inputControl', function(tt) {
     geocoder.query('-79,43');
   });
 
-  tt.test('placeholder', function(t) {
+  test('placeholder', function(t) {
     t.plan(1);
     setup({ placeholder: 'foo to the bar' });
     t.equal(
@@ -95,13 +94,13 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
-  tt.test('get language when a language is provided in the options', function(t){
+  test('get language when a language is provided in the options', function(t){
     t.plan(1);
     setup({language: 'en-UK'});
     t.equals(geocoder.options.language, 'en-UK', 'uses the right language when set directly as an option');
   });
 
-  tt.test('get language when a language obtained from the browser', function(t){
+  test('get language when a language obtained from the browser', function(t){
     t.plan(3);
     setup({});
     t.ok(geocoder.options.language, 'language is defined');
@@ -110,7 +109,7 @@ test('Geocoder#inputControl', function(tt) {
   })
 
 
-  tt.test('placeholder language localization', function(t){
+  test('placeholder language localization', function(t){
     t.plan(1);
     setup({language: 'de-DE'});
     t.equal(
@@ -122,7 +121,7 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
-  tt.test('placeholder language localization with more than one language specified', function(t){
+  test('placeholder language localization with more than one language specified', function(t){
     t.plan(1);
     setup({language: 'de-DE,lv'});
     t.equal(
@@ -134,7 +133,7 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
-  tt.test('clear is not called on keydown (tab), no focus trap', function(t){
+  test('clear is not called on keydown (tab), no focus trap', function(t){
     t.plan(3);
     setup({});
 
@@ -151,7 +150,7 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
-  tt.test('clear is called on keydown (not tab)', function(t){
+  test('clear is called on keydown (not tab)', function(t){
     t.plan(3);
     setup({});
 
@@ -168,7 +167,7 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
-  tt.test('options.clearAndBlurOnEsc=true clears and blurs on escape', function(t) {
+  test('options.clearAndBlurOnEsc=true clears and blurs on escape', function(t) {
     t.plan(4);
     setup({
       clearAndBlurOnEsc: true
@@ -191,7 +190,7 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
-  tt.test('options.clearAndBlurOnEsc=false does not clear and blur on escape', function(t) {
+  test('options.clearAndBlurOnEsc=false does not clear and blur on escape', function(t) {
     t.plan(2);
     setup({
       clearAndBlurOnEsc: false
@@ -210,7 +209,7 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
-  tt.test('options.collapsed=true', function(t) {
+  test('options.collapsed=true', function(t) {
     t.plan(1);
     setup({
       collapsed: true
@@ -220,7 +219,7 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
-  tt.test('options.collapsed=true, focus', function(t) {
+  test('options.collapsed=true, focus', function(t) {
     t.plan(1);
     setup({
       collapsed: true
@@ -240,7 +239,7 @@ test('Geocoder#inputControl', function(tt) {
   // listener no matter what I do. As a workaround, I'm:
   // 1. Testing that the option was set correctly.
   // 2. directly calling _clearOnBlur and asserting that it behaves as expected.
-  tt.test('options.clearOnBlur=true', function(t) {
+  test('options.clearOnBlur=true', function(t) {
     t.plan(5);
     setup({
       clearOnBlur: true
@@ -279,14 +278,14 @@ test('Geocoder#inputControl', function(tt) {
 
   });
 
-  tt.test('options.clearOnBlur=false by default', function(t) {
+  test('options.clearOnBlur=false by default', function(t) {
     t.plan(1);
     setup();
     t.equal(geocoder.options.clearOnBlur, false);
     t.end();
   });
 
-  tt.test('options.collapsed=true, hover', function(t) {
+  test('options.collapsed=true, hover', function(t) {
     t.plan(1);
     setup({
       collapsed: true
@@ -300,7 +299,7 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
-  tt.test('options.collapsed=false', function(t) {
+  test('options.collapsed=false', function(t) {
     t.plan(1);
     setup({
       collapsed: false
@@ -310,7 +309,7 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
-  tt.test('createIcon', function(t) {
+  test('createIcon', function(t) {
     t.plan(1);
     setup({ });
     var icon = geocoder.createIcon('search', '<path/>');
@@ -322,7 +321,7 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
-  tt.test('clear method can be overwritten', function(t) {
+  test('clear method can be overwritten', function(t) {
     t.plan(1);
     setup({ });
     geocoder.clear = function(ev){
@@ -337,7 +336,7 @@ test('Geocoder#inputControl', function(tt) {
   });
 
 
-  tt.test('event deduplication', function(t) {
+  test('event deduplication', function(t) {
     setup({
       types: 'place',
       mapboxgl: mapboxgl
@@ -361,7 +360,7 @@ test('Geocoder#inputControl', function(tt) {
     geocoder.query('usa');
   });
 
-  tt.test('event deduplication even when IDs are shared', function(t) {
+  test('event deduplication even when IDs are shared', function(t) {
     setup({
       types: 'place',
       mapboxgl: mapboxgl
@@ -385,7 +384,7 @@ test('Geocoder#inputControl', function(tt) {
     geocoder.query('usa');
   });
 
-  tt.test('paste event', function(t) {
+  test('paste event', function(t) {
     t.plan(1);
     setup({ });
     var pasteEvent = new ClipboardEvent('paste', {
@@ -404,7 +403,7 @@ test('Geocoder#inputControl', function(tt) {
     );
   });
 
-  tt.test('focus switches to the first item with useBrowserFocus', (t)=>{
+  test('focus switches to the first item with useBrowserFocus', (t)=>{
     t.plan(2);
     setup({
       useBrowserFocus: true
@@ -463,7 +462,7 @@ test('Geocoder#addTo(String) -- no map', function(tt) {
     geocoder.addTo(".notAMap")
   }
 
-  tt.test('result was added to container', (t)=>{
+  test('result was added to container', (t)=>{
     setup();
     const geocoderRef = document.getElementsByClassName("mapboxgl-ctrl-geocoder");
     t.ok(Object.keys(geocoderRef).length, "A geocoder exists in the document");
@@ -473,7 +472,7 @@ test('Geocoder#addTo(String) -- no map', function(tt) {
     t.end(); 
   });
 
-  tt.test('input works without a map', function(t) {
+  test('input works without a map', function(t) {
     setup({
       types: 'place'
     });
@@ -524,7 +523,7 @@ test('Geocoder#addTo(String) -- no map', function(tt) {
     geocoder.query('-79,43');
   });
 
-  tt.test('should add geolocate icon when browser supports geolocation', (t)=>{
+  test('should add geolocate icon when browser supports geolocation', (t)=>{
     t.plan(1);
 
     const opts = { enableGeolocation: true };
@@ -550,7 +549,7 @@ test('Geocoder#addTo(String) -- no map', function(tt) {
     }, 100);
   });
 
-  tt.test('should hide geolocate icon when browser doesn\'t support geolocation', (t)=>{
+  test('should hide geolocate icon when browser doesn\'t support geolocation', (t)=>{
     t.plan(1);
 
     const opts = { enableGeolocation: true };
@@ -579,7 +578,7 @@ test('Geocoder#addTo(String) -- no map', function(tt) {
 });
 
 
-test('Geocoder#addTo(HTMLElement) -- no map', function(tt) {
+describe('Geocoder#addTo(HTMLElement) -- no map', function(tt) {
   var container, geocoder;
 
   var changeEvent = document.createEvent('HTMLEvents');
@@ -599,7 +598,7 @@ test('Geocoder#addTo(HTMLElement) -- no map', function(tt) {
     geocoder.addTo(".notAMap")
   }
 
-  tt.test('result was added to container', (t)=>{
+  test('result was added to container', (t)=>{
     setup();
     const geocoderRef = document.getElementsByClassName("mapboxgl-ctrl-geocoder");
     t.ok(Object.keys(geocoderRef).length, "A geocoder exists in the document");
@@ -610,10 +609,10 @@ test('Geocoder#addTo(HTMLElement) -- no map', function(tt) {
   });
 });
 
-test('Geocoder#addTo(mapboxgl.Map)', function(tt) {
+describe('Geocoder#addTo(mapboxgl.Map)', function(tt) {
   var container, geocoder;
 
-  tt.test('add to an existing map', (t)=>{
+  test('add to an existing map', (t)=>{
     const opts = {}
     opts.accessToken = mapboxgl.accessToken;
     opts.enableEventLogging = false;
@@ -625,7 +624,7 @@ test('Geocoder#addTo(mapboxgl.Map)', function(tt) {
     t.end(); 
   });
 
-  tt.test('add to an existing html class', (t)=>{
+  test('add to an existing html class', (t)=>{
     const opts = {}
     opts.accessToken = mapboxgl.accessToken;
     opts.enableEventLogging = false;
@@ -638,7 +637,7 @@ test('Geocoder#addTo(mapboxgl.Map)', function(tt) {
     t.end(); 
   });
 
-  tt.test('add to an existing HTMLElement', (t)=>{
+  test('add to an existing HTMLElement', (t)=>{
     const opts = {}
     opts.accessToken = mapboxgl.accessToken;
     opts.enableEventLogging = false;
@@ -650,7 +649,7 @@ test('Geocoder#addTo(mapboxgl.Map)', function(tt) {
     t.end(); 
   });
 
-  tt.test('throws if the element cannot be found', (t)=>{
+  test('throws if the element cannot be found', (t)=>{
     const opts = {}
     opts.accessToken = mapboxgl.accessToken;
     opts.enableEventLogging = false;
@@ -662,7 +661,7 @@ test('Geocoder#addTo(mapboxgl.Map)', function(tt) {
     t.end(); 
   });
 
-  tt.test('throws if there are multiple matching elements', (t)=>{
+  test('throws if there are multiple matching elements', (t)=>{
     const opts = {}
     opts.accessToken = mapboxgl.accessToken;
     opts.enableEventLogging = false;
@@ -676,5 +675,4 @@ test('Geocoder#addTo(mapboxgl.Map)', function(tt) {
     t.throws(()=>{geocoder.addTo(".notAMap")}, 'addTo throws if there are too many matching elements');
     t.end(); 
   });
-
 });

@@ -49,20 +49,16 @@ describe('geocoder', function () {
     await map.once("style.load");
     geocoder.query('Queen Street');
     var mapMoveSpy = sinon.spy(map, "flyTo");
-    geocoder.on(
-      'result',
-      once(function(e) {
-        // feature is in the event object
-        expect(e.result).toBeTruthy();
-        var mapMoveArgs = mapMoveSpy.args[0][0];
-        // the map#flyTo method was called when a result was selected
-        expect(mapMoveSpy.calledOnce).toBeTruthy();
-        // center.lng changed
-        expect(mapMoveArgs.center[0]).not.toEqual(-92.25)
-        // center.lat changed
-        expect(mapMoveArgs.center[1]).not.toEqual(37.75)
-      })
-    );
+    const e = await geocoder.once("result");
+    // feature is in the event object
+    expect(e.result).toBeTruthy();
+    var mapMoveArgs = mapMoveSpy.args[0][0];
+    // the map#flyTo method was called when a result was selected
+    expect(mapMoveSpy.calledOnce).toBeTruthy();
+    // center.lng changed
+    expect(mapMoveArgs.center[0]).not.toEqual(-92.25)
+    // center.lat changed
+    expect(mapMoveArgs.center[1]).not.toEqual(37.75)
   });
 
   test('options', async function () {
@@ -76,34 +72,25 @@ describe('geocoder', function () {
     geocoder.query('Paris');
     var startEventMethod = sinon.stub(geocoder.eventManager, "start")
 
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // Event for results emitted
-        expect(e.features.length).toBeTruthy();
-        // input string keeps track of state
-        expect(geocoder.inputString).toEqual('Paris');
-        // once a search has been completed, the geocoder is no longer fresh
-        expect(geocoder.fresh).toEqual(false);
-        // a search start event was issued
-        expect(startEventMethod.called).toBeTruthy();
-        // a search start event was issued only once
-        expect(startEventMethod.calledOnce).toBeTruthy();
-      })
-    );
-
-    geocoder.on(
-      'result',
-      once(function(e) {
-        var center = map.getCenter();
-        // center.lng is unchanged
-        expect(center.lng).toEqual(0);
-        // center.lat is unchanged
-        expect(center.lat).toEqual(0);
-        // one result is returned with expected place name
-        expect(e.result.place_name).toEqual('Paris, France');
-      })
-    );
+    let e = await geocoder.once("results");
+    // Event for results emitted
+    expect(e.features.length).toBeTruthy();
+    // input string keeps track of state
+    expect(geocoder.inputString).toEqual('Paris');
+    // once a search has been completed, the geocoder is no longer fresh
+    expect(geocoder.fresh).toEqual(false);
+    // a search start event was issued
+    expect(startEventMethod.called).toBeTruthy();
+    // a search start event was issued only once
+    expect(startEventMethod.calledOnce).toBeTruthy();
+    e = await geocoder.once("result");
+    var center = map.getCenter();
+    // center.lng is unchanged
+    expect(center.lng).toEqual(0);
+    // center.lat is unchanged
+    expect(center.lat).toEqual(0);
+    // one result is returned with expected place name
+    expect(e.result.place_name).toEqual('Paris, France');
   });
 
   test('custom endpoint', function () {
@@ -112,17 +99,16 @@ describe('geocoder', function () {
     expect(geocoder.options.origin).toEqual('localhost:2999');
   });
 
-  test("swapped endpoint", function () {
+  test("swapped endpoint", async function() {
     setup({ origin: 'localhost:2999' });
     geocoder.setOrigin("https://api.mapbox.com");
     geocoder.query("pizza");
-    geocoder.on("results", function(e) {
-      // endpoint correctly reset
-      expect(e.request.origin).toEqual("https://api.mapbox.com");
-    });
+    const e = await geocoder.once("results");
+    // endpoint correctly reset
+    expect(e.request.origin).toEqual("https://api.mapbox.com");
   });
 
-  test('options.bbox', function () {
+  test('options.bbox', async function() {
     setup({
       bbox: [
         -122.71901248631752,
@@ -133,64 +119,50 @@ describe('geocoder', function () {
     });
 
     geocoder.query('London');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // Event for results emitted
-        expect(e.features.length).toBeTruthy();
-        // Result is returned within a bbox
-        expect(e.features[0].text).toEqual('London Road');
-      })
-    );
+    const e = await geocoder.once("results");
+    // Event for results emitted
+    expect(e.features.length).toBeTruthy();
+    // Result is returned within a bbox
+    expect(e.features[0].text).toEqual('London Road');
   });
 
-  test('options.reverseGeocode - true', function () {
+  test('options.reverseGeocode - true', async function() {
     setup({
       reverseGeocode: true
     });
     geocoder.query('-6.1933875, 34.5177548');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // One result returned
-        expect(e.features.length).toEqual(1);
-        // returns expected result
-        expect(e.features[0].place_name.indexOf('Tanzania') > -1).toBeTruthy();
-        // returns expected result
-        expect(e.features[0].place_name.indexOf('Singida') > -1).toBeTruthy();
-        // sets limit to 1 for reverse geocodes
-        expect(e.config.limit).toEqual(1);
-      })
-    );
+    const e = await geocoder.once("results");
+    // One result returned
+    expect(e.features.length).toEqual(1);
+    // returns expected result
+    expect(e.features[0].place_name.indexOf('Tanzania') > -1).toBeTruthy();
+    // returns expected result
+    expect(e.features[0].place_name.indexOf('Singida') > -1).toBeTruthy();
+    // sets limit to 1 for reverse geocodes
+    expect(e.config.limit).toEqual(1);
   });
 
-  test('options.reverseGeocode - interprets coordinates & options correctly', function () {
+  test('options.reverseGeocode - interprets coordinates & options correctly', async function() {
     setup({
       types: 'country',
       reverseGeocode: true
     });
     geocoder.query('31.791, -7.0926');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        t.deepEquals(e.query, [ -7.0926, 31.791 ], 'parses query');
-        t.deepEquals(e.config.types.toString(), 'country', 'uses correct type passed to config' );
-        // returns expected result
-        expect(e.features[0].place_name).toEqual('Morocco');
-      })
-    );
+    const e = await geocoder.once("results");
+    // parses query
+    expect(e.query).toStrictEqual([ -7.0926, 31.791 ]);
+    // uses correct type passed to config
+    expect(e.config.types.toString()).toStrictEqual('country');
+    // returns expected result
+    expect(e.features[0].place_name).toEqual('Morocco');
   });
 
-  test('options.reverseGeocode - false by default', function () {
+  test('options.reverseGeocode - false by default', async function() {
     setup();
     geocoder.query('-6.1933875, 34.5177548');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // No results returned
-        expect(e.features.length).toEqual(0);
-      })
-    );
+    const e = await geocoder.once("results");
+    // No results returned
+    expect(e.features.length).toEqual(0);
   });
 
   test('options.reverseGeocode: true with trackProximity: true', function () {
@@ -205,42 +177,39 @@ describe('geocoder', function () {
     geocoder.query('-6.1933875, 34.5177548');
   });
 
-  test('options.flipCoordinates - false by default', function () {
+  test('options.flipCoordinates - false by default', async function() {
     setup({
       reverseGeocode: true,
     });
     geocoder.query('-98, 40');
-    geocoder.on('results', once(function(e) {
-      // No results returned
-      expect(e.features.length).toEqual(0)
-    }))
+    const e = await geocoder.once("results");
+    // No results returned
+    expect(e.features.length).toEqual(0)
   })
 
-  test('options.flipCoordinates - true accepts lon,lat order', function () {
+  test('options.flipCoordinates - true accepts lon,lat order', async function() {
     setup({
       reverseGeocode: true,
       flipCoordinates: true
     });
     geocoder.query('-98, 40');
-    geocoder.on('results', once(function(e) {
-      // One result returned
-      expect(e.features.length).toEqual(1)
-    }))
+    const e = await geocoder.once("results");
+    // One result returned
+    expect(e.features.length).toEqual(1)
   })
 
-  test('options.flipCoordinates - true does not accept lat,lon order', function () {
+  test('options.flipCoordinates - true does not accept lat,lon order', async function() {
     setup({
       reverseGeocode: true,
       flipCoordinates: true
     });
     geocoder.query('40, -98');
-    geocoder.on('results', once(function(e) {
-      // No results returned
-      expect(e.features.length).toEqual(0)
-    }))
+    const e = await geocoder.once("results");
+    // No results returned
+    expect(e.features.length).toEqual(0)
   })
 
-  test('parses options correctly', function () {
+  test('parses options correctly', async function() {
     setup({
       language: 'en,es,zh',
       types: 'district, locality, neighborhood, postcode',
@@ -252,57 +221,43 @@ describe('geocoder', function () {
     var countries = ['us', 'mx'];
 
     geocoder.query('Hartford');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // Five results returned
-        expect(e.features.length).toEqual(5);
-        t.deepEquals(
-          e.config.language,
-          languages,
-          'converts language options with no spaces to array'
-        );
-        t.deepEquals(e.config.types, types, 'converts types options to array');
-        t.deepEquals(
-          e.config.countries,
-          countries,
-          'converts countries options to array'
-        );
-      })
-    );
+    const e = await geocoder.once("results");
+    // Five results returned
+    expect(e.features.length).toEqual(5);
+    // parses language options to array
+    expect(e.config.language).toStrictEqual(languages);
+
+    // converts types options to array
+    expect(e.config.types).toStrictEqual(types);
+    // converts countries options to array
+    expect(
+      e.config.countries,
+    ).toStrictEqual(countries);
   });
 
-  test('options.limit', function () {
+  test('options.limit', async function() {
     setup({
       flyTo: false,
       limit: 6
     });
 
     geocoder.query('London');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // Results limit applied
-        expect(e.features.length).toEqual(6);
-      })
-    );
+    const e = await geocoder.once("results");
+    // Results limit applied
+    expect(e.features.length).toEqual(6);
   });
 
-  test('options:zoom', function () {
+  test('options:zoom', async function() {
     setup({ zoom: 12 });
     geocoder.query('1714 14th St NW');
     var mapMoveSpy = sinon.spy(map, "flyTo");
-    geocoder.on(
-      'result',
-      once(function() {
-        var mapMoveArgs = mapMoveSpy.args[0][0];
-        // custom zoom is supported
-        expect(mapMoveArgs.zoom).toEqual(12);
-      })
-    );
+    await geocoder.once("result");
+    var mapMoveArgs = mapMoveSpy.args[0][0];
+    // custom zoom is supported
+    expect(mapMoveArgs.zoom).toEqual(12);
   });
 
-  test('options.localGeocoder', function () {
+  test('options.localGeocoder', async function() {
     setup({
       flyTo: false,
       limit: 6,
@@ -312,18 +267,14 @@ describe('geocoder', function () {
     });
 
     geocoder.query('London');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // Local geocoder supplement remote response
-        expect(e.features.length).toEqual(7);
-        // Local geocoder results above remote response
-        expect(e.features[0]).toEqual('London');
-      })
-    );
+    const e = await geocoder.once("results");
+    // Local geocoder supplement remote response
+    expect(e.features.length).toEqual(7);
+    // Local geocoder results above remote response
+    expect(e.features[0]).toEqual('London');
   });
 
-  test('options.localGeocoder with reverseGeocode=true', function () {
+  test('options.localGeocoder with reverseGeocode=true', async function() {
     setup({
       flyTo: false,
       reverseGeocode: true,
@@ -333,18 +284,14 @@ describe('geocoder', function () {
     });
 
     geocoder.query('-30,150');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // Local geocoder used
-        expect(e.features.length).toEqual(2);
-        // Local geocoder supplement remote response
-        expect(e.features[0]).toEqual('-30,150');
-      })
-    );
+    const e = await geocoder.once("results");
+    // Local geocoder used
+    expect(e.features.length).toEqual(2);
+    // Local geocoder supplement remote response
+    expect(e.features[0]).toEqual('-30,150');
   });
 
-  test('options.externalGeocoder', function () {
+  test('options.externalGeocoder', async function() {
     setup({
       flyTo: false,
       limit: 6,
@@ -361,75 +308,54 @@ describe('geocoder', function () {
     });
 
     geocoder.query('Washington, DC');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // External geocoder used
-        expect(e.features.length).toEqual(7);
+    let e = await geocoder.once("results");
+    // External geocoder used
+    expect(e.features.length).toEqual(7);
 
-        geocoder.query('DC');
-        geocoder.on(
-          'results',
-          once(function(e) {
-            // External geocoder supplement remote response
-            expect(e.features.length).toEqual(7);
+    geocoder.query('DC');
+    e = await geocoder.once("results");
+    // External geocoder supplement remote response
+    expect(e.features.length).toEqual(7);
 
-            geocoder.query('District of Columbia');
-            geocoder.on(
-              'results',
-              once(function(e) {
-                // External geocoder results above remote response
-                expect(e.features[0].place_name).toEqual('Promise: Washington, District of Columbia, United States of America');
-              })
-            );
-          })
-        );
-      })
-    );
+    geocoder.query('District of Columbia');
+    e = await geocoder.once("results");
+    // External geocoder results above remote response
+    expect(e.features[0].place_name).toEqual('Promise: Washington, District of Columbia, United States of America');
   });
 
-  test('country bbox', function () {
+  test('country bbox', async function() {
     setup({});
     geocoder.query('Spain');
     var fitBoundsSpy = sinon.spy(map, "fitBounds");
-    geocoder.on(
-      'result',
-      once(function(e) {
-        // map#fitBounds was called when a country-level feature was returned
-        expect(fitBoundsSpy.calledOnce).toBeTruthy()
-        var fitBoundsArgs = fitBoundsSpy.args[0][0];
-        // flatten
-        var mapBBox = [fitBoundsArgs[0][0], fitBoundsArgs[0][1], fitBoundsArgs[1][0], fitBoundsArgs[1][1]];
-        expect(mapBBox.some(function(coord, i) {
-          return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
-        })).toBeTruthy();
-      })
-    );
+    const e = await geocoder.once("result");
+    // map#fitBounds was called when a country-level feature was returned
+    expect(fitBoundsSpy.calledOnce).toBeTruthy()
+    var fitBoundsArgs = fitBoundsSpy.args[0][0];
+    // flatten
+    var mapBBox = [fitBoundsArgs[0][0], fitBoundsArgs[0][1], fitBoundsArgs[1][0], fitBoundsArgs[1][1]];
+    expect(mapBBox.some(function(coord, i) {
+      return coord.toPrecision(4) === e.result.bbox[i].toPrecision(4);
+    })).toBeTruthy();
   });
 
-  test('country bbox exception', function () {
+  test('country bbox exception', async function() {
     setup({});
     geocoder.query('Canada');
     var fitBoundsSpy = sinon.spy(map, "fitBounds");
-    geocoder.on(
-      'result',
-      once(function() {
-        // the map#fitBounds method was called when an excepted feature was returned
-        expect(fitBoundsSpy.calledOnce).toBeTruthy();
-        var fitBoundsArgs = fitBoundsSpy.args[0][0];
-        // flatten
-        var mapBBox = [fitBoundsArgs[0][0], fitBoundsArgs[0][1], fitBoundsArgs[1][0], fitBoundsArgs[1][1]];
-        var expectedBBox = exceptions['ca'].bbox;
-        var expectedBBoxFlat = [expectedBBox[0][0], expectedBBox[0][1], expectedBBox[1][0], expectedBBox[1][1]]
-        expect(mapBBox.some(function(coord, i) {
-          return coord.toPrecision(4) === expectedBBoxFlat[i].toPrecision(4);
-        })).toBeTruthy();
-      })
-    );
+    await geocoder.once("result");
+    // the map#fitBounds method was called when an excepted feature was returned
+    expect(fitBoundsSpy.calledOnce).toBeTruthy();
+    var fitBoundsArgs = fitBoundsSpy.args[0][0];
+    // flatten
+    var mapBBox = [fitBoundsArgs[0][0], fitBoundsArgs[0][1], fitBoundsArgs[1][0], fitBoundsArgs[1][1]];
+    var expectedBBox = exceptions['ca'].bbox;
+    var expectedBBoxFlat = [expectedBBox[0][0], expectedBBox[0][1], expectedBBox[1][0], expectedBBox[1][1]]
+    expect(mapBBox.some(function(coord, i) {
+      return coord.toPrecision(4) === expectedBBoxFlat[i].toPrecision(4);
+    })).toBeTruthy();
   });
 
   test('lint exceptions file', function () {
-    var exceptions = require('../lib/exceptions.js');
 
     for (var id in exceptions) {
       var ex = exceptions[id];
@@ -495,11 +421,10 @@ describe('geocoder', function () {
 
     map.setZoom(10);
     map.setCenter([15, 10]);
-    t.deepEquals(
-      geocoder.getProximity(),
-      { longitude: 15, latitude: 10 },
-      'proximity updates after setCenter'
-    );
+    // proximity updates after setCenter
+    expect(
+      geocoder.getProximity()
+    ).toStrictEqual({ longitude: 15, latitude: 10 });
 
     map.setZoom(9);
     // proximity unset after zooming out
@@ -518,7 +443,7 @@ describe('geocoder', function () {
     expect(geocoder.getProximity()).toBeFalsy();
   });
 
-  test('options.setProximity', function () {
+  test('options.setProximity', async function() {
     setup({});
 
     // trackProximity is set to true by default
@@ -530,43 +455,31 @@ describe('geocoder', function () {
     expect(geocoder.options.trackProximity).toBeFalsy()
 
     geocoder.query('high');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // proximity applied in geocoding request
-        expect(e.features[0].place_name.indexOf('Toronto') !== -1).toBeTruthy();
-        // Move map and make sure _updateProximity not still changing proximity
-        map.setCenter([0,0]);
-        map.setZoom(5);
-        geocoder.query('high');
-        geocoder.on(
-          'results',
-          once(function(e) {
-            // explicitly-set proximity remains intact after moving map
-            expect(e.features[0].place_name.indexOf('Toronto') !== -1).toBeTruthy()
-          })
-        )
-      })
-    );
+    let e = await geocoder.once("results");
+    // proximity applied in geocoding request
+    expect(e.features[0].place_name.indexOf('Toronto') !== -1).toBeTruthy();
+    // Move map and make sure _updateProximity not still changing proximity
+    map.setCenter([0,0]);
+    map.setZoom(5);
+    geocoder.query('high');
+    e = await geocoder.once("results");
+    // explicitly-set proximity remains intact after moving map
+    expect(e.features[0].place_name.indexOf('Toronto') !== -1).toBeTruthy()
   });
 
-  test('geocoding works correctly around a place with a 0 lat or lng', function () {
+  test('geocoding works correctly around a place with a 0 lat or lng', async function() {
     setup({});
 
     map.setZoom(13);
     map.setCenter([0, 51.5]);
 
     geocoder.query('Berlin');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // geocoding works correctly around a location with a 0 lat or lng
-        expect(e.features.some((feature) => feature.place_name.indexOf('Berlin') !== -1)).toBeTruthy();
-      })
-    );
+    const e = await geocoder.once("results");
+    // geocoding works correctly around a location with a 0 lat or lng
+    expect(e.features.some((feature) => feature.place_name.indexOf('Berlin') !== -1)).toBeTruthy();
   });
 
-  test('proximity can be set to a value with a 0 lat or lng', function () {
+  test('proximity can be set to a value with a 0 lat or lng', async function() {
     setup({});
 
     map.setZoom(13);
@@ -574,28 +487,20 @@ describe('geocoder', function () {
     geocoder.setProximity({ longitude: 32.58, latitude: 0});
 
     geocoder.query('ent');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // proximity applied correctly to location including a zero in geocoding request
-        expect(e.features[0].place_name.indexOf('Entebbe') !== -1).toBeTruthy();
-      })
-    );
+    const e = await geocoder.once("results");
+    // proximity applied correctly to location including a zero in geocoding request
+    expect(e.features[0].place_name.indexOf('Entebbe') !== -1).toBeTruthy();
   });
 
-  test('proximity can be set to a value of "ip"', function () {
+  test('proximity can be set to a value of "ip"', async function() {
     setup({trackProximity: false});
 
     geocoder.setProximity('ip');
     geocoder.query('par');
 
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // proximity=ip successfully returned results
-        expect(e.features.length > 0).toBeTruthy();
-      })
-    );
+    const e = await geocoder.once("results");
+    // proximity=ip successfully returned results
+    expect(e.features.length > 0).toBeTruthy();
   });
 
   test('options.render', function (){
@@ -690,47 +595,39 @@ describe('geocoder', function () {
     expect(geocoder._typeahead.getItemValue(fixture)).toEqual('San Francisco, California');
   });
 
-  test('options.flyTo [false]', function (){
+  test('options.flyTo [false]', async function() {
     setup({
       flyTo: false
     });
 
     var mapFlyMethod =  sinon.spy(map, "flyTo");
     geocoder.query('Golden Gate Bridge');
-    geocoder.on(
-      'result',
-      once(function() {
-        // The map flyTo was not called when the option was set to false
-        expect(mapFlyMethod.notCalled).toBeTruthy()
-      })
-    );
+    await geocoder.once("result");
+    // The map flyTo was not called when the option was set to false
+    expect(mapFlyMethod.notCalled).toBeTruthy()
   });
 
 
-  test('options.flyTo [true]', function (){
+  test('options.flyTo [true]', async function() {
     setup({
       flyTo: true
     });
 
     var mapFlyMethod =  sinon.spy(map, "flyTo");
     geocoder.query('Golden Gate Bridge');
-    geocoder.on(
-      'result',
-      once(function() {
-        // The map flyTo was called when the option was set to true
-        expect(mapFlyMethod.calledOnce).toBeTruthy();
-        var calledWithArgs = mapFlyMethod.args[0][0];
-        // the map is directed to fly to the right longitude
-        expect(+calledWithArgs.center[0].toFixed(4)).toEqual(+-(122.4802).toFixed(4));
-        // the map is directed to fly to the right latitude
-        expect(+calledWithArgs.center[1].toFixed(4)).toEqual(+(37.8317).toFixed(4));
-        // the map is directed to fly to the right zoom
-        expect(calledWithArgs.zoom).toEqual(16);
-      })
-    );
+    await geocoder.once("result");
+    // The map flyTo was called when the option was set to true
+    expect(mapFlyMethod.calledOnce).toBeTruthy();
+    var calledWithArgs = mapFlyMethod.args[0][0];
+    // the map is directed to fly to the right longitude
+    expect(+calledWithArgs.center[0].toFixed(4)).toEqual(+-(122.4802).toFixed(4));
+    // the map is directed to fly to the right latitude
+    expect(+calledWithArgs.center[1].toFixed(4)).toEqual(+(37.8317).toFixed(4));
+    // the map is directed to fly to the right zoom
+    expect(calledWithArgs.zoom).toEqual(16);
   });
 
-  test('options.flyTo [object]', function (){
+  test('options.flyTo [object]', async function() {
     setup({
       flyTo: {
         speed: 5,
@@ -741,25 +638,21 @@ describe('geocoder', function () {
 
     var mapFlyMethod =  sinon.spy(map, "flyTo");
     geocoder.query('Golden Gate Bridge');
-    geocoder.on(
-      'result',
-      once(function() {
-        // The map flyTo was called when the option was set to true
-        expect(mapFlyMethod.calledOnce).toBeTruthy();
-        var calledWithArgs = mapFlyMethod.args[0][0];
-        // the map is directed to fly to the right longitude
-        expect(+calledWithArgs.center[0].toFixed(4)).toEqual(+-(122.4802).toFixed(4));
-        // the map is directed to fly to the right latitude
-        expect(+calledWithArgs.center[1].toFixed(4)).toEqual(+(37.8317).toFixed(4));        // the selected result overrides the constructor zoom option
-      expect(calledWithArgs.zoom).toEqual(4);
-        // speed argument is passed to the flyTo method
-        expect(calledWithArgs.speed).toEqual(5);
-      })
-    );
+    await geocoder.once("result");
+    // The map flyTo was called when the option was set to true
+    expect(mapFlyMethod.calledOnce).toBeTruthy();
+    var calledWithArgs = mapFlyMethod.args[0][0];
+    // the map is directed to fly to the right longitude
+    expect(+calledWithArgs.center[0].toFixed(4)).toEqual(+-(122.4802).toFixed(4));
+    // the map is directed to fly to the right latitude
+    expect(+calledWithArgs.center[1].toFixed(4)).toEqual(+(37.8317).toFixed(4));        // the selected result overrides the constructor zoom option
+    expect(calledWithArgs.zoom).toEqual(4);
+    // speed argument is passed to the flyTo method
+    expect(calledWithArgs.speed).toEqual(5);
   });
 
 
-  test('options.flyTo object on feature with bounding box', function (){
+  test('options.flyTo object on feature with bounding box', async function() {
     setup({
       flyTo: {
         speed: 5
@@ -768,20 +661,16 @@ describe('geocoder', function () {
 
     var mapFlyMethod =  sinon.spy(map, "fitBounds");
     geocoder.query('Brazil');
-    geocoder.on(
-      'result',
-      once(function() {
-        // The map flyTo was called when the option was set to true
-        expect(mapFlyMethod.calledOnce).toBeTruthy();
-        var calledWithArgs = mapFlyMethod.args[0][1];
-        // speed argument is passed to the flyTo method
-        expect(calledWithArgs.speed).toEqual(5);
-      })
-    );
+    await geocoder.once("result");
+    // The map flyTo was called when the option was set to true
+    expect(mapFlyMethod.calledOnce).toBeTruthy();
+    var calledWithArgs = mapFlyMethod.args[0][1];
+    // speed argument is passed to the flyTo method
+    expect(calledWithArgs.speed).toEqual(5);
   });
 
 
-  test('options.flyTo object on bounding box excepted feature', function (){
+  test('options.flyTo object on bounding box excepted feature', async function() {
     setup({
       flyTo: {
         speed: 5
@@ -790,16 +679,12 @@ describe('geocoder', function () {
 
     var mapFlyMethod =  sinon.spy(map, "fitBounds");
     geocoder.query('Canada');
-    geocoder.on(
-      'result',
-      once(function() {
-        // The map flyTo was called when the option was set to true
-        expect(mapFlyMethod.calledOnce).toBeTruthy();
-        var calledWithArgs = mapFlyMethod.args[0][1];
-        // speed argument is passed to the flyTo method
-        expect(calledWithArgs.speed).toEqual(5);
-      })
-    );
+    await geocoder.once("result");
+    // The map flyTo was called when the option was set to true
+    expect(mapFlyMethod.calledOnce).toBeTruthy();
+    var calledWithArgs = mapFlyMethod.args[0][1];
+    // speed argument is passed to the flyTo method
+    expect(calledWithArgs.speed).toEqual(5);
   });
 
   test('placeholder localization', function (){
@@ -809,7 +694,7 @@ describe('geocoder', function () {
     });
   });
 
-  test('options.marker [true]', function () {
+  test('options.marker [true]', async function() {
     setup({
       marker: true,
       mapboxgl: mapboxgl
@@ -817,20 +702,16 @@ describe('geocoder', function () {
     var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
 
     geocoder.query('high');
-    geocoder.on(
-      'result',
-      once(function() {
-        // a new marker is added to the map
-        expect(markerConstructorSpy.calledOnce).toBeTruthy();
-        var calledWithOptions = markerConstructorSpy.args[0][0];
-        // a default color is set
-        expect(calledWithOptions.color).toEqual('#4668F2');
-        markerConstructorSpy.restore();
-      })
-    );
+    await geocoder.once("result");
+    // a new marker is added to the map
+    expect(markerConstructorSpy.calledOnce).toBeTruthy();
+    var calledWithOptions = markerConstructorSpy.args[0][0];
+    // a default color is set
+    expect(calledWithOptions.color).toEqual('#4668F2');
+    markerConstructorSpy.restore();
   });
 
-  test('options.marker  [constructor properties]', function () {
+  test('options.marker  [constructor properties]', async function() {
     setup({
       marker: {
         color: "purple",
@@ -842,38 +723,30 @@ describe('geocoder', function () {
     var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
 
     geocoder.query('high');
-    geocoder.on(
-      'result',
-      once(function() {
-        // a new marker is added to the map
-        expect(markerConstructorSpy.calledOnce).toBeTruthy();
-        var calledWithOptions = markerConstructorSpy.args[0][0];
-        // sets the correct color property
-        expect(calledWithOptions.color).toEqual('purple');
-        // sets the correct draggable property
-        expect(calledWithOptions.draggable).toEqual(true);
-        // default anchor is overriden by custom properties
-        expect(calledWithOptions.anchor).toEqual('top');
-        markerConstructorSpy.restore();
-      })
-    );
+    await geocoder.once("result");
+    // a new marker is added to the map
+    expect(markerConstructorSpy.calledOnce).toBeTruthy();
+    var calledWithOptions = markerConstructorSpy.args[0][0];
+    // sets the correct color property
+    expect(calledWithOptions.color).toEqual('purple');
+    // sets the correct draggable property
+    expect(calledWithOptions.draggable).toEqual(true);
+    // default anchor is overriden by custom properties
+    expect(calledWithOptions.anchor).toEqual('top');
+    markerConstructorSpy.restore();
   });
 
-  test('options.marker [false]', function () {
+  test('options.marker [false]', async function() {
     setup({
       marker: false
     });
     var markerConstructorSpy = sinon.spy(mapboxgl, "Marker");
 
     geocoder.query('high');
-    geocoder.on(
-      'result',
-      once(function() {
-        // a new marker is not added to the map
-        expect(markerConstructorSpy.notCalled).toBeTruthy();
-        markerConstructorSpy.restore();
-      })
-    );
+    await geocoder.once("result");
+    // a new marker is not added to the map
+    expect(markerConstructorSpy.notCalled).toBeTruthy();
+    markerConstructorSpy.restore();
   });
 
   test('geocode#onRemove', function (){
@@ -1041,13 +914,12 @@ describe('geocoder', function () {
     expect(nextFiltered).toEqual([]);
   });
 
-  test('geocoder#autocomplete default results', function () {
+  test('geocoder#autocomplete default results', async function() {
     setup();
     geocoder.query('India');
-    geocoder.on('results', once(function(e) {
-      // autocomplete is enabled in default responses
-      expect(e.features.some(feature => feature.place_name.indexOf('Indiana') !== -1 )).toBeTruthy();
-    }));
+    const e = await geocoder.once("results");
+    // autocomplete is enabled in default responses
+    expect(e.features.some(feature => feature.place_name.indexOf('Indiana') !== -1 )).toBeTruthy();
   });
 
   test('geocoder#getAutocomplete', function () {
@@ -1056,39 +928,36 @@ describe('geocoder', function () {
     expect(geocoder.getAutocomplete()).toEqual(false);
   });
 
-  test('geocoder#setAccessToken', function (){
-    const accessToken = process.env.MapboxAccessToken;
+  test('geocoder#setAccessToken', async function() {
+    const accessToken = import.meta.env.MapboxAccessToken;
     setup({ accessToken: `${accessToken}#foo` });
     geocoder.setAccessToken(accessToken);
     geocoder.query('pizza');
-    geocoder.on('results', function(e) {
-      // new access token applied to requests
-      expect(e.request.client.accessToken).toEqual(accessToken);
-    });
+    const e = await geocoder.once("results");
+    // new access token applied to requests
+    expect(e.request.client.accessToken).toEqual(accessToken);
   });
 
-  test('geocoder#setAutocomplete', function (){
+  test('geocoder#setAutocomplete', async function() {
     setup({autocomplete: false});
     geocoder.setAutocomplete(true);
     // the setAutocomplete changes the autocomplete value in the geocoder options
     expect(geocoder.options.autocomplete).toEqual(true);
     geocoder.setAutocomplete(false);
     geocoder.query('India');
-    geocoder.on('results', once(function(e) {
-      // disabling autocomplete correctly affects geocoding results
-      expect(e.features.every(feature => feature.place_name.indexOf('Indiana') === -1 )).toBeTruthy();
-    }));
+    const e = await geocoder.once("results");
+    // disabling autocomplete correctly affects geocoding results
+    expect(e.features.every(feature => feature.place_name.indexOf('Indiana') === -1 )).toBeTruthy();
   });
 
-  test('geocoder#fuzzyMatch default results', function () {
+  test('geocoder#fuzzyMatch default results', async function() {
     setup();
     geocoder.query('wahsingtno');
-    geocoder.on('results', once(function(e) {
-      // fuzzyMatch is enabled in default responses
-      expect(
-        e.features.some(feature => feature.place_name.indexOf('Washington') !== -1 )
-      ).toBeTruthy();
-    }));
+    const e = await geocoder.once("results");
+    // fuzzyMatch is enabled in default responses
+    expect(
+      e.features.some(feature => feature.place_name.indexOf('Washington') !== -1 )
+    ).toBeTruthy();
   });
 
   test('geocoder#getFuzzyMatch', function () {
@@ -1097,26 +966,24 @@ describe('geocoder', function () {
     expect(geocoder.getFuzzyMatch()).toEqual(false);
   });
 
-  test('geocoder#setFuzzyMatch', function (){
+  test('geocoder#setFuzzyMatch', async function() {
     setup({fuzzyMatch: false});
     geocoder.setFuzzyMatch(true);
     // setFuzzyMatch changes the fuzzyMatch value in the geocoder options
     expect(geocoder.options.fuzzyMatch).toEqual(true);
     geocoder.setFuzzyMatch(false);
     geocoder.query('wahsingtno');
-    geocoder.on('results', once(function(e) {
-      // disabling fuzzyMatch correctly affects geocoding results
-      expect(e.features.length).toEqual(0);
-    }));
+    const e = await geocoder.once("results");
+    // disabling fuzzyMatch correctly affects geocoding results
+    expect(e.features.length).toEqual(0);
   });
 
-  test('geocoder#routing default results', function () {
+  test('geocoder#routing default results', async function() {
     setup();
     geocoder.query('The White House');
-    geocoder.on('results', once(function(e) {
-      // routing (returning routable_points) is disabled in default responses
-      expect(e.features[0].routable_points === undefined).toBeTruthy();
-    }));
+    const e = await geocoder.once("results");
+    // routing (returning routable_points) is disabled in default responses
+    expect(e.features[0].routable_points === undefined).toBeTruthy();
   });
 
   test('geocoder#getRouting', function () {
@@ -1137,13 +1004,12 @@ describe('geocoder', function () {
     }));
   });
 
-  test('geocoder#worldview default results', function () {
+  test('geocoder#worldview default results', async function() {
     setup();
     geocoder.query('Taipei');
-    geocoder.on('results', once(function(e) {
-      // worldview defaults to US in responses
-      expect(e.features[0].place_name.indexOf('Taiwan') !== -1).toBeTruthy();
-    }));
+    const e = await geocoder.once("results");
+    // worldview defaults to US in responses
+    expect(e.features[0].place_name.indexOf('Taiwan') !== -1).toBeTruthy();
   });
 
   test('geocoder#getWorldview', function () {
@@ -1152,95 +1018,79 @@ describe('geocoder', function () {
     expect(geocoder.getWorldview()).toEqual('cn');
   });
 
-  test('geocoder#setWorldview', function (){
+  test('geocoder#setWorldview', async function() {
     setup({worldview: 'us'});
     geocoder.setWorldview('cn');
     // setWorldview changes the worldview value in the geocoder options
     expect(geocoder.options.worldview).toEqual('cn');
     geocoder.query('Taipei');
-    geocoder.on('results', once(function(e) {
-      // setting worldview correctly affects geocoding results
-      expect(e.features[0].place_name.indexOf('China') !== -1).toBeTruthy();
-    }));
+    const e = await geocoder.once("results");
+    // setting worldview correctly affects geocoding results
+    expect(e.features[0].place_name.indexOf('China') !== -1).toBeTruthy();
   });
 
-  test('geocoder#_renderMessage', function (){
+  test('geocoder#_renderMessage', async function() {
     setup({});
     var typeaheadRenderErrorSpy = sinon.spy(geocoder._typeahead, 'renderError');
 
     geocoder.query('high');
-    geocoder.on(
-      'result',
-      once(function() {
-        setTimeout(function() {
-          // the suggestions menu has some options in it after a query
-          expect(geocoder._typeahead.data.length).not.toEqual(0);
-          geocoder._renderMessage("<h1>This is a test</h1>");
-          // the data was cleared from the suggestions
-          expect(geocoder._typeahead.data.length).toEqual(0);
-          // the selected option was cleared from the suggestions
-          expect(geocoder._typeahead.selected).toEqual(null);
-          // the renderError method was called exactly once
-          expect(typeaheadRenderErrorSpy.calledOnce).toBeTruthy();
-          var calledWithArgs = typeaheadRenderErrorSpy.args[0][0];
-          // the error rendering function was called with the correct message
-          expect(calledWithArgs).toEqual("<h1>This is a test</h1>");
-        });
-      })
-    );
+    await geocoder.once("result");
+    await Promise.resolve()
+      .then(() => {
+        // the suggestions menu has some options in it after a query
+        expect(geocoder._typeahead.data.length).not.toEqual(0);
+        geocoder._renderMessage("<h1>This is a test</h1>");
+        // the data was cleared from the suggestions
+        expect(geocoder._typeahead.data.length).toEqual(0);
+        // the selected option was cleared from the suggestions
+        expect(geocoder._typeahead.selected).toEqual(null);
+        // the renderError method was called exactly once
+        expect(typeaheadRenderErrorSpy.calledOnce).toBeTruthy();
+        var calledWithArgs = typeaheadRenderErrorSpy.args[0][0];
+        // the error rendering function was called with the correct message
+        expect(calledWithArgs).toEqual("<h1>This is a test</h1>");
+      });
   });
 
-  test('geocoder#_renderError', function (){
+  test('geocoder#_renderError', async function() {
     setup({});
     var renderMessageSpy = sinon.spy(geocoder, '_renderMessage');
 
     geocoder.query('high');
-    geocoder.on(
-      'result',
-      once(function() {
-        geocoder._renderError();
-        // the error render method calls the renderMessage method exactly once
-        expect(renderMessageSpy.calledOnce).toBeTruthy();
-        var calledWithArgs = renderMessageSpy.args[0][0];
-        // the error message specifies the correct class
-        expect(calledWithArgs.indexOf('mapbox-gl-geocoder--error') > -1).toBeTruthy();
-      })
-    );
+    await geocoder.once("result");
+    geocoder._renderError();
+    // the error render method calls the renderMessage method exactly once
+    expect(renderMessageSpy.calledOnce).toBeTruthy();
+    var calledWithArgs = renderMessageSpy.args[0][0];
+    // the error message specifies the correct class
+    expect(calledWithArgs.indexOf('mapbox-gl-geocoder--error') > -1).toBeTruthy();
   });
 
-  test('geocoder#_renderNoResults', function (){
+  test('geocoder#_renderNoResults', async function() {
     setup({});
     var renderMessageSpy = sinon.spy(geocoder, '_renderMessage');
 
     geocoder.query('high');
-    geocoder.on(
-      'result',
-      once(function() {
-        geocoder._renderNoResults();
-        // the no results render method calls the renderMessage method exactly once
-        expect(renderMessageSpy.calledOnce).toBeTruthy();
-        var calledWithArgs = renderMessageSpy.args[0][0];
-        // the info message specifies the correct class
-        expect(calledWithArgs.indexOf('mapbox-gl-geocoder--error') > -1).toBeTruthy();
-        // the info message specifies the correct class
-        expect(calledWithArgs.indexOf('mapbox-gl-geocoder--no-results') > -1).toBeTruthy();
-      })
-    );
+    await geocoder.once("result");
+    geocoder._renderNoResults();
+    // the no results render method calls the renderMessage method exactly once
+    expect(renderMessageSpy.calledOnce).toBeTruthy();
+    var calledWithArgs = renderMessageSpy.args[0][0];
+    // the info message specifies the correct class
+    expect(calledWithArgs.indexOf('mapbox-gl-geocoder--error') > -1).toBeTruthy();
+    // the info message specifies the correct class
+    expect(calledWithArgs.indexOf('mapbox-gl-geocoder--no-results') > -1).toBeTruthy();
   });
 
-  test('error is shown after an error occurred', function (){
+  test('error is shown after an error occurred', async function() {
     setup({});
     geocoder.query('12,');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // Some results are returned using and the input is not used for reverse geocoding
-        expect(e.features.length > 0).toBeTruthy();
-      })
-    );
+    const e = await geocoder.once("results");
+    // Some results are returned using and the input is not used for reverse geocoding
+    expect(e.features.length > 0).toBeTruthy();
   });
 
-  test('error is shown after an error occurred [with local geocoder]', function (){
+  test('error is shown after an error occurred [with local geocoder]', async function() {
     setup({
       localGeocoder: function(){
         return [
@@ -1249,29 +1099,21 @@ describe('geocoder', function () {
       }
     });
     geocoder.query('12,');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // Some results are returned using and the input is not used for reverse geocoding
-        expect(e.features.length > 0).toBeTruthy();
-      })
-    );
+    const e = await geocoder.once("results");
+    // Some results are returned using and the input is not used for reverse geocoding
+    expect(e.features.length > 0).toBeTruthy();
   });
 
-  test('message is shown if no results are returned', function (){
+  test('message is shown if no results are returned', async function() {
     setup({});
     var renderMessageSpy = sinon.spy(geocoder, '_renderNoResults');
     geocoder.query('abcdefghijkl!@#$%^&*()_+'); //this will return no results
-    geocoder.on(
-      'results',
-      once(function() {
-        // a message was rendered
-        expect(renderMessageSpy.called).toBeTruthy();
-      })
-    );
+    await geocoder.once("results");
+    // a message was rendered
+    expect(renderMessageSpy.called).toBeTruthy();
   });
 
-  test('no mapbox api call is made if localGeocoderOnly is set', function (){
+  test('no mapbox api call is made if localGeocoderOnly is set', async function() {
     setup({
       localGeocoderOnly: true,
       localGeocoder: function(q){
@@ -1289,17 +1131,13 @@ describe('geocoder', function () {
     // geocoding service is not initialized during localGeocoderOnly mode
     expect(geocoder.geocoderService).toBeFalsy()
     geocoder.query('Golden Gate Bridge');
-    geocoder.on(
-      'results',
-      once(function(e) {
-        // returns the result of the local geocoder
-        expect(e.features[0].place_name == "Golden Gate Bridge").toBeTruthy();
-        // returns the result of the local geocoder
-        expect(e.features[0].id == "abc.123").toBeTruthy()
-        // returns the correct number of results
-        expect(e.features.length).toEqual(1)
-      })
-    );
+    const e = await geocoder.once("results");
+    // returns the result of the local geocoder
+    expect(e.features[0].place_name == "Golden Gate Bridge").toBeTruthy();
+    // returns the result of the local geocoder
+    expect(e.features[0].id == "abc.123").toBeTruthy()
+    // returns the correct number of results
+    expect(e.features.length).toEqual(1)
   });
 
   test('does not throw if no access token is set and localGeocoderOnly mode is active', function (){
@@ -1313,11 +1151,12 @@ describe('geocoder', function () {
     container = document.createElement('div');
     map = new mapboxgl.Map({ container: container });
     geocoder = new MapboxGeocoder(opts);
-    t.doesNotThrow(function(){map.addControl(geocoder);}, 'does not throw an error when no access token is set')
+    // does not throw an error when no access token is set
+    expect(function(){map.addControl(geocoder);}).not.toThrowError();
   });
 
 
-  test('throws an error if localGeocoderOnly mode is active but no localGeocoder is supplied', function (){
+  test('throws an error if localGeocoderOnly mode is active but no localGeocoder is supplied', function () {
     var opts =  {
       localGeocoderOnly: true
     }
@@ -1325,10 +1164,11 @@ describe('geocoder', function () {
     container = document.createElement('div');
     map = new mapboxgl.Map({ container: container });
     geocoder = new MapboxGeocoder(opts);
-    t.throws(function(){map.addControl(geocoder);}, "throws an error if no local geocoder is set")
+    // throws an error if no local geocoder is set
+    expect(function(){map.addControl(geocoder);}).toThrowError();
   });
 
-  test('geocoder.lastSelected is reset on input', function (){
+  test('geocoder.lastSelected is reset on input', function () {
     setup();
     geocoder.lastSelected = "abc123";
     geocoder._onKeyDown(new KeyboardEvent('KeyDown'));
