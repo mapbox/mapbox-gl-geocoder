@@ -1,19 +1,18 @@
-'use strict';
+import {describe, test, expect} from 'vitest';
+import once from 'lodash.once';
+import sinon from 'sinon';
 
-var test = require('tape');
-var MapboxGeocoder = require('../');
-var mapboxgl = require('mapbox-gl');
-var once = require('lodash.once');
-var mapboxEvents = require('./../lib/events');
-var sinon = require('sinon');
-var localization = require('./../lib/localization');
-var exceptions = require('./../lib/exceptions');
+import mapboxgl from 'mapbox-gl';
 
+import MapboxGeocoder from '../lib/index.js';
+import mapboxEvents from '../lib/events.js';
+import * as localization from '../lib/localization.js';
+import exceptions from '../lib/exceptions.js';
 
-mapboxgl.accessToken = process.env.MapboxAccessToken;
+mapboxgl.accessToken = import.meta.env.MapboxAccessToken;
 
-test('geocoder', function(tt) {
-  var container, map, geocoder;
+describe('geocoder', function () {
+  let container, map, geocoder;
 
   function setup(opts) {
     opts = opts || {};
@@ -30,7 +29,7 @@ test('geocoder', function(tt) {
     map.addControl(geocoder);
   }
 
-  tt.test('initialized', function(t) {
+  test.only('initialized', function(t) {
     setup();
     t.ok(geocoder, 'geocoder is initialized');
     t.ok(geocoder.fresh, 'geocoder is initialized with fresh status to enable turnstile event');
@@ -40,7 +39,7 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('set/get input', function(t) {
+  test('set/get input', function(t) {
     t.plan(4)
     setup({ proximity: { longitude: -79.45, latitude: 43.65 } });
 
@@ -60,7 +59,7 @@ test('geocoder', function(tt) {
     });
   });
 
-  tt.test('options', function(t) {
+  test('options', function(t) {
     t.plan(8);
     setup({
       flyTo: false,
@@ -99,7 +98,7 @@ test('geocoder', function(tt) {
     });
   });
 
-  tt.test('custom endpoint', function(t) {
+  test('custom endpoint', function(t) {
     t.plan(1);
     setup({ origin: 'localhost:2999' });
     t.equals(
@@ -109,7 +108,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test("swapped endpoint", function(t) {
+  test("swapped endpoint", function(t) {
     t.plan(1);
     setup({ origin: 'localhost:2999' });
     geocoder.setOrigin("https://api.mapbox.com");
@@ -123,7 +122,7 @@ test('geocoder', function(tt) {
     });
   });
 
-  tt.test('options.bbox', function(t) {
+  test('options.bbox', function(t) {
     t.plan(2);
     setup({
       bbox: [
@@ -148,7 +147,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.reverseGeocode - true', function(t) {
+  test('options.reverseGeocode - true', function(t) {
     t.plan(4);
     setup({
       reverseGeocode: true
@@ -171,7 +170,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.reverseGeocode - interprets coordinates & options correctly', function(t) {
+  test('options.reverseGeocode - interprets coordinates & options correctly', function(t) {
     t.plan(3);
     setup({
       types: 'country',
@@ -188,7 +187,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.reverseGeocode - false by default', function(t) {
+  test('options.reverseGeocode - false by default', function(t) {
     t.plan(1);
     setup();
     geocoder.query('-6.1933875, 34.5177548');
@@ -200,7 +199,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.reverseGeocode: true with trackProximity: true', function(t) {
+  test('options.reverseGeocode: true with trackProximity: true', function(t) {
     t.plan(0);
     setup({
       reverseGeocode: true,
@@ -214,7 +213,7 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('options.flipCoordinates - false by default', function(t) {
+  test('options.flipCoordinates - false by default', function(t) {
     t.plan(1);
     setup({
       reverseGeocode: true,
@@ -225,7 +224,7 @@ test('geocoder', function(tt) {
     }))
   })
 
-  tt.test('options.flipCoordinates - true accepts lon,lat order', function(t) {
+  test('options.flipCoordinates - true accepts lon,lat order', function(t) {
     t.plan(1);
     setup({
       reverseGeocode: true,
@@ -237,7 +236,7 @@ test('geocoder', function(tt) {
     }))
   })
 
-  tt.test('options.flipCoordinates - true does not accept lat,lon order', function(t) {
+  test('options.flipCoordinates - true does not accept lat,lon order', function(t) {
     t.plan(1);
     setup({
       reverseGeocode: true,
@@ -249,7 +248,7 @@ test('geocoder', function(tt) {
     }))
   })
 
-  tt.test('parses options correctly', function(t) {
+  test('parses options correctly', function(t) {
     t.plan(4);
     setup({
       language: 'en,es,zh',
@@ -281,7 +280,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.limit', function(t) {
+  test('options.limit', function(t) {
     t.plan(1);
     setup({
       flyTo: false,
@@ -297,7 +296,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options:zoom', function(t) {
+  test('options:zoom', function(t) {
     t.plan(1);
     setup({ zoom: 12 });
     geocoder.query('1714 14th St NW');
@@ -311,7 +310,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.localGeocoder', function(t) {
+  test('options.localGeocoder', function(t) {
     t.plan(2);
     setup({
       flyTo: false,
@@ -339,7 +338,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.localGeocoder with reverseGeocode=true', function(t) {
+  test('options.localGeocoder with reverseGeocode=true', function(t) {
     setup({
       flyTo: false,
       reverseGeocode: true,
@@ -359,7 +358,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.externalGeocoder', function(t) {
+  test('options.externalGeocoder', function(t) {
     t.plan(3);
     setup({
       flyTo: false,
@@ -409,7 +408,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('country bbox', function(t) {
+  test('country bbox', function(t) {
     t.plan(2);
     setup({});
     geocoder.query('Spain');
@@ -430,7 +429,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('country bbox exception', function(t) {
+  test('country bbox exception', function(t) {
     t.plan(2);
     setup({});
     geocoder.query('Canada');
@@ -453,7 +452,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('lint exceptions file', function(t) {
+  test('lint exceptions file', function(t) {
     var exceptions = require('../lib/exceptions.js');
     t.plan(Object.keys(exceptions).length * 5);
 
@@ -517,7 +516,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.trackProximity', function(t) {
+  test('options.trackProximity', function(t) {
     t.plan(3);
 
     setup({
@@ -537,7 +536,7 @@ test('geocoder', function(tt) {
     t.true(geocoder.options.trackProximity, 'trackProximity remains enabled after it automatically updates proximity')
   });
 
-  tt.test('options.trackProximity=false', function(t) {
+  test('options.trackProximity=false', function(t) {
     t.plan(2);
 
     setup({
@@ -547,7 +546,7 @@ test('geocoder', function(tt) {
     t.notOk(geocoder.getProximity(), 'proximity is not available when trackProximity is set to false');
   });
 
-  tt.test('options.setProximity', function(t) {
+  test('options.setProximity', function(t) {
     t.plan(4);
 
     setup({});
@@ -583,7 +582,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('geocoding works correctly around a place with a 0 lat or lng', function(t) {
+  test('geocoding works correctly around a place with a 0 lat or lng', function(t) {
     t.plan(1);
 
     setup({});
@@ -603,7 +602,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('proximity can be set to a value with a 0 lat or lng', function(t) {
+  test('proximity can be set to a value with a 0 lat or lng', function(t) {
     t.plan(1);
 
     setup({});
@@ -624,7 +623,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('proximity can be set to a value of "ip"', function(t) {
+  test('proximity can be set to a value of "ip"', function(t) {
     t.plan(1)
 
     setup({trackProximity: false});
@@ -644,7 +643,7 @@ test('geocoder', function(tt) {
 
   })
 
-  tt.test('options.render', function(t){
+  test('options.render', function(t){
     t.plan(3);
     setup({
       render: function(feature){
@@ -662,7 +661,7 @@ test('geocoder', function(tt) {
     t.equals(geocoder._typeahead.render(fixture), 'feature id is abc123', 'render function is applied properly on the typeahead');
   })
 
-  tt.test('setRenderFunction with no input', function(t){
+  test('setRenderFunction with no input', function(t){
     t.plan(2);
     setup({});
     var result = geocoder.setRenderFunction();
@@ -670,7 +669,7 @@ test('geocoder', function(tt) {
     t.ok(result instanceof MapboxGeocoder, 'setRenderFunction always returns a MapboxGeocoder instance');
   });
 
-  tt.test('setRenderFunction with function input', function(t){
+  test('setRenderFunction with function input', function(t){
     t.plan(2);
     setup({});
     var result = geocoder.setRenderFunction(function(item){return item.place_name});
@@ -678,7 +677,7 @@ test('geocoder', function(tt) {
     t.ok(result instanceof MapboxGeocoder, 'setRenderFunction always returns a MapboxGeocoder instance');
   });
 
-  tt.test('getRenderFunction default', function(t){
+  test('getRenderFunction default', function(t){
     t.plan(2);
     setup({});
     var result = geocoder.getRenderFunction();
@@ -686,7 +685,7 @@ test('geocoder', function(tt) {
     t.equals(typeof(result), 'function', 'function is always returned');
   })
 
-  tt.test('getRenderFunction', function(t){
+  test('getRenderFunction', function(t){
     t.plan(2);
     setup({render: function(item){return item.place_name}});
     var result = geocoder.getRenderFunction();
@@ -694,7 +693,7 @@ test('geocoder', function(tt) {
     t.equals(typeof(result), 'function', 'function is returned  when a custom function is set');
   })
 
-  tt.test('options.getItemValue', function(t){
+  test('options.getItemValue', function(t){
     setup({
       getItemValue: function(feature){
         return 'feature id is ' + feature.id
@@ -712,7 +711,7 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('options.getItemValue default', function(t){
+  test('options.getItemValue default', function(t){
     setup({});
 
     var fixture = {
@@ -726,7 +725,7 @@ test('geocoder', function(tt) {
     t.end()
   });
 
-  tt.test('options.flyTo [false]', function(t){
+  test('options.flyTo [false]', function(t){
     t.plan(1)
     setup({
       flyTo: false
@@ -743,7 +742,7 @@ test('geocoder', function(tt) {
   });
 
 
-  tt.test('options.flyTo [true]', function(t){
+  test('options.flyTo [true]', function(t){
     t.plan(4)
     setup({
       flyTo: true
@@ -763,7 +762,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.flyTo [object]', function(t){
+  test('options.flyTo [object]', function(t){
     t.plan(5)
     setup({
       flyTo: {
@@ -788,7 +787,7 @@ test('geocoder', function(tt) {
   });
 
 
-  tt.test('options.flyTo object on feature with bounding box', function(t){
+  test('options.flyTo object on feature with bounding box', function(t){
     t.plan(2 )
     setup({
       flyTo: {
@@ -809,7 +808,7 @@ test('geocoder', function(tt) {
   });
 
 
-  tt.test('options.flyTo object on bounding box excepted feature', function(t){
+  test('options.flyTo object on bounding box excepted feature', function(t){
     t.plan(2)
     setup({
       flyTo: {
@@ -829,7 +828,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('placeholder localization', function(t){
+  test('placeholder localization', function(t){
     var ensureLanguages = ['de', 'en', 'fr', 'it', 'nl', 'ca', 'cs', 'fr', 'he', 'hu', 'is', 'ja', 'ka', 'ko', 'lv', 'ka', 'ko', 'lv', 'nb', 'pl', 'pt', 'sk', 'sl', 'sr', 'th', 'zh'];
     ensureLanguages.forEach(function(languageTag){
       t.equals(typeof(localization.placeholder[languageTag]), 'string', 'localized placeholder value is present for language=' + languageTag);
@@ -837,7 +836,7 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('options.marker [true]', function(t) {
+  test('options.marker [true]', function(t) {
     t.plan(2);
 
     setup({
@@ -858,7 +857,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.marker  [constructor properties]', function(t) {
+  test('options.marker  [constructor properties]', function(t) {
     t.plan(4);
 
     setup({
@@ -885,7 +884,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('options.marker [false]', function(t) {
+  test('options.marker [false]', function(t) {
     t.plan(1);
 
     setup({
@@ -903,7 +902,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('geocode#onRemove', function(t){
+  test('geocode#onRemove', function(t){
     setup({marker: true});
 
     var removeMarkerMethod = sinon.spy(geocoder, "_removeMarker");
@@ -915,7 +914,7 @@ test('geocoder', function(tt) {
 
     t.end();
   })
-  tt.test('geocoder#setLanguage', function(t){
+  test('geocoder#setLanguage', function(t){
     setup({language: 'de-DE'});
     t.equals(geocoder.options.language,  'de-DE', 'the correct language is set on initialization');
     geocoder.setLanguage('en-US');
@@ -923,19 +922,19 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('geocoder#getLanguage', function(t){
+  test('geocoder#getLanguage', function(t){
     setup({language: 'de-DE'});
     t.equals(geocoder.getLanguage(), 'de-DE', 'getLanguage returns the right language');
     t.end();
   });
 
-  tt.test('geocoder#getZoom', function(t){
+  test('geocoder#getZoom', function(t){
     setup({zoom: 12});
     t.equals(geocoder.getZoom(), 12, 'getZoom returns the right zoom' );
     t.end();
   });
 
-  tt.test('geocoder#setZoom', function(t){
+  test('geocoder#setZoom', function(t){
     setup({zoom: 14});
     t.equals(geocoder.options.zoom, 14, 'the correct zoom is set on initialization');
     geocoder.setZoom(17);
@@ -943,13 +942,13 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('geocoder#getFlyTo', function(t){
+  test('geocoder#getFlyTo', function(t){
     setup({flyTo: false});
     t.equals(geocoder.getFlyTo(), false, 'getFlyTo returns the right value');
     t.end();
   });
 
-  tt.test('geocoder#setFlyTo', function(t){
+  test('geocoder#setFlyTo', function(t){
     setup({flyTo: false});
     t.equals(geocoder.options.flyTo, false, 'the correct flyTo option is set on initialization');
     geocoder.setFlyTo({speed: 25});
@@ -957,13 +956,13 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('geocoder#getPlaceholder', function(t){
+  test('geocoder#getPlaceholder', function(t){
     setup({placeholder: 'Test'});
     t.equals(geocoder.getPlaceholder(), 'Test', 'getPlaceholder returns the right value');
     t.end();
   });
 
-  tt.test('geocoder#setPlaceholder', function(t){
+  test('geocoder#setPlaceholder', function(t){
     setup({placeholder: 'Test'});
     t.equals(geocoder._inputEl.placeholder, 'Test', 'the right placeholder is set on initialization');
     geocoder.setPlaceholder('Search');
@@ -972,13 +971,13 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('geocoder#getBbox', function(t){
+  test('geocoder#getBbox', function(t){
     setup({bbox: [-1,-1,1,1]});
     t.deepEqual(geocoder.getBbox(), [-1, -1, 1, 1], 'getBbox returns the right bounding box');
     t.end();
   });
 
-  tt.test('geocoder#setBbox', function(t){
+  test('geocoder#setBbox', function(t){
     setup({bbox: [-1,-1,1,1]});
     t.deepEqual(geocoder.options.bbox, [-1, -1, 1, 1], 'getBbox returns the right bounding box');
     geocoder.setBbox([-2, -2, 2, 2])
@@ -986,13 +985,13 @@ test('geocoder', function(tt) {
     t.end()
   });
 
-  tt.test('geocoder#getCountries', function(t){
+  test('geocoder#getCountries', function(t){
     setup({countries: 'ca,us'})
     t.equals(geocoder.getCountries(), 'ca,us', 'getCountries returns the right country list');
     t.end();
   });
 
-  tt.test('geocoder#setCountries', function(t){
+  test('geocoder#setCountries', function(t){
     setup({countries:'ca'});
     t.equals(geocoder.options.countries, 'ca', 'the right countries are set on initialization');
     geocoder.setCountries("ca,us");
@@ -1000,13 +999,13 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('geocoder#getTypes', function(t){
+  test('geocoder#getTypes', function(t){
     setup({types: 'poi'});
     t.equals(geocoder.getTypes(), 'poi', 'getTypes returns the right types list');
     t.end();
   });
 
-  tt.test('geocoder#setTypes', function(t){
+  test('geocoder#setTypes', function(t){
     setup({types: 'poi'});
     t.equals(geocoder.options.types, 'poi', 'the  right types are set on initializations');
     geocoder.setTypes("place,poi");
@@ -1014,13 +1013,13 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('geocoder#getLimit', function(t){
+  test('geocoder#getLimit', function(t){
     setup({limit:4});
     t.equals(geocoder.getLimit(), 4, 'getLimit returns the right limit value');
     t.end();
   });
 
-  tt.test('geocoder#setLimit', function(t){
+  test('geocoder#setLimit', function(t){
     setup({limit: 1});
     t.equals(geocoder.options.limit, 1, 'the correct limit is set on initialization');
     t.equals(geocoder._typeahead.options.limit, 1, 'the correct limit is set on the typeahead');
@@ -1030,7 +1029,7 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('geocoder#getFilter', function(t){
+  test('geocoder#getFilter', function(t){
     setup({filter: function(){ return false}});
     var filter = geocoder.getFilter();
     t.equals(typeof(filter), 'function', 'the filter is a function');
@@ -1038,7 +1037,7 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('geocoder#setFilter', function(t){
+  test('geocoder#setFilter', function(t){
     setup({filter: function(){return true}});
     var initialFilter = geocoder.getFilter();
     var filtered = ['a', 'b', 'c'].filter(initialFilter);
@@ -1052,7 +1051,7 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('geocoder#autocomplete default results', function(t) {
+  test('geocoder#autocomplete default results', function(t) {
     t.plan(1)
     setup();
     geocoder.query('India');
@@ -1061,13 +1060,13 @@ test('geocoder', function(tt) {
     }));
   });
 
-  tt.test('geocoder#getAutocomplete', function(t) {
+  test('geocoder#getAutocomplete', function(t) {
     setup({autocomplete: false});
     t.equals(geocoder.getAutocomplete(), false, 'getAutocomplete returns the correct autocomplete value');
     t.end();
   });
 
-  tt.test('geocoder#setAccessToken', function(t){
+  test('geocoder#setAccessToken', function(t){
     const accessToken = process.env.MapboxAccessToken;
     t.plan(1);
     setup({ accessToken: `${accessToken}#foo` });
@@ -1082,7 +1081,7 @@ test('geocoder', function(tt) {
     });
   });
 
-  tt.test('geocoder#setAutocomplete', function(t){
+  test('geocoder#setAutocomplete', function(t){
     t.plan(2);
 
     setup({autocomplete: false});
@@ -1095,7 +1094,7 @@ test('geocoder', function(tt) {
     }));
   });
 
-  tt.test('geocoder#fuzzyMatch default results', function(t) {
+  test('geocoder#fuzzyMatch default results', function(t) {
     t.plan(1)
     setup();
     geocoder.query('wahsingtno');
@@ -1104,13 +1103,13 @@ test('geocoder', function(tt) {
     }));
   });
 
-  tt.test('geocoder#getFuzzyMatch', function(t) {
+  test('geocoder#getFuzzyMatch', function(t) {
     setup({fuzzyMatch: false});
     t.equals(geocoder.getFuzzyMatch(), false, 'getFuzzyMatch returns the correct fuzzyMatch value');
     t.end();
   });
 
-  tt.test('geocoder#setFuzzyMatch', function(t){
+  test('geocoder#setFuzzyMatch', function(t){
     t.plan(2);
 
     setup({fuzzyMatch: false});
@@ -1123,7 +1122,7 @@ test('geocoder', function(tt) {
     }));
   });
 
-  tt.test('geocoder#routing default results', function(t) {
+  test('geocoder#routing default results', function(t) {
     t.plan(1)
     setup();
     geocoder.query('The White House');
@@ -1132,7 +1131,7 @@ test('geocoder', function(tt) {
     }));
   });
 
-  tt.test('geocoder#getRouting', function(t) {
+  test('geocoder#getRouting', function(t) {
     setup({routing: true});
     t.equals(geocoder.getRouting(), true, 'getRouting returns the correct routing value');
     t.end();
@@ -1150,7 +1149,7 @@ test('geocoder', function(tt) {
     }));
   });
 
-  tt.test('geocoder#worldview default results', function(t) {
+  test('geocoder#worldview default results', function(t) {
     t.plan(1)
     setup();
     geocoder.query('Taipei');
@@ -1159,13 +1158,13 @@ test('geocoder', function(tt) {
     }));
   });
 
-  tt.test('geocoder#getWorldview', function(t) {
+  test('geocoder#getWorldview', function(t) {
     setup({worldview: 'cn'});
     t.equals(geocoder.getWorldview(), 'cn', 'getWorldview returns the correct worldview value');
     t.end();
   });
 
-  tt.test('geocoder#setWorldview', function(t){
+  test('geocoder#setWorldview', function(t){
     t.plan(2);
 
     setup({worldview: 'us'});
@@ -1177,7 +1176,7 @@ test('geocoder', function(tt) {
     }));
   });
 
-  tt.test('geocoder#_renderMessage', function(t){
+  test('geocoder#_renderMessage', function(t){
     setup({});
     var typeaheadRenderErrorSpy = sinon.spy(geocoder._typeahead, 'renderError');
 
@@ -1199,7 +1198,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('geocoder#_renderError', function(t){
+  test('geocoder#_renderError', function(t){
     setup({});
     var renderMessageSpy = sinon.spy(geocoder, '_renderMessage');
 
@@ -1216,7 +1215,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('geocoder#_renderNoResults', function(t){
+  test('geocoder#_renderNoResults', function(t){
     setup({});
     var renderMessageSpy = sinon.spy(geocoder, '_renderMessage');
 
@@ -1234,7 +1233,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('error is shown after an error occurred', function(t){
+  test('error is shown after an error occurred', function(t){
     setup({});
     geocoder.query('12,');
     geocoder.on(
@@ -1246,7 +1245,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('error is shown after an error occurred [with local geocoder]', function(t){
+  test('error is shown after an error occurred [with local geocoder]', function(t){
     setup({
       localGeocoder: function(){
         return [
@@ -1264,7 +1263,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('message is shown if no results are returned', function(t){
+  test('message is shown if no results are returned', function(t){
     setup({});
     var renderMessageSpy = sinon.spy(geocoder, '_renderNoResults');
     geocoder.query('abcdefghijkl!@#$%^&*()_+'); //this will return no results
@@ -1277,7 +1276,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('no mapbox api call is made if localGeocoderOnly is set', function(t){
+  test('no mapbox api call is made if localGeocoderOnly is set', function(t){
     setup({
       localGeocoderOnly: true,
       localGeocoder: function(q){
@@ -1311,7 +1310,7 @@ test('geocoder', function(tt) {
     );
   });
 
-  tt.test('does not throw if no access token is set and localGeocoderOnly mode is active', function(t){
+  test('does not throw if no access token is set and localGeocoderOnly mode is active', function(t){
     var opts =  {
       localGeocoderOnly: true,
       localGeocoder: function(d){
@@ -1327,7 +1326,7 @@ test('geocoder', function(tt) {
   });
 
 
-  tt.test('throws an error if localGeocoderOnly mode is active but no localGeocoder is supplied', function(t){
+  test('throws an error if localGeocoderOnly mode is active but no localGeocoder is supplied', function(t){
     var opts =  {
       localGeocoderOnly: true
     }
@@ -1339,7 +1338,7 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('geocoder.lastSelected is reset on input', function(t){
+  test('geocoder.lastSelected is reset on input', function(t){
     setup();
     geocoder.lastSelected = "abc123";
     geocoder._onKeyDown(new KeyboardEvent('KeyDown'));
@@ -1348,7 +1347,7 @@ test('geocoder', function(tt) {
   });
 
 
-  tt.test('geocoder#onPaste', function(t){
+  test('geocoder#onPaste', function(t){
     setup();
     var searchMock = sinon.spy(geocoder, "_geocode")
     var event = new ClipboardEvent('paste', {
@@ -1363,7 +1362,7 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('geocoder#onPaste not triggered when text is too short', function(t){
+  test('geocoder#onPaste not triggered when text is too short', function(t){
     setup({
       minLength: 5
     });
@@ -1378,7 +1377,7 @@ test('geocoder', function(tt) {
     t.end();
   });
 
-  tt.test('geocoder#onPaste not triggered when there is no text', function(t){
+  test('geocoder#onPaste not triggered when there is no text', function(t){
     setup();
     var searchMock = sinon.spy(geocoder, "_geocode")
     var event = new ClipboardEvent('paste', {

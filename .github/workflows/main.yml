@@ -30,12 +30,10 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Install Firefox
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y firefox
+    - name: Install Chromium
+      run: sudo apt-get install -y chromium-browser
 
-    - name: Run tests with Smokestack and Firefox
+    - name: Run tests with Vitest
       run: |
         export DISPLAY=:99
         Xvfb :99 -screen 0 1024x768x24 2> /dev/null &
