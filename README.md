@@ -1,4 +1,4 @@
-Mapbox GL Geocoder [![Build Status](https://github.com/mapbox/mapbox-gl-geocoder/actions/workflows/main.yml/badge.svg)](https://github.com/mapbox/mapbox-gl-geocoder/actions/workflows/main.yml)
+Mapbox GL Geocoder [![Build Status](https://github.com/mapbox/mapbox-gl-geocoder/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/mapbox/mapbox-gl-geocoder/actions/workflows/main.yml)
 ---
 
 A geocoder control for [mapbox-gl-js](https://github.com/mapbox/mapbox-gl-js) using the [Mapbox Geocoding API](https://docs.mapbox.com/api/search/#geocoding). For a JavaScript geocoder without a graphical user interface see the [Mapbox SDK for JS](https://github.com/mapbox/mapbox-sdk-js/blob/master/docs/services.md#geocoding).
