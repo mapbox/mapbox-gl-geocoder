@@ -12,7 +12,6 @@ export default defineConfig({
                 }
             ]
         },
-        include: ['test/events.test.js'],
         env: {
             MapboxAccessToken: process.env.MapboxAccessToken
         }

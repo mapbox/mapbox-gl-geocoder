@@ -7,7 +7,7 @@
   "style": "lib/mapbox-gl-geocoder.css",
   "scripts": {
     "start": "vite --port 9967 --open debug/index.html",
-    "prepublish": "NODE_ENV=production && mkdir -p dist && rollup -c && cp lib/mapbox-gl-geocoder.css dist/mapbox-gl-geocoder.css",
+    "prepublishOnly": "NODE_ENV=production && mkdir -p dist && rollup -c && cp lib/mapbox-gl-geocoder.css dist/mapbox-gl-geocoder.css",
     "test": "vitest",
     "docs": "documentation build lib/index.js --format=md > API.md",
     "pretest": "npm run lint",

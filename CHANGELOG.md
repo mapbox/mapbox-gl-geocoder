@@ -1,5 +1,14 @@
 ## HEAD
 
+### Breaking Changes ⚠️
+
+- Increase minimum supported version of EcmaScript to ES2020. This means that the library now uses modern JavaScript features and may not be compatible with older browsers or environments that do not support ES2020.
+- Migrate not bundled source code to ESM modules. This change allows for better tree-shaking and module loading, improving performance and reducing bundle size.
+
+### Features / Improvements 🚀
+
+- Add `once` method to `Geocoder` class to allow for one-time event listeners
+
 ## 5.1.0
 
 ### Features / Improvements 🚀
