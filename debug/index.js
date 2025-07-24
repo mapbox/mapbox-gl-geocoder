@@ -1,59 +1,50 @@
-'use strict';
-var mapboxgl = require('mapbox-gl');
-var insertCss = require('insert-css');
-var fs = require('fs');
+import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '../lib';
 
 mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
 
-
-var meta = document.createElement('meta');
+const meta = document.createElement('meta');
 meta.name = 'viewport';
 meta.content = 'initial-scale=1,maximum-scale=1,user-scalable=no';
 document.getElementsByTagName('head')[0].appendChild(meta);
 
-insertCss(fs.readFileSync('./lib/mapbox-gl-geocoder.css', 'utf8'));
-insertCss(
-  fs.readFileSync('./node_modules/mapbox-gl/dist/mapbox-gl.css', 'utf8')
-);
-
-var MapboxGeocoder = require('../');
-
-var mapDiv = document.body.appendChild(document.createElement('div'));
+const mapDiv = document.body.appendChild(document.createElement('div'));
 mapDiv.style.position = 'absolute';
 mapDiv.style.top = 0;
 mapDiv.style.right = 0;
 mapDiv.style.left = 0;
 mapDiv.style.bottom = 0;
 
-var map = new mapboxgl.Map({
+const map = new mapboxgl.Map({
   container: mapDiv,
   center: [-79.4512, 43.6568],
   zoom: 13
 });
 
-var coordinatesGeocoder = function(query) {
-  var matches = query.match(/^[ ]*(-?\d+\.?\d*)[, ]+(-?\d+\.?\d*)[ ]*$/);
+function coordinateFeature(lng, lat) {
+  lng = Number(lng);
+  lat = Number(lat);
+  return {
+    center: [lng, lat],
+    geometry: {
+      type: 'Point',
+      coordinates: [lng, lat]
+    },
+    place_name: 'Lat: ' + lat + ', Lng: ' + lng,
+    place_type: ['coordinate'],
+    properties: {},
+    type: 'Feature'
+  };
+}
+
+function coordinatesGeocoder(query) {
+  const matches = query.match(/^[ ]*(-?\d+\.?\d*)[, ]+(-?\d+\.?\d*)[ ]*$/);
   if (!matches) {
     return null;
   }
-  function coordinateFeature(lng, lat) {
-    lng = Number(lng);
-    lat = Number(lat);
-    return {
-      center: [lng, lat],
-      geometry: {
-        type: 'Point',
-        coordinates: [lng, lat]
-      },
-      place_name: 'Lat: ' + lat + ', Lng: ' + lng,
-      place_type: ['coordinate'],
-      properties: {},
-      type: 'Feature'
-    };
-  }
-  var coord1 = matches[1];
-  var coord2 = matches[2];
-  var geocodes = [];
+  const coord1 = matches[1];
+  const coord2 = matches[2];
+  const geocodes = [];
   if (coord1 < -90 || coord1 > 90) {
     // must be lng, lat
     geocodes.push(coordinateFeature(coord1, coord2));
@@ -70,7 +61,7 @@ var coordinatesGeocoder = function(query) {
   return geocodes;
 };
 
-var geocoder = new MapboxGeocoder({
+const geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
   trackProximity: true,
   useBrowserFocus: true,
@@ -81,7 +72,7 @@ var geocoder = new MapboxGeocoder({
   externalGeocoder: function(query, features) {
     // peak at the query and features before calling the external api
     if(query.length > 5 && (features.length ? features[0].relevance != 1 : true)) {
-      return fetch('/mock-api.json')
+      return fetch('mock-api.json')
         .then(response => response.json())
     }
   },
@@ -92,10 +83,10 @@ map.addControl(geocoder)
 
 window.geocoder = geocoder;
 
-var button = document.createElement('button');
+const button = document.createElement('button');
 button.textContent = 'click me';
 
-var removeBtn = document.body.appendChild(document.createElement('button'));
+const removeBtn = document.body.appendChild(document.createElement('button'));
 removeBtn.style.position = 'absolute';
 removeBtn.style.zIndex = 10;
 removeBtn.style.top = '10px';

@@ -1,31 +1,23 @@
-'use strict';
-var mapboxgl = require('mapbox-gl');
-var insertCss = require('insert-css');
-var fs = require('fs');
+import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '../lib';
+
 mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
 
-insertCss(fs.readFileSync('./lib/mapbox-gl-geocoder.css', 'utf8'));
-insertCss(
-  fs.readFileSync('./node_modules/mapbox-gl/dist/mapbox-gl.css', 'utf8')
-);
-
-var MapboxGeocoder = require('../');
-
-var mapDiv = document.body.appendChild(document.createElement('div'));
+const mapDiv = document.body.appendChild(document.createElement('div'));
 mapDiv.style.position = 'absolute';
 mapDiv.style.top = 0;
 mapDiv.style.right = 0;
 mapDiv.style.left = 0;
 mapDiv.style.bottom = 0;
 
-var map = new mapboxgl.Map({
+const map = new mapboxgl.Map({
   container: mapDiv,
   style: 'mapbox://styles/mapbox/streets-v9',
   center: [-79.4512, 43.6568],
   zoom: 13
 });
 
-var geocoder = new MapboxGeocoder({
+const geocoder = new MapboxGeocoder({
   accessToken: window.localStorage.getItem('MapboxAccessToken'),
   country: 'au',
   filter: function(item) {
@@ -42,10 +34,10 @@ var geocoder = new MapboxGeocoder({
 
 window.geocoder = geocoder;
 
-var button = document.createElement('button');
+const button = document.createElement('button');
 button.textContent = 'click me';
 
-var removeBtn = document.body.appendChild(document.createElement('button'));
+const removeBtn = document.body.appendChild(document.createElement('button'));
 removeBtn.style.position = 'absolute';
 removeBtn.style.zIndex = 10;
 removeBtn.style.top = '10px';
