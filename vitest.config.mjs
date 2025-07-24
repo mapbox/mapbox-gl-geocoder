@@ -4,7 +4,6 @@ export default defineConfig({
     test: {
         browser: {
             enabled: true,
-            headless: false,
             provider: 'playwright',
             instances: [
                 {
