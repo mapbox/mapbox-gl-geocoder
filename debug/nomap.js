@@ -1,24 +1,13 @@
-'use strict';
-var mapboxgl = require('mapbox-gl');
-var insertCss = require('insert-css');
-var fs = require('fs');
+import MapboxGeocoder from "../lib";
 
-mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
+const accessToken = window.localStorage.getItem('MapboxAccessToken');
 
-
-var meta = document.createElement('meta');
+const meta = document.createElement('meta');
 meta.name = 'viewport';
 meta.content = 'initial-scale=1,maximum-scale=1,user-scalable=no';
 document.getElementsByTagName('head')[0].appendChild(meta);
 
-insertCss(fs.readFileSync('./lib/mapbox-gl-geocoder.css', 'utf8'));
-insertCss(
-  fs.readFileSync('./node_modules/mapbox-gl/dist/mapbox-gl.css', 'utf8')
-);
-
-var MapboxGeocoder = require('../');
-
-var notMapDiv = document.body.appendChild(document.createElement('div'));
+const notMapDiv = document.body.appendChild(document.createElement('div'));
 notMapDiv.style.position = 'absolute';
 notMapDiv.style.top = 0;
 notMapDiv.style.right = 0;
@@ -28,15 +17,14 @@ notMapDiv.style.backgroundColor = 'darkcyan';
 
 notMapDiv.classList.add("notAMap");
 
-var geocoder = new MapboxGeocoder({
-  accessToken: mapboxgl.accessToken,
+const geocoder = new MapboxGeocoder({
+  accessToken,
   trackProximity: true
 });
 
 geocoder.addTo('.notAMap')
 
 window.geocoder = geocoder;
-
 
 geocoder.on('results', function(e) {
   console.log('results: ', e.features);

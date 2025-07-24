@@ -1,14 +1,24 @@
-var test = require('tape');
-var utils = require('../lib/utils');
+import {test, expect} from 'vitest';
 
-test('REVERSE_GEOCODE_COORD_RGX', function (t) {
-  t.ok(utils.REVERSE_GEOCODE_COORD_RGX.test('12, 34'), 'Reverse: "12, 34"');
-  t.ok(utils.REVERSE_GEOCODE_COORD_RGX.test('1,2'), 'Reverse: "1,2"');
-  t.ok(utils.REVERSE_GEOCODE_COORD_RGX.test('12.123, 34.345'), 'Reverse: "12.123, 34.345"');
-  t.ok(utils.REVERSE_GEOCODE_COORD_RGX.test('12, 34.345'), 'Reverse: "12, 34.345"');
-  t.ok(utils.REVERSE_GEOCODE_COORD_RGX.test('12., 34.'), 'Reverse: "12., 34."');
-  t.ok(utils.REVERSE_GEOCODE_COORD_RGX.test('122, 41'), 'Reverse: "122, 41"');
-  t.ok(utils.REVERSE_GEOCODE_COORD_RGX.test('12, 123'), 'Reverse: "12, 123"');
-  t.notOk(utils.REVERSE_GEOCODE_COORD_RGX.test('1234, 4568'), 'Forward: "1234, 4568"');
-  t.notOk(utils.REVERSE_GEOCODE_COORD_RGX.test('123 Main'), 'Forward: "123 Main"');
+import * as utils from '../lib/utils.js';
+
+test('REVERSE_GEOCODE_COORD_RGX', function () {
+  // Reverse: "12, 34"
+  expect(utils.REVERSE_GEOCODE_COORD_RGX.test('12, 34')).toBeTruthy();
+  // Reverse: "1,2"
+  expect(utils.REVERSE_GEOCODE_COORD_RGX.test('1,2')).toBeTruthy();
+  // Reverse: "12.123, 34.345"
+  expect(utils.REVERSE_GEOCODE_COORD_RGX.test('12.123, 34.345')).toBeTruthy();
+  // Reverse: "12, 34.345"
+  expect(utils.REVERSE_GEOCODE_COORD_RGX.test('12, 34.345')).toBeTruthy();
+  // Reverse: "12., 34."
+  expect(utils.REVERSE_GEOCODE_COORD_RGX.test('12., 34.')).toBeTruthy();
+  // Reverse: "122, 41"
+  expect(utils.REVERSE_GEOCODE_COORD_RGX.test('122, 41')).toBeTruthy();
+  // Reverse: "12, 123"
+  expect(utils.REVERSE_GEOCODE_COORD_RGX.test('12, 123')).toBeTruthy();
+  // Forward: "1234, 4568"
+  expect(utils.REVERSE_GEOCODE_COORD_RGX.test('1234, 4568')).toBeFalsy();
+  // Forward: "123 Main"
+  expect(utils.REVERSE_GEOCODE_COORD_RGX.test('123 Main')).toBeFalsy();
 })
