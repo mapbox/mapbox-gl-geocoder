@@ -11,8 +11,7 @@
     "test": "vitest",
     "docs": "documentation build lib/index.js --format=md > API.md",
     "pretest": "npm run lint",
-    "lint": "eslint lib test",
-    "precommit": "lint-staged"
+    "lint": "eslint lib test"
   },
   "files": [
     "lib",
@@ -69,5 +68,10 @@
       "eslint",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
