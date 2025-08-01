@@ -903,6 +903,29 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test('options.marker  [marker instance]', function(t) {
+    t.plan(3);
+    
+    const marker = new mapboxgl.Marker();
+    marker.id = 'my-custom-marker';
+    marker.setLngLat([0,0]);
+    setup({
+      marker: marker,
+      mapboxgl: mapboxgl
+    });
+   
+    geocoder.query('high');
+    geocoder.on(
+      'result',
+      once(function(r) {
+        const coords = marker.getLngLat();
+        t.equals(coords.lng, r.result.center[0], "sets the correct lng");
+        t.equals(coords.lat, r.result.center[1], "sets the correct lat");
+        t.equals(geocoder.mapMarker.id, 'my-custom-marker', "keep id");
+      })
+    );
+  });
+
   tt.test('geocode#onRemove', function(t){
     setup({marker: true});
 
