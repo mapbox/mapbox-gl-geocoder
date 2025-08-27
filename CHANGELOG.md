@@ -1,5 +1,7 @@
 ## HEAD
 
+## 5.1.1
+
 ### Dependency update
 
 - Bumps `form-data` to v4.0.4
