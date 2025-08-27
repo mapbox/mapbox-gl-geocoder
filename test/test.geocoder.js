@@ -40,6 +40,22 @@ test('geocoder', function(tt) {
     t.end();
   });
 
+  tt.test('rendered place name is HTML-sanitized', function(t){
+    t.plan(2);
+
+    const html =  '<script>alert(1)</script>';  // should not render this as-is!
+    const escapedHtml = '&lt;script&gt;alert(1)&lt;/script&gt';
+
+    var fixture = {
+      id: 'abc123',
+      place_name: html
+    }
+
+    const rendered = geocoder.options.render(fixture);
+    t.ok(rendered.indexOf(html) === -1, 'rendered result does not contain original dangerous HTML');
+    t.ok(rendered.indexOf(escapedHtml) > 0, 'rendered result contains escaped version of HTML');
+  })
+
   tt.test('set/get input', function(t) {
     t.plan(4)
     setup({ proximity: { longitude: -79.45, latitude: 43.65 } });
