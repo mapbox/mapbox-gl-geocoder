@@ -1,5 +1,9 @@
 ## HEAD
 
+### Dependency update
+
+- Bumps `form-data` to v4.0.4
+
 ## 5.1.0
 
 ### Features / Improvements 🚀
