@@ -1,7 +1,5 @@
 ## HEAD
 
-## 5.1.2
-
 ### Bug fixes 🐛
 
 - Fix potential XSS when rendering place name [#547](https://github.com/mapbox/mapbox-gl-geocoder/pull/547)
