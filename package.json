@@ -70,7 +70,7 @@
     "xtend": "^4.0.1"
   },
   "overrides": {
-    "request@2.88.2": {
+    "request": {
       "form-data":"^4.0.4"
     },
     "@mapbox/mapbox-sdk": {
