@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/mapbox-gl-geocoder",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "description": "A geocoder control for Mapbox GL JS",
   "main": "lib/index.js",
   "unpkg": "dist/mapbox-gl-geocoder.min.js",
@@ -71,10 +71,10 @@
   },
   "overrides": {
     "request": {
-      "form-data":"^4.0.4"
+      "form-data": "^4.0.4"
     },
     "@mapbox/mapbox-sdk": {
-      "form-data":"^4.0.4"
+      "form-data": "^4.0.4"
     }
   },
   "lint-staged": {
