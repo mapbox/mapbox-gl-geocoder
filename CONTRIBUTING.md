@@ -34,7 +34,7 @@ Follow this deploy process after all changes for the release are merged into mai
     - [ ] Commit and push with commit message `vX.X.X`
     - [ ] Create the git tag for the release with `git tag -a vX.X.X -m 'vX.X.X'`
     - [ ] Push the tags with `git push --tags`
-    - [ ] Run `npm publish`
+    - [ ] Run `mbx npm publish`
 
 
 ## Post-release checklist
