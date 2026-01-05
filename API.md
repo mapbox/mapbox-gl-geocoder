@@ -110,7 +110,7 @@ A geocoder component using the [Mapbox Geocoding API][74]
         If reverseGeocode is enabled and no type is specified, the type defaults to POIs. Otherwise, if you configure more than one type, the first type will be used.
     *   `options.minLength` **[Number][79]** Minimum number of characters to enter before results are shown. (optional, default `2`)
     *   `options.limit` **[Number][79]** Maximum number of results to show. (optional, default `5`)
-    *   `options.language` **[string][76]?** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas. Defaults to the browser's language settings.
+    *   `options.language` **[string][76]?** Specify the language to use for response text and query result weighting. Options are IETF language tags comprising mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas. Defaults to the browser's language settings.
     *   `options.filter` **[Function][85]?** A function which accepts a Feature in the [extended GeoJSON][86] format to filter out results from the Geocoding API response before they are included in the suggestions list. Return `true` to keep the item, `false` otherwise.
     *   `options.localGeocoder` **[Function][85]?** A function accepting the query string which performs local geocoding to supplement results from the Mapbox Geocoding API. Expected to return an Array of GeoJSON Features in the [extended GeoJSON][86] format.
     *   `options.externalGeocoder` **[Function][85]?** A function accepting the query string and current features list which performs geocoding to supplement results from the Mapbox Geocoding API. Expected to return a Promise which resolves to an Array of GeoJSON Features in the [extended GeoJSON][86] format.
@@ -232,7 +232,7 @@ Look first at the explicitly set options otherwise use the browser's language se
 
 #### Parameters
 
-*   `language` **[String][76]** Specify the language to use for response text and query result weighting. Options are IETF language tags comprised of a mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas.
+*   `language` **[String][76]** Specify the language to use for response text and query result weighting. Options are IETF language tags comprising mandatory ISO 639-1 language code and optionally one or more IETF subtags for country or script. More than one value can also be specified, separated by commas.
 
 Returns **[MapboxGeocoder][2]** this
 
