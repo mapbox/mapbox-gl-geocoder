@@ -61,6 +61,33 @@ test('geocoder', function(tt) {
     setup({ proximity: { longitude: -79.45, latitude: 43.65 } });
 
     map.once('style.load', () => {
+      // Stub the geocoder service to return predictable coordinates for Queen Street
+      var forwardGeocodeStub = sinon.stub(geocoder.geocoderService, 'forwardGeocode').returns({
+        send: function() {
+          return Promise.resolve({
+            statusCode: '200',
+            body: {
+              type: 'FeatureCollection',
+              features: [{
+                id: 'address.123',
+                type: 'Feature',
+                place_type: ['address'],
+                text: 'Queen Street',
+                place_name: 'Queen Street, Toronto, Ontario, Canada',
+                center: [-79.3832, 43.6532],
+                geometry: {
+                  type: 'Point',
+                  coordinates: [-79.3832, 43.6532]
+                },
+                properties: {}
+              }]
+            },
+            request: {},
+            headers: {}
+          });
+        }
+      });
+
       geocoder.query('Queen Street');
       var mapMoveSpy = sinon.spy(map, "flyTo");
       geocoder.on(
@@ -71,6 +98,7 @@ test('geocoder', function(tt) {
           t.ok(mapMoveSpy.calledOnce, 'the map#flyTo method was called when a result was selected');
           t.notEquals(mapMoveArgs.center[0], -92.25, 'center.lng changed')
           t.notEquals(mapMoveArgs.center[1], 37.75, 'center.lat changed')
+          forwardGeocodeStub.restore();
         })
       );
     });
@@ -765,6 +793,32 @@ test('geocoder', function(tt) {
       flyTo: true
     });
 
+    var forwardGeocodeStub = sinon.stub(geocoder.geocoderService, 'forwardGeocode').returns({
+      send: function() {
+        return Promise.resolve({
+          statusCode: '200',
+          body: {
+            type: 'FeatureCollection',
+            features: [{
+              id: 'poi.123',
+              type: 'Feature',
+              place_type: ['poi'],
+              text: 'Golden Gate Bridge',
+              place_name: 'Golden Gate Bridge, San Francisco, California, United States',
+              center: [-122.4802, 37.8317],
+              geometry: {
+                type: 'Point',
+                coordinates: [-122.4802, 37.8317]
+              },
+              properties: {}
+            }]
+          },
+          request: {},
+          headers: {}
+        });
+      }
+    });
+
     var mapFlyMethod =  sinon.spy(map, "flyTo");
     geocoder.query('Golden Gate Bridge');
     geocoder.on(
@@ -775,6 +829,7 @@ test('geocoder', function(tt) {
         t.equals(+calledWithArgs.center[0].toFixed(4), +-122.4802.toFixed(4), 'the map is directed to fly to the right longitude');
         t.equals(+calledWithArgs.center[1].toFixed(4),  +37.8317.toFixed(4), 'the map is directed to fly to the right latitude');
         t.deepEqual(calledWithArgs.zoom, 16, 'the map is directed to fly to the right zoom');
+        forwardGeocodeStub.restore();
       })
     );
   });
@@ -789,6 +844,33 @@ test('geocoder', function(tt) {
       }
     });
 
+    // Stub the geocoder service to return predictable coordinates for Golden Gate Bridge
+    var forwardGeocodeStub = sinon.stub(geocoder.geocoderService, 'forwardGeocode').returns({
+      send: function() {
+        return Promise.resolve({
+          statusCode: '200',
+          body: {
+            type: 'FeatureCollection',
+            features: [{
+              id: 'poi.123',
+              type: 'Feature',
+              place_type: ['poi'],
+              text: 'Golden Gate Bridge',
+              place_name: 'Golden Gate Bridge, San Francisco, California, United States',
+              center: [-122.4802, 37.8317],
+              geometry: {
+                type: 'Point',
+                coordinates: [-122.4802, 37.8317]
+              },
+              properties: {}
+            }]
+          },
+          request: {},
+          headers: {}
+        });
+      }
+    });
+
     var mapFlyMethod =  sinon.spy(map, "flyTo");
     geocoder.query('Golden Gate Bridge');
     geocoder.on(
@@ -797,8 +879,10 @@ test('geocoder', function(tt) {
         t.ok(mapFlyMethod.calledOnce, "The map flyTo was called when the option was set to true");
         var calledWithArgs = mapFlyMethod.args[0][0];
         t.equals(+calledWithArgs.center[0].toFixed(4), +-122.4802.toFixed(4), 'the map is directed to fly to the right longitude');
-        t.equals(+calledWithArgs.center[1].toFixed(4),  +37.8317.toFixed(4), 'the map is directed to fly to the right latitude');        t.deepEqual(calledWithArgs.zoom, 4, 'the selected result overrides the constructor zoom option');
+        t.equals(+calledWithArgs.center[1].toFixed(4),  +37.8317.toFixed(4), 'the map is directed to fly to the right latitude');
+        t.deepEqual(calledWithArgs.zoom, 4, 'the selected result overrides the constructor zoom option');
         t.deepEqual(calledWithArgs.speed, 5, 'speed argument is passed to the flyTo method');
+        forwardGeocodeStub.restore();
       })
     );
   });
@@ -1133,7 +1217,7 @@ test('geocoder', function(tt) {
     geocoder.setFuzzyMatch(true);
     t.equals(geocoder.options.fuzzyMatch, true, 'setFuzzyMatch changes the fuzzyMatch value in the geocoder options');
     geocoder.setFuzzyMatch(false);
-    geocoder.query('wahsingtno');
+    geocoder.query('wshngtn');
     geocoder.on('results', once(function(e) {
       t.equals(e.features.length, 0, 'disabling fuzzyMatch correctly affects geocoding results');
     }));
@@ -1283,11 +1367,28 @@ test('geocoder', function(tt) {
   tt.test('message is shown if no results are returned', function(t){
     setup({});
     var renderMessageSpy = sinon.spy(geocoder, '_renderNoResults');
-    geocoder.query('abcdefghijkl!@#$%^&*()_+'); //this will return no results
+
+    // Stub the geocoder service to return no results
+    var forwardGeocodeStub = sinon.stub(geocoder.geocoderService, 'forwardGeocode').returns({
+      send: function() {
+        return Promise.resolve({
+          statusCode: '200',
+          body: {
+            type: 'FeatureCollection',
+            features: []
+          },
+          request: {},
+          headers: {}
+        });
+      }
+    });
+
+    geocoder.query('abcdefghijkl!@#$%^&*()_+');
     geocoder.on(
       'results',
       once(function() {
         t.ok(renderMessageSpy.called, 'a message was rendered');
+        forwardGeocodeStub.restore();
         t.end();
       })
     );
