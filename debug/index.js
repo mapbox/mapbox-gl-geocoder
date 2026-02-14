@@ -27,8 +27,6 @@ mapDiv.style.bottom = 0;
 
 var map = new mapboxgl.Map({
   container: mapDiv,
-  // update to Standard after fix of GLJS-624
-  style: 'mapbox://styles/mapbox/streets-v12',
   center: [-79.4512, 43.6568],
   zoom: 13
 });
@@ -75,6 +73,7 @@ var coordinatesGeocoder = function(query) {
 var geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
   trackProximity: true,
+  useBrowserFocus: true,
   enableGeolocation: true,
   localGeocoder: function(query) {
     return coordinatesGeocoder(query);

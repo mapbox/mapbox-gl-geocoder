@@ -25,8 +25,7 @@ test('Geocoder#inputControl', function(tt) {
     map = new mapboxgl.Map({
       container: container,
       projection: 'mercator',
-      // update to Standard after fix of GLJS-624
-      style: 'mapbox://styles/mapbox/streets-v12',
+      style: 'mapbox://styles/mapbox/standard',
     });
     geocoder = new MapboxGeocoder(opts);
     map.addControl(geocoder);
@@ -403,6 +402,42 @@ test('Geocoder#inputControl', function(tt) {
         t.end();
       })
     );
+  });
+
+  tt.test('focus switches to the first item with useBrowserFocus', (t)=>{
+    t.plan(2);
+    setup({
+      useBrowserFocus: true
+    });
+
+    var inputEl = container.querySelector('.mapboxgl-ctrl-geocoder input');
+
+    geocoder.query('Golden Gate Bridge');
+
+    document.body.appendChild(container);
+
+    sinon.spy(map, 'flyTo')
+
+    const updateList = geocoder._typeahead.list.update.bind(geocoder._typeahead.list);
+
+    geocoder._tyeahead.list.update = function(data) {
+      updateList(data);
+      container.querySelector('.suggestions li').addEventListener('focus', function() {
+        t.pass('focus was switched to the first item');
+        t.ok(!map.flyTo.called, 'map.flyTo was not called');
+        t.end();
+      });
+      inputEl.addEventListener('focus', function() {
+        inputEl.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          keyCode: 40,
+          which: 40,
+          bubbles: true,
+          cancelable: true
+        }));
+      });
+      inputEl.focus();
+    }
   });
 
   tt.end();

@@ -1,5 +1,23 @@
 ## HEAD
 
+## 5.1.2
+
+### Bug fixes 🐛
+
+- Fix potential XSS when rendering place name [#547](https://github.com/mapbox/mapbox-gl-geocoder/pull/547)
+
+## 5.1.1
+
+### Dependency update
+
+- Bumps `form-data` to v4.0.4
+
+## 5.1.0
+
+### Features / Improvements 🚀
+
+- Introduce `useBrowserFocus` option to use the browser's native focus management instead of the geocoder's custom focus management. This is useful for accessibility.
+
 ## 5.0.3
 
 ### Features / Improvements 🚀
