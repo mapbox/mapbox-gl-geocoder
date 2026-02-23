@@ -3,11 +3,13 @@
   "version": "5.1.2",
   "description": "A geocoder control for Mapbox GL JS",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "unpkg": "dist/mapbox-gl-geocoder.min.js",
   "style": "lib/mapbox-gl-geocoder.css",
   "scripts": {
     "start": "budo debug/index.js --dir debug --live -- -t brfs ",
-    "prepublish": "NODE_ENV=production && mkdir -p dist && browserify lib/index.js --transform [ babelify --global ] --standalone MapboxGeocoder | uglifyjs -c -m > dist/mapbox-gl-geocoder.min.js && cp lib/mapbox-gl-geocoder.css dist/",
+    "prepublish": "NODE_ENV=production && mkdir -p dist && npm run build:types && browserify lib/index.js --transform [ babelify --global ] --standalone MapboxGeocoder | uglifyjs -c -m > dist/mapbox-gl-geocoder.min.js && cp lib/mapbox-gl-geocoder.css dist/",
+    "build:types": "tsc",
     "test": "browserify -t envify test/index.js test/events.test.js test/utils.test.js | smokestack -b firefox | tap-status | tap-color",
     "docs": "documentation build lib/index.js --format=md > API.md",
     "pretest": "npm run lint",
@@ -58,6 +60,7 @@
     "tap-color": "^1.1.0",
     "tap-status": "^1.0.1",
     "tape": "^4.10.1",
+    "typescript": "^5.9.3",
     "uglify-js": "^2.8.29"
   },
   "dependencies": {

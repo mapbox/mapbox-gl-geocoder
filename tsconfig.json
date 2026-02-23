@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "lib",
+    "declarationMap": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es2015",
+    "strict": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true
+  },
+  "include": ["lib/**/*.js"],
+  "exclude": ["node_modules", "test", "debug", "dist"]
+}
