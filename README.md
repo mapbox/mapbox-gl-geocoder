@@ -38,7 +38,7 @@ See [API.md](https://github.com/mapbox/mapbox-gl-geocoder/blob/master/API.md) fo
 
 #### Examples
 
-See [https://docs.mapbox.com/mapbox-gl-js/examples/#geocoder](https://docs.mapbox.com/mapbox-gl-js/examples/#geocoder).
+See [https://docs.mapbox.com/mapbox-gl-js/example/?topic=Geocoder](https://docs.mapbox.com/mapbox-gl-js/example/?topic=Geocoder).
 
 ### Contributing
 
