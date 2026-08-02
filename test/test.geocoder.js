@@ -143,6 +143,19 @@ test('geocoder', function(tt) {
     });
   });
 
+  tt.test('forward geocoding - trims surrounding whitespace', function(t) {
+    t.plan(2);
+    setup({});
+    geocoder.query('  Paris  ');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.equals(geocoder.inputString, 'Paris', 'inputString is trimmed');
+        t.equals(e.config.query, 'Paris', 'query sent to API is trimmed');
+      })
+    );
+  });
+
   tt.test('custom endpoint', function(t) {
     t.plan(1);
     setup({ origin: 'localhost:2999' });
@@ -228,6 +241,48 @@ test('geocoder', function(tt) {
         t.deepEquals(e.query, [ -7.0926, 31.791 ], 'parses query');
         t.deepEquals(e.config.types.toString(), 'country', 'uses correct type passed to config' );
         t.equal(e.features[0].place_name, 'Morocco', 'returns expected result');
+      })
+    );
+  });
+
+  tt.test('options.reverseGeocode - trims surrounding whitespace (trailing space)', function(t) {
+    t.plan(1);
+    setup({
+      reverseGeocode: true
+    });
+    geocoder.query('48.774989, 9.155557 ');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.deepEquals(e.query, [ 9.155557, 48.774989 ], 'parses query with no extra/NaN elements');
+      })
+    );
+  });
+
+  tt.test('options.reverseGeocode - trims surrounding whitespace (leading space)', function(t) {
+    t.plan(1);
+    setup({
+      reverseGeocode: true
+    });
+    geocoder.query(' 48.774989, 9.155557');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.deepEquals(e.query, [ 9.155557, 48.774989 ], 'parses query with no extra/NaN elements');
+      })
+    );
+  });
+
+  tt.test('options.reverseGeocode - trims whitespace around comma', function(t) {
+    t.plan(1);
+    setup({
+      reverseGeocode: true
+    });
+    geocoder.query('48.774989 , 9.155557');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.deepEquals(e.query, [ 9.155557, 48.774989 ], 'parses query with no extra/NaN elements');
       })
     );
   });
