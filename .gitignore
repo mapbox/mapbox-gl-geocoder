@@ -2,4 +2,6 @@ env.test.sh
 dist
 node_modules
 
+.idea
 .env
+CLAUDE.local.md

@@ -1,5 +1,9 @@
 ## HEAD
 
+### Features / Improvements 🚀
+
+- Add `inputTransforms.trimCoordinatesPunctuation` option (defaults to `false`). When enabled, leading/trailing punctuation (e.g. `;`) is trimmed from search input that looks like coordinates (e.g. `"48.774989, 9.155557;"`)
+
 ### Bug fixes 🐛
 
 - Fix reverse geocoding errors caused by leading/trailing whitespace in coordinate input (e.g. `"48.774989, 9.155557 "`)

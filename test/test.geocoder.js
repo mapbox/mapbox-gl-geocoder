@@ -156,6 +156,102 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test('options.inputTransforms.trimCoordinatesPunctuation - false by default', function(t) {
+    setup();
+    t.equals(geocoder.options.inputTransforms.trimCoordinatesPunctuation, false, 'trimCoordinatesPunctuation defaults to false');
+    t.end();
+  });
+
+  tt.test('options.inputTransforms.trimCoordinatesPunctuation - false does not trim punctuation from coordinate-like input', function(t) {
+    t.plan(1);
+    setup({});
+    geocoder.query(';48.774989, 9.155557;');
+    geocoder.on(
+      'results',
+      once(function() {
+        t.equals(geocoder.inputString, ';48.774989, 9.155557;', 'inputString keeps punctuation when trimCoordinatesPunctuation is disabled');
+      })
+    );
+  });
+
+  tt.test('options.inputTransforms.trimCoordinatesPunctuation - true trims leading punctuation from coordinate-like input', function(t) {
+    t.plan(1);
+    setup({
+      inputTransforms: { trimCoordinatesPunctuation: true }
+    });
+    geocoder.query(';48.774989, 9.155557');
+    geocoder.on(
+      'results',
+      once(function() {
+        t.equals(geocoder.inputString, '48.774989, 9.155557', 'leading punctuation is trimmed from coordinate-like input');
+      })
+    );
+  });
+
+  tt.test('options.inputTransforms.trimCoordinatesPunctuation - true trims trailing punctuation from coordinate-like input', function(t) {
+    t.plan(1);
+    setup({
+      inputTransforms: { trimCoordinatesPunctuation: true }
+    });
+    geocoder.query('48.774989, 9.155557;');
+    geocoder.on(
+      'results',
+      once(function() {
+        t.equals(geocoder.inputString, '48.774989, 9.155557', 'trailing punctuation is trimmed from coordinate-like input');
+      })
+    );
+  });
+
+  tt.test('options.inputTransforms.trimCoordinatesPunctuation - true recursively trims repeated punctuation and whitespace', function(t) {
+    t.plan(1);
+    setup({
+      inputTransforms: { trimCoordinatesPunctuation: true }
+    });
+    geocoder.query('  ;;48.774989, 9.155557;;  ');
+    geocoder.on(
+      'results',
+      once(function() {
+        t.equals(geocoder.inputString, '48.774989, 9.155557', 'repeated punctuation and whitespace are trimmed');
+      })
+    );
+  });
+
+  tt.test('options.inputTransforms.trimCoordinatesPunctuation - true does not trim punctuation from non-coordinate input', function(t) {
+    t.plan(1);
+    setup({
+      inputTransforms: { trimCoordinatesPunctuation: true }
+    });
+    geocoder.query('Paris;');
+    geocoder.on(
+      'results',
+      once(function() {
+        t.equals(geocoder.inputString, 'Paris;', 'punctuation is left untouched for non-coordinate input');
+      })
+    );
+  });
+
+  tt.test('options.inputTransforms.trimCoordinatesPunctuation - true does not trim punctuation in the middle of coordinate-like input', function(t) {
+    t.plan(1);
+    setup({
+      inputTransforms: { trimCoordinatesPunctuation: true }
+    });
+    geocoder.query('note;48.774989, 9.155557;end');
+    geocoder.on(
+      'results',
+      once(function() {
+        t.equals(geocoder.inputString, 'note;48.774989, 9.155557;end', 'punctuation in the middle of the string is left untouched');
+      })
+    );
+  });
+
+  tt.test('options.inputTransforms - partial object merges with defaults', function(t) {
+    setup({
+      inputTransforms: {}
+    });
+    t.equals(geocoder.options.inputTransforms.trimCoordinatesPunctuation, false, 'trimCoordinatesPunctuation still defaults to false when a partial inputTransforms object is provided');
+    t.end();
+  });
+
   tt.test('custom endpoint', function(t) {
     t.plan(1);
     setup({ origin: 'localhost:2999' });
