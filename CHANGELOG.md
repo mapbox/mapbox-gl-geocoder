@@ -1,5 +1,9 @@
 ## HEAD
 
+### Bug fixes 🐛
+
+- Fix reverse geocoding errors caused by leading/trailing whitespace in coordinate input (e.g. `"48.774989, 9.155557 "`)
+
 ## 5.1.2
 
 ### Bug fixes 🐛
