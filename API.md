@@ -130,6 +130,9 @@ A geocoder component using the [Mapbox Geocoding API][74]
     *   `options.enableGeolocation` **[Boolean][80]** If `true` enable user geolocation feature. (optional, default `false`)
     *   `options.useBrowserFocus` **[Boolean][80]** If `true`, the geocoder will use the browser's focus event to show suggestions. If `false`, it will only highlight active suggestions and Tab will not propagate to the suggestions list. (optional, default `false`)
     *   `options.addressAccuracy` **(`"address"` | `"street"` | `"place"` | `"country"`)** The accuracy for the geolocation feature with which we define the address line to fill. The browser API returns the user's position with accuracy, and sometimes we can get the neighbor's address. To prevent receiving an incorrect address, you can reduce the accuracy of the definition. (optional, default `"street"`)
+    *   `options.inputTransforms` **[Object][75]?** Options controlling how the search input is transformed before being processed.
+
+        *   `options.inputTransforms.trimCoordinatesPunctuation` **[Boolean][80]** If `true`, leading/trailing punctuation characters (currently only `;`) are trimmed from the search input. (optional, default `false`)
 
 ### Examples
 
