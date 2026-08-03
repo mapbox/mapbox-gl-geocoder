@@ -7,10 +7,12 @@
 ### Features / Improvements 🚀
 
 - Add `inputTransforms.trimCoordinatesPunctuation` option (defaults to `false`). When enabled, leading/trailing punctuation (e.g. `;`) is trimmed from search input that looks like coordinates (e.g. `"48.774989, 9.155557;"`)
+- Reject search input longer than 256 characters (matching the Geocoding v5 API's own limit) with a dedicated "search is too long" error message, instead of sending it to the API
 
 ### Bug fixes 🐛
 
 - Fix reverse geocoding errors caused by leading/trailing whitespace in coordinate input (e.g. `"48.774989, 9.155557 "`)
+- Fix an error message not being shown when pasting an invalid value directly (e.g. via keyboard shortcut), instead of typing it character by character
 
 ## 5.1.2
 
