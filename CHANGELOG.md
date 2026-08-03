@@ -1,12 +1,18 @@
 ## HEAD
 
+### Breaking changes ⚠️
+
+- Coordinate detection (`options.reverseGeocode`) no longer bounds the numeric range of the input. Any input that looks like coordinates (two numbers separated by a comma, with optional whitespace around the comma, e.g. `"12.45, 12345456"`) is now always treated as a reverse geocode request, regardless of whether the numbers fall within valid latitude/longitude bounds. Previously, inputs with more than 3 integer digits (e.g. `12345456`) were misclassified as a forward geocoding request, which the Geocoding v5 API would still interpret as a reverse request server-side, resulting in a response with an error and status code 422. This change aligns the package's detection logic with how the API itself detects coordinate-shaped queries — the API does not treat whitespace-separated numbers without a comma (e.g. `"12.55 34.87"`) as coordinates, so that input is still handled as a forward geocoding request.
+
 ### Features / Improvements 🚀
 
 - Add `inputTransforms.trimCoordinatesPunctuation` option (defaults to `false`). When enabled, leading/trailing punctuation (e.g. `;`) is trimmed from search input that looks like coordinates (e.g. `"48.774989, 9.155557;"`)
+- Reject search input longer than 256 characters (matching the Geocoding v5 API's own limit) with a dedicated "search is too long" error message, instead of sending it to the API
 
 ### Bug fixes 🐛
 
 - Fix reverse geocoding errors caused by leading/trailing whitespace in coordinate input (e.g. `"48.774989, 9.155557 "`)
+- Fix an error message not being shown when pasting an invalid value directly (e.g. via keyboard shortcut), instead of typing it character by character
 
 ## 5.1.2
 

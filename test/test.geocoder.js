@@ -1485,6 +1485,49 @@ test('geocoder', function(tt) {
     );
   });
 
+  tt.test('geocoder#_renderInputTooLongError', function(t){
+    setup({});
+    var renderMessageSpy = sinon.spy(geocoder, '_renderMessage');
+
+    geocoder._renderInputTooLongError();
+    t.ok(renderMessageSpy.calledOnce, 'the input too long render method calls the renderMessage method exactly once');
+    var calledWithArgs = renderMessageSpy.args[0][0];
+    t.ok(calledWithArgs.indexOf('mapbox-gl-geocoder--error') > -1, 'the error message specifies the correct class');
+    t.end();
+  });
+
+  tt.test('geocoder#_geocode with input over 256 characters', function(t){
+    setup({});
+    var renderInputTooLongErrorSpy = sinon.spy(geocoder, '_renderInputTooLongError');
+    var forwardGeocodeSpy = sinon.spy(geocoder.geocoderService, 'forwardGeocode');
+    var reverseGeocodeSpy = sinon.spy(geocoder.geocoderService, 'reverseGeocode');
+
+    var tooLongInput = 'a'.repeat(257);
+    geocoder.query(tooLongInput);
+
+    t.ok(renderInputTooLongErrorSpy.calledOnce, 'the input too long error is rendered');
+    t.ok(forwardGeocodeSpy.notCalled, 'no forward geocoding request is made');
+    t.ok(reverseGeocodeSpy.notCalled, 'no reverse geocoding request is made');
+    t.end();
+  });
+
+  tt.test('geocoder#_geocode with input at 256 characters', function(t){
+    t.plan(2);
+    setup({});
+    var renderInputTooLongErrorSpy = sinon.spy(geocoder, '_renderInputTooLongError');
+
+    var maxLengthInput = 'high' + ' a'.repeat(126);
+    geocoder.query(maxLengthInput);
+    geocoder.on(
+      'results',
+      once(function() {
+        t.ok(renderInputTooLongErrorSpy.notCalled, 'the input too long error is not rendered');
+        t.equals(maxLengthInput.length, 256, 'the test input is exactly at the length limit');
+        t.end();
+      })
+    );
+  });
+
   tt.test('error is shown after an error occurred', function(t){
     setup({});
     geocoder.query('12,');
