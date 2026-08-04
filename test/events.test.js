@@ -215,6 +215,27 @@ test('search selects event', function(assert){
   assert.end();
 });
 
+test('search selects event with id-less (synthetic) features is not logged', function(assert){
+  var eventsManager = new MapboxEventsManager({
+    accessToken: 'abc123'
+  })
+  var pushMethod = sinon.spy(eventsManager, "push");
+  var geocoder = new MapboxGeocoder({accessToken: 'abc123'});
+  // Neither feature has an `id`, e.g. two features synthesized from extended
+  // spatial formats (parseExtendedSpatialFormats: { tile: true, slashSeparatedZoomLatLng: true }).
+  var firstFeature = {place_name: 'Tile,x=45 y=30 z=12', place_type: ['coordinate'], properties: {}, _source: 'extended-spatial-format'};
+  var secondFeature = {place_name: 'Point,lng=30 lat=45 zoom=12', place_type: ['coordinate'], properties: {}, _source: 'extended-spatial-format'};
+  geocoder._typeahead = {
+    data: [firstFeature, secondFeature]
+  };
+  geocoder.inputString = '12/45/30';
+  assert.equals(eventsManager.getSelectedIndex(secondFeature, geocoder), undefined, 'id-less features report no index');
+  eventsManager.select(secondFeature, geocoder);
+  assert.notOk(pushMethod.called, 'synthetic id-less features are not logged to the events service');
+  pushMethod.restore();
+  assert.end();
+});
+
 test('generate session id', function(assert){
   var eventsManager = new MapboxEventsManager({
     accessToken: 'abc123'

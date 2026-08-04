@@ -133,6 +133,12 @@ A geocoder component using the [Mapbox Geocoding API][74]
     *   `options.inputTransforms` **[Object][75]?** Options controlling how the search input is transformed before being processed.
 
         *   `options.inputTransforms.trimCoordinatesPunctuation` **[Boolean][80]** If `true`, leading/trailing punctuation characters (currently only `;`) are trimmed from the search input. (optional, default `false`)
+    *   `options.parseExtendedSpatialFormats` **[Object][75]?** Options controlling which extended spatial input formats are recognized. This must be an object of the sub-options below. When the search input matches an enabled format, a feature for the parsed location is added as the first suggestion, counting against `options.limit` in the suggestion list alongside any geocoding results. All formats are disabled by default. Longitude must be within -180..180, latitude within -90..90, and zoom within 0..24.
+
+        *   `options.parseExtendedSpatialFormats.commaSeparatedLngLatZoom` **[Boolean][80]** If `true`, recognize input of the form `lng,lat,zoom` with no spaces, e.g. `6.925882,51.110352,11.31`. (optional, default `false`)
+        *   `options.parseExtendedSpatialFormats.slashSeparatedZoomLatLng` **[Boolean][80]** If `true`, recognize input of the form `zoom/lat/lng` with no spaces, e.g. `11.31/51.110352/6.925882`. (optional, default `false`)
+        *   `options.parseExtendedSpatialFormats.tile` **[Boolean][80]** If `true`, recognize XYZ tile coordinates of the form `z/x/y`, e.g. `14/8507/5477`, and resolve them to the center of the tile. Note that an all-integer `z/a/b` input within latitude/longitude range, e.g. `12/45/30`, is valid under both this format and `slashSeparatedZoomLatLng`; when both are enabled such input produces two suggestions, the tile one first. (optional, default `false`)
+        *   `options.parseExtendedSpatialFormats.quadkey` **[Boolean][80]** If `true`, recognize a quadkey, e.g. `12020332200123`, and resolve it to the center of the quadkey. Be aware that a quadkey is any string of the digits `0`-`3`, so enabling this makes purely numeric searches ambiguous — searching for the postal code `20331`, for example, also produces a quadkey suggestion. Only enable it where numeric-only queries are not expected. (optional, default `false`)
 
 ### Examples
 

@@ -8,6 +8,7 @@ var mapboxEvents = require('./../lib/events');
 var sinon = require('sinon');
 var localization = require('./../lib/localization');
 var exceptions = require('./../lib/exceptions');
+var spatialFormats = require('./../lib/spatial-formats');
 
 
 mapboxgl.accessToken = process.env.MapboxAccessToken;
@@ -921,6 +922,20 @@ test('geocoder', function(tt) {
     t.end()
   });
 
+  tt.test('options.getItemValue for spatial format results', function(t){
+    setup({});
+
+    var fixture = {
+      id: 'abc123',
+      place_name: 'Point,lng=6.925882 lat=51.110352 zoom=11',
+      _source: spatialFormats.SOURCE,
+      _searchQuery: '6.925882,51.110352,11'
+    }
+
+    t.equals(geocoder._typeahead.getItemValue(fixture), '6.925882,51.110352,11', 'the getItemValue uses the original search query for spatial format results');
+    t.end()
+  });
+
   tt.test('options.flyTo [false]', function(t){
     t.plan(1)
     setup({
@@ -1700,6 +1715,193 @@ test('geocoder', function(tt) {
     t.notOk(searchMock.calledOnce, 'the search was not triggered');
     searchMock.restore();
     t.end();
+  });
+
+  tt.test('options.parseExtendedSpatialFormats - every format is disabled by default', function(t) {
+    setup();
+    t.deepEqual(geocoder.options.parseExtendedSpatialFormats, {
+      commaSeparatedLngLatZoom: false,
+      slashSeparatedZoomLatLng: false,
+      tile: false,
+      quadkey: false
+    }, 'every format defaults to false');
+    t.end();
+  });
+
+  tt.test('options.parseExtendedSpatialFormats - a partial option keeps the remaining defaults', function(t) {
+    setup({ parseExtendedSpatialFormats: { tile: true } });
+    t.deepEqual(geocoder.options.parseExtendedSpatialFormats, {
+      commaSeparatedLngLatZoom: false,
+      slashSeparatedZoomLatLng: false,
+      tile: true,
+      quadkey: false
+    }, 'only the key that was passed is overridden');
+    t.end();
+  });
+
+  tt.test('options.inputTransforms - a partial option still keeps the remaining defaults', function(t) {
+    var passedInputTransforms = { trimCoordinatesPunctuation: true };
+    setup({ inputTransforms: passedInputTransforms });
+    t.deepEqual(geocoder.options.inputTransforms, {
+      trimCoordinatesPunctuation: true
+    }, 'the existing nested option still merges over its defaults');
+    t.notEqual(geocoder.options.inputTransforms, passedInputTransforms, 'the nested option was merged into a fresh object rather than adopted by reference, so a caller mutating their own object afterwards cannot reach into the instance');
+    t.end();
+  });
+
+  // Stubs the Geocoding API with a fixed set of features, so the tests below do
+  // not depend on live API responses.
+  function stubForwardGeocode(features) {
+    return sinon.stub(geocoder.geocoderService, 'forwardGeocode').returns({
+      send: function() {
+        return Promise.resolve({
+          statusCode: '200',
+          body: {
+            type: 'FeatureCollection',
+            features: features
+          },
+          request: {},
+          headers: {}
+        });
+      }
+    });
+  }
+
+  var apiFeatureFixture = {
+    id: 'place.1',
+    type: 'Feature',
+    place_type: ['place'],
+    text: 'Somewhere',
+    place_name: 'Somewhere, Germany',
+    center: [7, 51],
+    geometry: {
+      type: 'Point',
+      coordinates: [7, 51]
+    },
+    properties: {}
+  };
+
+  tt.test('options.parseExtendedSpatialFormats - the parsed feature comes first in the results', function(t) {
+    t.plan(4);
+    setup({ parseExtendedSpatialFormats: { tile: true } });
+    stubForwardGeocode([apiFeatureFixture]);
+
+    geocoder.query('14/8507/5477');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.equals(e.features.length, 2, 'the parsed feature and the API result are both present');
+        t.equals(e.features[0].place_name, 'Tile,x=8507 y=5477 z=14', 'the parsed feature is first');
+        t.equals(e.features[1].place_name, 'Somewhere, Germany', 'the API result follows it');
+        t.equals(e.features[0]._source, 'extended-spatial-format', 'the parsed feature keeps its own _source instead of being relabelled "mapbox"');
+      })
+    );
+  });
+
+  tt.test('options.parseExtendedSpatialFormats - no "no results" message when the API returns nothing', function(t) {
+    t.plan(4);
+    setup({ parseExtendedSpatialFormats: { quadkey: true } });
+    stubForwardGeocode([]);
+    var noResultsSpy = sinon.spy(geocoder, '_renderNoResults');
+
+    geocoder.query('12020332200123');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.equals(e.features.length, 1, 'only the parsed feature is present');
+        t.equals(e.features[0].place_name, 'Quadkey,12020332200123', 'the parsed feature is shown');
+        t.ok(noResultsSpy.notCalled, 'the "No results found" message is not rendered');
+        // _geocode emits 'results' before it calls _typeahead.update(), so the
+        // suggestion list is only populated on the next tick.
+        setTimeout(function() {
+          t.equals(geocoder._typeahead.data.length, 1, 'the suggestion list holds the parsed feature');
+        });
+      })
+    );
+  });
+
+  tt.test('options.parseExtendedSpatialFormats - options.filter does not drop the parsed feature', function(t) {
+    t.plan(2);
+    setup({
+      parseExtendedSpatialFormats: { tile: true },
+      filter: function() { return false; }
+    });
+    stubForwardGeocode([apiFeatureFixture]);
+
+    geocoder.query('14/8507/5477');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.equals(e.features.length, 1, 'the API result was filtered out');
+        t.equals(e.features[0].place_name, 'Tile,x=8507 y=5477 z=14', 'the parsed feature survived the filter');
+      })
+    );
+  });
+
+  tt.test('options.parseExtendedSpatialFormats - the parsed feature survives an API error', function(t) {
+    t.plan(4);
+    setup({ parseExtendedSpatialFormats: { tile: true } });
+    sinon.stub(geocoder.geocoderService, 'forwardGeocode').returns({
+      send: function() {
+        return Promise.reject(new Error('network is down'));
+      }
+    });
+    var renderErrorSpy = sinon.spy(geocoder, '_renderError');
+
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.equals(e.features.length, 1, 'the parsed feature is still delivered');
+        t.equals(e.features[0].place_name, 'Tile,x=8507 y=5477 z=14', 'the parsed feature is shown');
+        t.ok(renderErrorSpy.notCalled, 'the error message does not replace the result');
+      })
+    );
+    geocoder.on(
+      'error',
+      once(function() {
+        t.pass('the error event is still emitted');
+      })
+    );
+
+    // _geocode resolves to the underlying request promise, which is rejected
+    // here; catching it keeps the rejection from surfacing as an unhandled one.
+    geocoder._geocode('14/8507/5477').catch(function() {});
+  });
+
+  tt.test('options.parseExtendedSpatialFormats - localGeocoderOnly still delivers the parsed feature', function(t) {
+    t.plan(2);
+    // The parser is purely local and makes no request, and both options are
+    // separate explicit opt-ins, so localGeocoderOnly must not suppress it.
+    setup({
+      localGeocoderOnly: true,
+      localGeocoder: function() { return []; },
+      parseExtendedSpatialFormats: { tile: true }
+    });
+
+    geocoder.query('14/8507/5477');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.equals(e.features.length, 1, 'the parsed feature is delivered even though localGeocoderOnly is set');
+        t.equals(e.features[0].place_name, 'Tile,x=8507 y=5477 z=14', 'the parsed feature is shown');
+      })
+    );
+  });
+
+  tt.test('options.parseExtendedSpatialFormats - the ambiguous z/a/b input yields two suggestions through _geocode', function(t) {
+    t.plan(3);
+    setup({ parseExtendedSpatialFormats: { tile: true, slashSeparatedZoomLatLng: true } });
+    stubForwardGeocode([]);
+
+    geocoder.query('12/45/30');
+    geocoder.on(
+      'results',
+      once(function(e) {
+        t.equals(e.features.length, 2, 'both interpretations are present');
+        t.equals(e.features[0].place_name, 'Tile,x=45 y=30 z=12', 'the tile interpretation comes first');
+        t.equals(e.features[1].place_name, 'Point,lng=30 lat=45 zoom=12', 'the lat/lng interpretation comes second');
+      })
+    );
   });
 
   tt.end();

@@ -75,6 +75,12 @@ var geocoder = new MapboxGeocoder({
   trackProximity: true,
   useBrowserFocus: true,
   enableGeolocation: true,
+  parseExtendedSpatialFormats: {
+    commaSeparatedLngLatZoom: true,
+    slashSeparatedZoomLatLng: true,
+    tile: true,
+    quadkey: true
+  },
   localGeocoder: function(query) {
     return coordinatesGeocoder(query);
   },
