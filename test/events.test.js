@@ -222,9 +222,9 @@ test('search selects event with id-less (synthetic) features is not logged', fun
   var pushMethod = sinon.spy(eventsManager, "push");
   var geocoder = new MapboxGeocoder({accessToken: 'abc123'});
   // Neither feature has an `id`, e.g. two features synthesized from extended
-  // spatial formats (parseExtendedSpatialFormats: { tile: true, slashSeparatedZoomLatLng: true }).
-  var firstFeature = {place_name: 'Tile,x=45 y=30 z=12', place_type: ['coordinate'], properties: {}, _source: 'extended-spatial-format'};
-  var secondFeature = {place_name: 'Point,lng=30 lat=45 zoom=12', place_type: ['coordinate'], properties: {}, _source: 'extended-spatial-format'};
+  // spatial formats (see lib/spatial-formats.js's `tile` and `slashSeparatedZoomLatLng`).
+  var firstFeature = {place_name: 'Tile,x=45 y=30 z=12', place_type: ['coordinate'], properties: {}, _searchQuery: '12/45/30'};
+  var secondFeature = {place_name: 'Point,lng=30 lat=45 zoom=12', place_type: ['coordinate'], properties: {}, _searchQuery: '12/45/30'};
   geocoder._typeahead = {
     data: [firstFeature, secondFeature]
   };

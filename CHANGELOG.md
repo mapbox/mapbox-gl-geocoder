@@ -7,7 +7,6 @@
 ### Features / Improvements 🚀
 
 - Add `inputTransforms.trimCoordinatesPunctuation` option (defaults to `false`). When enabled, leading/trailing punctuation (e.g. `;`) is trimmed from search input that looks like coordinates (e.g. `"48.774989, 9.155557;"`)
-- Add `parseExtendedSpatialFormats` option for recognizing extended spatial input formats: `commaSeparatedLngLatZoom` (`6.925882,51.110352,11.31`), `slashSeparatedZoomLatLng` (`11.31/51.110352/6.925882`), `tile` (`14/8507/5477`) and `quadkey` (`12020332200123`). Each defaults to `false`. When enabled and the search input matches, a feature for the parsed location is added as the first suggestion alongside the geocoding results, and selecting it moves the map to those coordinates at the parsed zoom. For `tile` and `quadkey` the coordinates are the center of the tile. Note that `12/45/30`-style input is valid as both a tile and a `zoom/lat/lng` triple, so with both formats enabled it yields two suggestions.
 - Reject search input longer than 256 characters (matching the Geocoding v5 API's own limit) with a dedicated "search is too long" error message, instead of sending it to the API
 
 ### Bug fixes 🐛

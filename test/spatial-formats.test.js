@@ -3,19 +3,6 @@
 var test = require('tape');
 var spatialFormats = require('../lib/spatial-formats');
 
-var ALL_ENABLED = {
-  commaSeparatedLngLatZoom: true,
-  slashSeparatedZoomLatLng: true,
-  tile: true,
-  quadkey: true
-};
-
-function placeNames(features) {
-  return features.map(function (feature) {
-    return feature.place_name;
-  });
-}
-
 function assertLngLat(t, actual, expected, msg) {
   t.ok(
     Math.abs(actual[0] - expected[0]) < 1e-9 && Math.abs(actual[1] - expected[1]) < 1e-9,
@@ -24,64 +11,58 @@ function assertLngLat(t, actual, expected, msg) {
 }
 
 test('spatial-formats: commaSeparatedLngLatZoom', function (t) {
-  var formatOptions = { commaSeparatedLngLatZoom: true };
-  var features = spatialFormats.parse('6.925882,51.110352,11.31', formatOptions);
+  var feature = spatialFormats.parseCommaSeparatedLngLatZoom('6.925882,51.110352,11.31');
 
-  t.equal(features.length, 1, 'one feature');
-  t.equal(features[0].place_name, 'Point,lng=6.925882 lat=51.110352 zoom=11.31', 'place_name echoes the input');
-  t.deepEqual(features[0].center, [6.925882, 51.110352], 'center is [lng, lat]');
-  t.equal(features[0]._zoom, 11.31, 'a fractional zoom is preserved');
-  t.equal(features[0].properties.spatialFormat, 'commaSeparatedLngLatZoom', 'the format is recorded');
+  t.equal(feature.place_name, 'Point,lng=6.925882 lat=51.110352 zoom=11.31', 'place_name echoes the input');
+  t.deepEqual(feature.center, [6.925882, 51.110352], 'center is [lng, lat]');
+  t.equal(feature._zoom, 11.31, 'a fractional zoom is preserved');
+  t.equal(feature.properties.spatialFormat, 'commaSeparatedLngLatZoom', 'the format is recorded');
 
-  t.equal(spatialFormats.parse('-6,-51,0', formatOptions).length, 1, 'negative values and zoom 0 are accepted');
-  t.equal(spatialFormats.parse('180,90,24', formatOptions).length, 1, 'the range boundaries are inclusive');
-  t.deepEqual(spatialFormats.parse('181,51,11', formatOptions), [], 'lng above 180');
-  t.deepEqual(spatialFormats.parse('6,91,11', formatOptions), [], 'lat above 90');
-  t.deepEqual(spatialFormats.parse('6,51,25', formatOptions), [], 'zoom above 24');
-  t.deepEqual(spatialFormats.parse('6,51,-1', formatOptions), [], 'negative zoom');
-  t.deepEqual(spatialFormats.parse('6, 51, 11', formatOptions), [], 'spaces around commas are not accepted');
-  t.deepEqual(spatialFormats.parse('6,51', formatOptions), [], 'two numbers are not enough');
-  t.deepEqual(spatialFormats.parse('6,51,11,2', formatOptions), [], 'four numbers are too many');
+  t.ok(spatialFormats.parseCommaSeparatedLngLatZoom('-6,-51,0'), 'negative values and zoom 0 are accepted');
+  t.ok(spatialFormats.parseCommaSeparatedLngLatZoom('180,90,24'), 'the range boundaries are inclusive');
+  t.equal(spatialFormats.parseCommaSeparatedLngLatZoom('181,51,11'), null, 'lng above 180');
+  t.equal(spatialFormats.parseCommaSeparatedLngLatZoom('6,91,11'), null, 'lat above 90');
+  t.equal(spatialFormats.parseCommaSeparatedLngLatZoom('6,51,25'), null, 'zoom above 24');
+  t.equal(spatialFormats.parseCommaSeparatedLngLatZoom('6,51,-1'), null, 'negative zoom');
+  t.equal(spatialFormats.parseCommaSeparatedLngLatZoom('6, 51, 11'), null, 'spaces around commas are not accepted');
+  t.equal(spatialFormats.parseCommaSeparatedLngLatZoom('6,51'), null, 'two numbers are not enough');
+  t.equal(spatialFormats.parseCommaSeparatedLngLatZoom('6,51,11,2'), null, 'four numbers are too many');
   t.end();
 });
 
 test('spatial-formats: slashSeparatedZoomLatLng', function (t) {
-  var formatOptions = { slashSeparatedZoomLatLng: true };
-  var features = spatialFormats.parse('11.31/51.110352/6.925882', formatOptions);
+  var feature = spatialFormats.parseSlashSeparatedZoomLatLng('11.31/51.110352/6.925882');
 
-  t.equal(features.length, 1, 'one feature');
-  t.equal(features[0].place_name, 'Point,lng=6.925882 lat=51.110352 zoom=11.31', 'place_name is reordered to lng, lat, zoom');
-  t.deepEqual(features[0].center, [6.925882, 51.110352], 'center is [lng, lat]');
-  t.equal(features[0]._zoom, 11.31, 'zoom comes from the first component');
-  t.equal(features[0].properties.spatialFormat, 'slashSeparatedZoomLatLng', 'the format is recorded');
+  t.equal(feature.place_name, 'Point,lng=6.925882 lat=51.110352 zoom=11.31', 'place_name is reordered to lng, lat, zoom');
+  t.deepEqual(feature.center, [6.925882, 51.110352], 'center is [lng, lat]');
+  t.equal(feature._zoom, 11.31, 'zoom comes from the first component');
+  t.equal(feature.properties.spatialFormat, 'slashSeparatedZoomLatLng', 'the format is recorded');
 
-  t.deepEqual(spatialFormats.parse('25/51/6', formatOptions), [], 'zoom above 24');
-  t.deepEqual(spatialFormats.parse('11/91/6', formatOptions), [], 'lat above 90');
-  t.deepEqual(spatialFormats.parse('11/51/181', formatOptions), [], 'lng above 180');
-  t.deepEqual(spatialFormats.parse('14/8507/5477', formatOptions), [], 'tile coordinates are out of lat/lng range');
-  t.deepEqual(spatialFormats.parse('11 / 51 / 6', formatOptions), [], 'spaces around slashes are not accepted');
+  t.equal(spatialFormats.parseSlashSeparatedZoomLatLng('25/51/6'), null, 'zoom above 24');
+  t.equal(spatialFormats.parseSlashSeparatedZoomLatLng('11/91/6'), null, 'lat above 90');
+  t.equal(spatialFormats.parseSlashSeparatedZoomLatLng('11/51/181'), null, 'lng above 180');
+  t.equal(spatialFormats.parseSlashSeparatedZoomLatLng('14/8507/5477'), null, 'tile coordinates are out of lat/lng range');
+  t.equal(spatialFormats.parseSlashSeparatedZoomLatLng('11 / 51 / 6'), null, 'spaces around slashes are not accepted');
   t.end();
 });
 
 test('spatial-formats: tile', function (t) {
-  var formatOptions = { tile: true };
-  var features = spatialFormats.parse('14/8507/5477', formatOptions);
+  var feature = spatialFormats.parseTile('14/8507/5477');
 
-  t.equal(features.length, 1, 'one feature');
-  t.equal(features[0].place_name, 'Tile,x=8507 y=5477 z=14', 'place_name lists x, y, z');
-  t.equal(features[0]._zoom, 14, 'zoom is the tile zoom');
-  t.deepEqual(features[0].properties.tile, { z: 14, x: 8507, y: 5477 }, 'the tile components are exposed');
-  t.equal(features[0].properties.spatialFormat, 'tile', 'the format is recorded');
-  assertLngLat(t, features[0].center, [6.932373046875, 51.10352194240417], 'center is the tile center');
+  t.equal(feature.place_name, 'Tile,x=8507 y=5477 z=14', 'place_name lists x, y, z');
+  t.equal(feature._zoom, 14, 'zoom is the tile zoom');
+  t.deepEqual(feature.properties.tile, { z: 14, x: 8507, y: 5477 }, 'the tile components are exposed');
+  t.equal(feature.properties.spatialFormat, 'tile', 'the format is recorded');
+  assertLngLat(t, feature.center, [6.932373046875, 51.10352194240417], 'center is the tile center');
 
-  t.equal(spatialFormats.parse('0/0/0', formatOptions).length, 1, 'the z=0 world tile is valid');
-  t.deepEqual(spatialFormats.parse('14/16384/5477', formatOptions), [], 'x is outside the z=14 grid');
-  t.deepEqual(spatialFormats.parse('25/0/0', formatOptions), [], 'zoom above 24');
-  t.deepEqual(spatialFormats.parse('14/8507.5/5477', formatOptions), [], 'components must be integers');
-  t.deepEqual(spatialFormats.parse('14/-1/5477', formatOptions), [], 'negative components are rejected');
-  t.equal(spatialFormats.parse('014/8507/5477', formatOptions).length, 1, 'leading zeros are accepted');
+  t.ok(spatialFormats.parseTile('0/0/0'), 'the z=0 world tile is valid');
+  t.equal(spatialFormats.parseTile('14/16384/5477'), null, 'x is outside the z=14 grid');
+  t.equal(spatialFormats.parseTile('25/0/0'), null, 'zoom above 24');
+  t.equal(spatialFormats.parseTile('14/8507.5/5477'), null, 'components must be integers');
+  t.equal(spatialFormats.parseTile('14/-1/5477'), null, 'negative components are rejected');
+  t.ok(spatialFormats.parseTile('014/8507/5477'), 'leading zeros are accepted');
   t.equal(
-    spatialFormats.parse('014/8507/5477', formatOptions)[0].place_name,
+    spatialFormats.parseTile('014/8507/5477').place_name,
     'Tile,x=8507 y=5477 z=14',
     'leading zeros are normalized away in place_name'
   );
@@ -89,83 +70,57 @@ test('spatial-formats: tile', function (t) {
 });
 
 test('spatial-formats: quadkey', function (t) {
-  var formatOptions = { quadkey: true };
-  var features = spatialFormats.parse('12020332200123',formatOptions);
+  var feature = spatialFormats.parseQuadkey('12020332200123');
 
-  t.equal(features.length, 1, 'one feature');
-  t.equal(features[0].place_name, 'Quadkey,12020332200123', 'place_name echoes the quadkey');
-  t.equal(features[0]._zoom, 14, 'zoom is the quadkey length');
-  t.equal(features[0].properties.quadkey, '12020332200123', 'the quadkey is exposed');
-  t.equal(features[0].properties.spatialFormat, 'quadkey', 'the format is recorded');
-  assertLngLat(t, features[0].center, [8.558349609375, 49.33228198473772], 'center is the tile center');
+  t.equal(feature.place_name, 'Quadkey,12020332200123', 'place_name echoes the quadkey');
+  t.equal(feature._zoom, 14, 'zoom is the quadkey length');
+  t.equal(feature.properties.quadkey, '12020332200123', 'the quadkey is exposed');
+  t.equal(feature.properties.spatialFormat, 'quadkey', 'the format is recorded');
+  assertLngLat(t, feature.center, [8.558349609375, 49.33228198473772], 'center is the tile center');
 
-  t.equal(spatialFormats.parse('0123',formatOptions).length, 1, 'a leading zero is a valid quadkey');
-  t.equal(spatialFormats.parse('0123',formatOptions)[0]._zoom, 4, 'the leading zero counts towards the zoom');
-  t.deepEqual(spatialFormats.parse('12345',formatOptions), [], 'digits above 3 are not a quadkey');
-  t.deepEqual(spatialFormats.parse('12 0203',formatOptions), [], 'whitespace is not accepted');
-  t.deepEqual(spatialFormats.parse('abc',formatOptions), [], 'letters are not accepted');
+  t.ok(spatialFormats.parseQuadkey('0123'), 'a leading zero is a valid quadkey');
+  t.equal(spatialFormats.parseQuadkey('0123')._zoom, 4, 'the leading zero counts towards the zoom');
+  t.equal(spatialFormats.parseQuadkey('12345'), null, 'digits above 3 are not a quadkey');
+  t.equal(spatialFormats.parseQuadkey('12 0203'), null, 'whitespace is not accepted');
+  t.equal(spatialFormats.parseQuadkey('abc'), null, 'letters are not accepted');
   t.end();
 });
 
 test('spatial-formats: feature shape', function (t) {
-  var feature = spatialFormats.parse('6.925882,51.110352,11.31', { commaSeparatedLngLatZoom: true })[0];
+  var feature = spatialFormats.parseCommaSeparatedLngLatZoom('6.925882,51.110352,11.31');
   t.equal(feature.type, 'Feature', 'is a GeoJSON Feature');
   t.deepEqual(feature.place_type, ['coordinate'], 'place_type is coordinate');
   t.equal(feature.geometry.type, 'Point', 'has a point geometry');
   t.deepEqual(feature.geometry.coordinates, feature.center, 'geometry coordinates match center');
-  t.equal(feature._source, 'extended-spatial-format', 'is tagged with the extended spatial format source');
+  t.equal(feature._searchQuery, '6.925882,51.110352,11.31', 'has initial searchInput value');
   t.equal(feature.bbox, undefined, 'has no bbox, so _fly uses center and _zoom');
   t.end();
 });
 
-test('spatial-formats: ambiguous z/a/b input yields both interpretations', function (t) {
-  t.deepEqual(placeNames(spatialFormats.parse('12/45/30', ALL_ENABLED)), [
-    'Tile,x=45 y=30 z=12',
-    'Point,lng=30 lat=45 zoom=12'
-  ], 'the tile interpretation comes first, then lat/lng');
+test('spatial-formats: ambiguous z/a/b input matches both tile and slashSeparatedZoomLatLng', function (t) {
+  t.equal(spatialFormats.parseTile('12/45/30').place_name, 'Tile,x=45 y=30 z=12', 'tile interpretation');
+  t.equal(spatialFormats.parseSlashSeparatedZoomLatLng('12/45/30').place_name, 'Point,lng=30 lat=45 zoom=12', 'lat/lng interpretation');
 
-  t.deepEqual(
-    placeNames(spatialFormats.parse('12/45/30', { tile: true })),
-    ['Tile,x=45 y=30 z=12'],
-    'only an enabled format contributes'
-  );
-  t.deepEqual(
-    placeNames(spatialFormats.parse('12/45.5/30', ALL_ENABLED)),
-    ['Point,lng=30 lat=45.5 zoom=12'],
-    'a decimal component rules out the tile interpretation'
-  );
-  t.deepEqual(
-    placeNames(spatialFormats.parse('14/8507/5477', ALL_ENABLED)),
-    ['Tile,x=8507 y=5477 z=14'],
-    'an out-of-range latitude rules out the lat/lng interpretation'
-  );
-  t.equal(spatialFormats.parse('6.925882,51.110352,11.31', ALL_ENABLED).length, 1, 'a comma-separated triple only ever matches one format');
-  t.equal(spatialFormats.parse('12020332200123', ALL_ENABLED).length, 1, 'a quadkey only ever matches one format');
+  t.equal(spatialFormats.parseTile('12/45.5/30'), null, 'a decimal component rules out the tile interpretation');
+  t.ok(spatialFormats.parseSlashSeparatedZoomLatLng('12/45.5/30'), 'the lat/lng interpretation still matches');
+
+  t.ok(spatialFormats.parseTile('14/8507/5477'), 'the tile interpretation matches');
+  t.equal(spatialFormats.parseSlashSeparatedZoomLatLng('14/8507/5477'), null, 'an out-of-range latitude rules out the lat/lng interpretation');
+
   t.end();
 });
 
-test('spatial-formats: every format is opt-in', function (t) {
-  var inputs = [
-    '6.925882,51.110352,11.31',
-    '11.31/51.110352/6.925882',
-    '14/8507/5477',
-    '12020332200123'
-  ];
+test('spatial-formats: ordinary text never matches', function (t) {
+  t.equal(spatialFormats.parseCommaSeparatedLngLatZoom('Berlin'), null, 'commaSeparatedLngLatZoom');
+  t.equal(spatialFormats.parseSlashSeparatedZoomLatLng('Berlin'), null, 'slashSeparatedZoomLatLng');
+  t.equal(spatialFormats.parseTile('Berlin'), null, 'tile');
+  t.equal(spatialFormats.parseQuadkey('Berlin'), null, 'quadkey');
 
-  var formatOptions = {
-    commaSeparatedLngLatZoom: false,
-    slashSeparatedZoomLatLng: false,
-    tile: false,
-    quadkey: false
-  }
+  t.equal(spatialFormats.parseCommaSeparatedLngLatZoom(''), null, 'commaSeparatedLngLatZoom on empty input');
+  t.equal(spatialFormats.parseSlashSeparatedZoomLatLng(''), null, 'slashSeparatedZoomLatLng on empty input');
+  t.equal(spatialFormats.parseTile(''), null, 'tile on empty input');
+  t.equal(spatialFormats.parseQuadkey(''), null, 'quadkey on empty input');
 
-  inputs.forEach(function (input) {
-    t.deepEqual(spatialFormats.parse(input, formatOptions), [], 'no feature for "' + input + '" when all formats are disabled');
-    t.deepEqual(spatialFormats.parse(input, undefined), [], 'no feature for "' + input + '" without format options');
-  });
-
-  t.deepEqual(spatialFormats.parse('Berlin', ALL_ENABLED), [], 'ordinary text never matches');
-  t.deepEqual(spatialFormats.parse('', ALL_ENABLED), [], 'empty input never matches');
-  t.deepEqual(spatialFormats.parse('48.774989, 9.155557', ALL_ENABLED), [], 'plain reverse-geocode coordinates never match');
+  t.equal(spatialFormats.parseCommaSeparatedLngLatZoom('48.774989, 9.155557'), null, 'plain reverse-geocode coordinates never match commaSeparatedLngLatZoom');
   t.end();
 });
