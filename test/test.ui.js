@@ -168,6 +168,72 @@ test('Geocoder#inputControl', function(tt) {
     t.end();
   });
 
+  tt.test('_onKeyDown triggers _geocode on Cmd+X (cut)', function(t){
+    t.plan(1);
+    setup({});
+
+    var geocodeSpy = sinon.spy(geocoder, '_geocode');
+    geocoder._onKeyDown({ target: { value: '6.945423,51.102197' }, keyCode: 88, metaKey: true });
+    t.equal(geocodeSpy.called, true, '_geocode is called for Cmd+X since it mutates the input value');
+
+    t.end();
+  });
+
+  tt.test('_onKeyDown triggers _geocode on Ctrl+X (cut)', function(t){
+    t.plan(1);
+    setup({});
+
+    var geocodeSpy = sinon.spy(geocoder, '_geocode');
+    geocoder._onKeyDown({ target: { value: '6.945423,51.102197' }, keyCode: 88, ctrlKey: true });
+    t.equal(geocodeSpy.called, true, '_geocode is called for Ctrl+X since it mutates the input value');
+
+    t.end();
+  });
+
+  tt.test('_onKeyDown does not trigger _geocode on Cmd+A', function(t){
+    t.plan(1);
+    setup({});
+
+    var geocodeSpy = sinon.spy(geocoder, '_geocode');
+    geocoder._onKeyDown({ target: { value: '6.945423,51.102197' }, keyCode: 65, metaKey: true });
+    t.equal(geocodeSpy.called, false, '_geocode is not called for other Cmd combos');
+
+    t.end();
+  });
+
+  tt.test('_onKeyDown does not trigger _geocode on Ctrl+A', function(t){
+    t.plan(1);
+    setup({});
+
+    var geocodeSpy = sinon.spy(geocoder, '_geocode');
+    geocoder._onKeyDown({ target: { value: '6.945423,51.102197' }, keyCode: 65, ctrlKey: true });
+    t.equal(geocodeSpy.called, false, '_geocode is not called for other Ctrl combos');
+
+    t.end();
+  });
+
+  tt.test('_onKeyDown triggers _geocode on Cmd+Z (undo)', function(t){
+    t.plan(1);
+    setup({});
+
+    var geocodeSpy = sinon.spy(geocoder, '_geocode');
+    geocoder._onKeyDown({ target: { value: '6.945423,51.102197,16.98' }, keyCode: 90, metaKey: true });
+    t.equal(geocodeSpy.called, true, '_geocode is called for Cmd+Z since it mutates the input value');
+
+    t.end();
+  });
+
+  tt.test('_onKeyDown triggers _geocode on Ctrl+Z (undo)', function(t){
+    t.plan(1);
+    setup({});
+
+    var geocodeSpy = sinon.spy(geocoder, '_geocode');
+    geocoder._onKeyDown({ target: { value: '6.945423,51.102197,16.98' }, keyCode: 90, ctrlKey: true });
+    t.equal(geocodeSpy.called, true, '_geocode is called for Ctrl+Z since it mutates the input value');
+
+    t.end();
+  });
+
   tt.test('options.clearAndBlurOnEsc=true clears and blurs on escape', function(t) {
     t.plan(4);
     setup({

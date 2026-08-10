@@ -17,6 +17,7 @@ insertCss(
 );
 
 var MapboxGeocoder = require('../');
+var spatialFormats = require('../lib/spatial-formats');
 
 var mapDiv = document.body.appendChild(document.createElement('div'));
 mapDiv.style.position = 'absolute';
@@ -76,7 +77,14 @@ var geocoder = new MapboxGeocoder({
   useBrowserFocus: true,
   enableGeolocation: true,
   localGeocoder: function(query) {
-    return coordinatesGeocoder(query);
+    var spatialFeatures = [
+      spatialFormats.parseSlashSeparatedZoomLatLng(query),
+      spatialFormats.parseCommaSeparatedLngLatZoom(query),
+      spatialFormats.parseTile(query),
+      spatialFormats.parseQuadkey(query)
+    ].filter(Boolean);
+
+    return spatialFeatures.concat(coordinatesGeocoder(query) || []);
   },
   externalGeocoder: function(query, features) {
     // peak at the query and features before calling the external api

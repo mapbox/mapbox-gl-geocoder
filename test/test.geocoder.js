@@ -921,6 +921,19 @@ test('geocoder', function(tt) {
     t.end()
   });
 
+  tt.test('options.getItemValue for spatial format results', function(t){
+    setup({});
+
+    var fixture = {
+      id: 'abc123',
+      place_name: 'Point,lng=6.925882 lat=51.110352 zoom=11',
+      _searchQuery: '6.925882,51.110352,11'
+    }
+
+    t.equals(geocoder._typeahead.getItemValue(fixture), '6.925882,51.110352,11', 'the getItemValue uses the original search query for spatial format results');
+    t.end()
+  });
+
   tt.test('options.flyTo [false]', function(t){
     t.plan(1)
     setup({
@@ -1699,6 +1712,16 @@ test('geocoder', function(tt) {
     geocoder._onPaste(event);
     t.notOk(searchMock.calledOnce, 'the search was not triggered');
     searchMock.restore();
+    t.end();
+  });
+
+  tt.test('options.inputTransforms - a partial option still keeps the remaining defaults', function(t) {
+    var passedInputTransforms = { trimCoordinatesPunctuation: true };
+    setup({ inputTransforms: passedInputTransforms });
+    t.deepEqual(geocoder.options.inputTransforms, {
+      trimCoordinatesPunctuation: true
+    }, 'the existing nested option still merges over its defaults');
+    t.notEqual(geocoder.options.inputTransforms, passedInputTransforms, 'the nested option was merged into a fresh object rather than adopted by reference, so a caller mutating their own object afterwards cannot reach into the instance');
     t.end();
   });
 

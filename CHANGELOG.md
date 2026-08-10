@@ -13,6 +13,7 @@
 
 - Fix reverse geocoding errors caused by leading/trailing whitespace in coordinate input (e.g. `"48.774989, 9.155557 "`)
 - Fix an error message not being shown when pasting an invalid value directly (e.g. via keyboard shortcut), instead of typing it character by character
+- Fix the suggestion list not updating after cutting (Cmd/Ctrl+X) or undoing (Cmd/Ctrl+Z) a change to the search input
 
 ## 5.1.2
 
