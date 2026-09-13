@@ -1015,6 +1015,17 @@ test('geocoder', function(tt) {
 
     t.end();
   })
+
+  tt.test('geocode#onRemove after map removal', function(t){
+    setup({marker: true});
+
+    map.remove();
+
+    t.doesNotThrow(function() {
+      geocoder.onRemove();
+    }, 'onRemove does not throw when the geocoder container is no longer in the DOM');
+    t.end();
+  })
   tt.test('geocoder#setLanguage', function(t){
     setup({language: 'de-DE'});
     t.equals(geocoder.options.language,  'de-DE', 'the correct language is set on initialization');
