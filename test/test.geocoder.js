@@ -706,6 +706,30 @@ test('geocoder', function(tt) {
     t.equals(geocoder._typeahead.render(fixture), 'feature id is abc123', 'render function is applied properly on the typeahead');
   })
 
+  tt.test('default render function escapes place_name', function(t){
+    t.plan(2);
+    var html = MapboxGeocoder.prototype.options.render({ place_name: '<img src=x>Cafe, Berlin' });
+    t.ok(html.indexOf('&lt;img src=x&gt;Cafe') > -1, 'place_name is escaped');
+    t.equals(html.indexOf('<img'), -1, 'no raw HTML from place_name');
+  });
+
+  // Compare by identity: calling the suggestions library's renderer directly loops forever on its initial empty query
+  tt.test('options.render that is not a function falls back to the default', function(t){
+    var values = [undefined, null, false, 'not a function'];
+    t.plan(values.length);
+    values.forEach(function(value){
+      setup({ render: value });
+      t.equals(geocoder.getRenderFunction(), MapboxGeocoder.prototype.options.render, 'default render function is used when render is ' + String(value));
+    });
+  });
+
+  tt.test('setRenderFunction with non-function input restores the default', function(t){
+    t.plan(1);
+    setup({ render: function(item){ return item.place_name; } });
+    geocoder.setRenderFunction(null);
+    t.equals(geocoder.getRenderFunction(), MapboxGeocoder.prototype.options.render, 'default render function is used');
+  });
+
   tt.test('setRenderFunction with no input', function(t){
     t.plan(2);
     setup({});

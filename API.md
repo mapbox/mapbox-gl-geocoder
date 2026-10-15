@@ -214,7 +214,7 @@ Set the render function used in the results dropdown
 
 #### Parameters
 
-*   `fn` **[Function][85]** The function to use as a render function. This function accepts a single [extended GeoJSON][86] object as input and returns a string.
+*   `fn` **[Function][85]** The function to use as a render function. This function accepts a single [extended GeoJSON][86] object as input and returns a string. If `fn` is not a function, the default render function is used.
 
 Returns **[MapboxGeocoder][2]** this
 
