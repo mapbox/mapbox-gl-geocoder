@@ -1,5 +1,7 @@
 ## HEAD
 
+## 5.1.3
+
 ### Bug fixes 🐛
 
 - Fix potential XSS when the `render` option is not a function.
