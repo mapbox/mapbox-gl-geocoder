@@ -30,18 +30,18 @@ Follow this deploy process after all changes for the release are merged into mai
     - [ ] Run `npm run docs` and commit any changes to `API.md`.
 2. Request a PR review and then merge it into `main`.
 3. Tag the merge commit and publish.
-    - [ ] Create the git tag with `git tag -a vX.X.X -m 'vX.X.X'` on the merged commit
-    - [ ] Push it with `git push origin vX.X.X`. This starts the `Publish` workflow, which publishes to npm once the `npm-release` environment is approved.
+    - [ ] Create the git tag with `git tag -a vX.X.X -m 'vX.X.X'` on the merged commit. Pushed tags are protected and can't normally be deleted or moved, so double-check the commit first.
+    - [ ] Push it with `git push origin vX.X.X`. This starts the `Publish` workflow, which publishes to npm right away.
     - [ ] Create a GitHub release for the tag with the changelog entry.
 
 
 ## Post-release checklist
 
-Upload to the CDN (make sure you are authenticated for AWS):
+- [ ] Upload to the CDN (make sure you are authenticated for AWS):
 
     git checkout vX.X.X
     npm ci
     aws s3 cp --recursive --acl public-read dist s3://mapbox-gl-js/plugins/mapbox-gl-geocoder/vX.X.X
 
-Update the geocoder version in `src/components/example/helpers.js` of [mapbox-gl-js-docs](https://github.com/mapbox/mapbox-gl-js-docs).
+- [ ] Update the geocoder version in the GL JS examples.
 ```
