@@ -64,7 +64,7 @@
     "@mapbox/mapbox-sdk": "^0.16.1",
     "events": "^3.3.0",
     "lodash.debounce": "^4.0.6",
-    "nanoid": "^3.1.31",
+    "nanoid": "^5.1.16",
     "subtag": "^0.5.0",
     "suggestions": "^1.6.0",
     "xtend": "^4.0.1"
